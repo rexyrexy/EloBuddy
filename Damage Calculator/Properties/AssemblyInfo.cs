@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Rexy Elobuddy Rengar")]
+[assembly: AssemblyTitle("Damage Calculator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Rexy Elobuddy Rengar")]
+[assembly: AssemblyProduct("Damage Calculator")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("61d5dcfd-19ea-495b-a62d-7a7455cd405b")]
+[assembly: Guid("5f246d57-29ed-436e-9fa9-bcbef745e059")]
 
 // Version information for an assembly consists of the following four values:
 //
