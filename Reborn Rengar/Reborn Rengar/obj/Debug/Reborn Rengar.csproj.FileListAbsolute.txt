@@ -1,0 +1,11 @@
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\RebornRengar.exe.config
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\obj\Debug\RebornRengar.exe
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\obj\Debug\RebornRengar.pdb
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\RebornRengar.exe
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\RebornRengar.pdb
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\EloBuddy.dll
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\SharpDX.dll
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Berkk\Documents\Visual Studio 2015\Projects\Reborn Rengar\Reborn Rengar\obj\Debug\Reborn Rengar.csprojResolveAssemblyReference.cache

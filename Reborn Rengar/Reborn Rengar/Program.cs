@@ -61,7 +61,6 @@ namespace RebornRengar
                 W.Cast();
             }
         }
-
         private static void ComboX()
         {
             var Target = TS.GetTarget(E.Range, DamageType.Physical);
@@ -73,27 +72,36 @@ namespace RebornRengar
                     Q.Cast();
                 }
 
-                if (E.IsReady() && !Q.IsReady())
+                if (E.IsReady())
                 {
                     E.Cast(Target);
                 }
 
-                if (W.IsReady() && !E.IsReady())
+                if (W.IsReady())
                 {
                     W.Cast();
                 }
 
-                if (Q.IsReady() && !W.IsReady())
+                if (Q.IsReady())
                 {
                     Q.Cast();
                 }
 
-                if (E.IsReady() && !Q.IsReady())
+                if (E.IsReady())
                 {
                     E.Cast(Target);
                 }
             }
-             else if (!Target.IsValidTarget(Q.Range) && Me.Mana < 5)
+
+            else if (!Target.IsValidTarget(Q.Range) && Me.Mana < 5 && Me.HasBuff("RengarR"))
+            {
+                if (Q.IsReady())
+                {
+                    Q.Cast();
+                }
+            }
+
+            else if (!Target.IsValidTarget(Q.Range) && Me.Mana < 5)
             {
                 if (E.IsReady())
                 {
@@ -102,6 +110,14 @@ namespace RebornRengar
             }
 
             else if (Target.IsValidTarget(Q.Range) && Me.Mana == 5)
+            {
+                if (Q.IsReady())
+                {
+                    Q.Cast();
+                }
+            }
+
+            else if (!Target.IsValidTarget(Q.Range) && Me.Mana == 5 && Me.HasBuff("RengarR"))
             {
                 if (Q.IsReady())
                 {
