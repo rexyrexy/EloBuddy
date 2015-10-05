@@ -43,6 +43,15 @@ namespace RebornRengar
 
             ComboMenu = MainnMenu.AddSubMenu("Combo Menu", "combomenuSET");
             ComboMenu.Add("AutoWHP", new Slider("% Health", 30));
+            var cs = ComboMenu.Add("css", new Slider("Combo Selector", 0, 0, 3));
+            var co = new[] { "Burst", "Snare", "Always Q", "Auto" };
+            cs.DisplayName = co[cs.CurrentValue];
+            cs.OnValueChange +=
+                delegate (ValueBase<int> sender, ValueBase<int>.ValueChangeArgs changeArgs)
+                {
+                    sender.DisplayName = co[changeArgs.NewValue];
+                };
+
             Game.OnUpdate += Game_OnUpdate;
         }
 
@@ -63,74 +72,180 @@ namespace RebornRengar
         }
         private static void ComboX()
         {
-            var Target = TS.GetTarget(E.Range, DamageType.Physical);
-            
-            if (Target.IsValidTarget(Q.Range) && Me.Mana < 5)
+            var options = ComboMenu["css"].DisplayName;
+            switch (options)
             {
-                if (Q.IsReady())
-                {
-                    Q.Cast();
-                }
+                case "Burst":
+                    if (Me.Mana < 5)
+                    {
+                        var targetW = TS.GetTarget(500, DamageType.Physical);
+                        if (W.IsReady() && targetW.IsValidTarget() && !targetW.IsZombie)
+                        {
+                            W.Cast(targetW);
+                        }
+                        if (Orbwalker.CanMove)
+                        {
+                            var targetE = TS.GetTarget(E.Range, DamageType.Physical);
+                            if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                            {
+                                E.Cast(targetE);
+                            }
+                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            {
+                                if (E.IsReady())
+                                    E.Cast(target);
+                            }
+                        }
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack /*&& dontwaitQ*/)
+                            {
+                                Q.Cast();
+                            }
+                        }
+                    }
+                    break;
+                case "Snare":
+                    if (Me.Mana < 5)
+                    {
+                        var targetW = TargetSelector.GetTarget(500, DamageType.Physical);
+                        if (W.IsReady() && targetW.IsValidTarget() && !targetW.IsZombie)
+                        {
+                            W.Cast(targetW);
+                        }
+                        if (Orbwalker.CanMove)
+                        {
+                            var targetE = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                            if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                            {
+                                E.Cast(targetE);
+                            }
+                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            {
+                                if (E.IsReady())
+                                    E.Cast(target);
+                            }
+                        }
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack)
+                            {
+                                Q.Cast();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var targetE = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                        if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                        {
+                            E.Cast(targetE);
+                        }
+                        foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                        {
+                            if (E.IsReady())
+                                E.Cast(target);
+                        }
+                    }
+            break;
+                case "Always Q":
+                    if (Me.Mana < 5)
+                    {
+                        var targetW = TargetSelector.GetTarget(500, DamageType.Physical);
+                        if (W.IsReady() && targetW.IsValidTarget() && !targetW.IsZombie)
+                        {
+                            W.Cast(targetW);
+                        }
+                        if (Orbwalker.CanMove)
+                        {
+                            var targetE = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                            if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                            {
+                                E.Cast(targetE);
+                            }
+                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            {
+                                if (E.IsReady())
+                                    E.Cast(target);
+                            }
+                        }
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack /*&& dontwaitQ*/)
+                            {
+                                Q.Cast();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack)
+                            {
+                                Q.Cast();
+                            }
+                        }
+                        if (Q.IsReady() && Me.IsDashing())
+                        {
+                            Q.Cast();
+                        }
+                    }
+                    break;
+                case "Auto":
+                    if (Me.Mana < 5)
+                    {
+                        var targetW = TargetSelector.GetTarget(500, DamageType.Physical);
+                        if (W.IsReady() && targetW.IsValidTarget() && !targetW.IsZombie)
+                        {
+                            W.Cast(targetW);
+                        }
+                        if (Orbwalker.CanMove)
+                        {
+                            var targetE = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                            if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                            {
+                                E.Cast(targetE);
+                            }
+                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            {
+                                if (E.IsReady())
+                                    E.Cast(target);
+                            }
+                        }
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack) 
+                            {
+                                Q.Cast();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Q.IsReady() && Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) != 0)
+                        {
+                            if (Orbwalker.CanMove && !Orbwalker.CanAutoAttack)
+                            {
+                                Q.Cast();
+                            }
 
-                if (E.IsReady())
-                {
-                    E.Cast(Target);
-                }
-
-                if (W.IsReady())
-                {
-                    W.Cast();
-                }
-
-                if (Q.IsReady())
-                {
-                    Q.Cast();
-                }
-
-                if (E.IsReady())
-                {
-                    E.Cast(Target);
-                }
-            }
-
-            else if (!Target.IsValidTarget(Q.Range) && Me.Mana < 5 && Me.HasBuff("RengarR"))
-            {
-                if (Q.IsReady())
-                {
-                    Q.Cast();
-                }
-            }
-
-            else if (!Target.IsValidTarget(Q.Range) && Me.Mana < 5)
-            {
-                if (E.IsReady())
-                {
-                    E.Cast(Target);
-                }
-            }
-
-            else if (Target.IsValidTarget(Q.Range) && Me.Mana == 5)
-            {
-                if (Q.IsReady())
-                {
-                    Q.Cast();
-                }
-            }
-
-            else if (!Target.IsValidTarget(Q.Range) && Me.Mana == 5 && Me.HasBuff("RengarR"))
-            {
-                if (Q.IsReady())
-                {
-                    Q.Cast();
-                }
-            }
-
-            else if (!Target.IsValidTarget(Q.Range) && Me.Mana == 5)
-            {
-                if (E.IsReady())
-                {
-                    E.Cast(Target);
-                }
+                        }
+                        if (Me.CountEnemiesInRange(Me.AttackRange + Me.BoundingRadius + 100) == 0 && !Player.HasBuff("rengarpassivebuff"))
+                        {
+                            var targetE = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                            if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                            {
+                                E.Cast(targetE);
+                            }
+                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            {
+                                if (E.IsReady())
+                                    E.Cast(target);
+                            }
+                        }
+                    }
+                    break;
             }
         }
     }
