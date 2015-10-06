@@ -8,6 +8,8 @@ using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
+using EloBuddy.SDK.Utils;
+using EloBuddy.SDK.Constants;
 using SharpDX;
 using System.Drawing;
 
@@ -53,6 +55,89 @@ namespace RebornRengar
                 };
 
             Game.OnUpdate += Game_OnUpdate;
+            Orbwalker.OnPreAttack += Orbwalker_OnPreAttack;
+            Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
+            Obj_AI_Base.OnBuffLose += Obj_AI_Base_OnBuffLose;
+            Obj_AI_Base.OnSpellCast += Obj_AI_Base_OnSpellCast;
+            Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
+        }
+
+        private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            if (!target.IsMe)
+                return;
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            {
+                var options = ComboMenu["css"].DisplayName;
+                if (Q.IsReady())
+                {
+                    Q.Cast();
+                }
+                else if (E.IsReady())
+                {
+                    var targetE = TS.GetTarget(E.Range,DamageType.Physical);
+                    if (E.IsReady() && targetE.IsValidTarget() && !targetE.IsZombie)
+                    {
+                        E.Cast(targetE);
+                    }
+                    foreach (var tar in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                    {
+                        if (E.IsReady())
+                            E.Cast(tar);
+                    }
+                }
+            }
+        }
+
+        private static void Obj_AI_Base_OnSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            var spell = args.SData;
+            if (!sender.IsMe)
+                return;
+            if (spell.Name.ToLower().Contains("rengarq"))
+            {
+                Orbwalker.ResetAutoAttack();
+            }
+            if (spell.Name.ToLower().Contains("rengare"))
+                if (Orbwalker.LastAutoAttack < Game.TicksPerSecond - Game.Ping / 2 && Game.TicksPerSecond - Game.Ping / 2 < Orbwalker.LastAutoAttack + Me.AttackCastDelay * 1000 + 40)
+                {
+                    Orbwalker.ResetAutoAttack();
+                }
+        }
+
+        private static void Obj_AI_Base_OnBuffLose(Obj_AI_Base sender, Obj_AI_BaseBuffLoseEventArgs args)
+        {
+            if (!sender.IsMe)
+                return;
+            if (args.Buff.Name == "rengarqbase" || args.Buff.Name == "rengarqemp")
+            {
+
+            }
+        }
+
+        private static void Interrupter_OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs e)
+        {
+            if (Me.Mana == 5 && E.IsReady())
+            {
+                if (sender.IsValidTarget(E.Range))
+                {
+                    E.Cast(sender);
+                }
+            }
+        }
+
+        private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        {
+            var options = ComboMenu["css"].DisplayName;
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo && !Me.HasBuff("rengarpassivebuff") && Q.IsReady() && options != "Snare" && Me.Mana == 5)
+            {
+                var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int) Me.AttackCastDelay + (int) 0.04f);
+                if (Me.Distance(x) <= Me.BoundingRadius + Me.AttackRange + target.BoundingRadius)
+                {
+                    args.Process = false;
+                    Q.Cast();
+                }
+            }
         }
 
         private static void Game_OnUpdate(EventArgs args)
@@ -90,7 +175,7 @@ namespace RebornRengar
                             {
                                 E.Cast(targetE);
                             }
-                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                             {
                                 if (E.IsReady())
                                     E.Cast(target);
@@ -120,7 +205,7 @@ namespace RebornRengar
                             {
                                 E.Cast(targetE);
                             }
-                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                             {
                                 if (E.IsReady())
                                     E.Cast(target);
@@ -141,7 +226,7 @@ namespace RebornRengar
                         {
                             E.Cast(targetE);
                         }
-                        foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                        foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                         {
                             if (E.IsReady())
                                 E.Cast(target);
@@ -163,7 +248,7 @@ namespace RebornRengar
                             {
                                 E.Cast(targetE);
                             }
-                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                             {
                                 if (E.IsReady())
                                     E.Cast(target);
@@ -207,7 +292,7 @@ namespace RebornRengar
                             {
                                 E.Cast(targetE);
                             }
-                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                             {
                                 if (E.IsReady())
                                     E.Cast(target);
@@ -238,7 +323,7 @@ namespace RebornRengar
                             {
                                 E.Cast(targetE);
                             }
-                            foreach (var target in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
+                            foreach (var target in EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(E.Range) && !x.IsZombie))
                             {
                                 if (E.IsReady())
                                     E.Cast(target);
