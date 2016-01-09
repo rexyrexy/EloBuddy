@@ -79,18 +79,23 @@ namespace First_Class_Rengar
         private static void Loading_OnLoadingComplete(EventArgs args)
         {
             if (Player.Instance.Hero != Champion.Rengar) { return; }
+            MenuInit.Initialize();
             Orbwalker.OnPreAttack += BeforeAttack;
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Heall();
             KillstealHandler();
-            DetectOrbwalkerMode();
             Dash.OnDash += OnDash;
             Drawing.OnDraw += OnDraw;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
-            Chat.Print("First Class Loaded..");
-            Chat.Print("#1 Rengar Script Have Fun !");
-        }
 
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            {
+                ActiveModes.Combo();
+            }
+            Chat.Print("First Class Loaded..");
+            Chat.Print("#1 Rengar Script..");
+            Chat.Print("Best Port From L$ Kappa");
+        }
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
@@ -245,22 +250,6 @@ namespace First_Class_Rengar
 
             }
         }
-
-        private static void DetectOrbwalkerMode()
-        {
-            if (Me.IsDead)
-            {
-                return;
-            }
-
-            switch (Orbwalker.ActiveModesFlags)
-            {
-                case Orbwalker.ActiveModes.Combo:
-                    ActiveModes.Combo();
-                    break;
-            }
-        }
-
         private static void OnDraw(EventArgs args)
         {
             var drawW = MiscMenu["Misc.Drawings.W"].Cast<CheckBox>().CurrentValue;
