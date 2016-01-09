@@ -66,7 +66,7 @@ namespace First_Class_Rengar
 
         private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 if (target.IsMe && Q.IsReady() && target is AIHeroClient
                     && target.IsValidTarget(Q.Range) && target.IsEnemy)
@@ -80,6 +80,14 @@ namespace First_Class_Rengar
         {
             if (Player.Instance.Hero != Champion.Rengar) { return; }
             MenuInit.Initialize();
+            Game.OnTick += Game_OnTick;
+            Chat.Print("First Class Loaded..");
+            Chat.Print("#1 Rengar Script..");
+            Chat.Print("Best Port From L$ Kappa");
+        }
+
+        private static void Game_OnTick(EventArgs args)
+        {
             Orbwalker.OnPreAttack += BeforeAttack;
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Heall();
@@ -88,14 +96,13 @@ namespace First_Class_Rengar
             Drawing.OnDraw += OnDraw;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 ActiveModes.Combo();
-            }
-            Chat.Print("First Class Loaded..");
-            Chat.Print("#1 Rengar Script..");
-            Chat.Print("Best Port From L$ Kappa");
+            }    
+            
         }
+
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
@@ -130,7 +137,7 @@ namespace First_Class_Rengar
         private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
             var options = ComboMenu["css"].DisplayName;
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo && !Me.HasBuff("rengarpassivebuff") && Q.IsReady() && options != "E" | options != "W" && Me.Mana == 5)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Me.HasBuff("rengarpassivebuff") && Q.IsReady() && options != "E" | options != "W" && Me.Mana == 5)
             {
                 var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int)Me.AttackCastDelay + (int)0.04f);
                 if (Me.Distance(x) <= Me.BoundingRadius + Me.AttackRange + target.BoundingRadius)
@@ -188,7 +195,7 @@ namespace First_Class_Rengar
                 return;
             }
 
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 if (Ferocity == 5)
                 {

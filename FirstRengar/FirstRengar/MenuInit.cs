@@ -21,8 +21,8 @@ namespace First_Class_Rengar
         public static void Initialize()
         {
 
-            MainnMenu = MainMenu.AddMenu("Reborn Rengar", "rebornrengar");
-            MainnMenu.AddGroupLabel("Reborn Rengar");
+            MainnMenu = MainMenu.AddMenu("FirstRengar", "rebornrengar");
+            MainnMenu.AddGroupLabel("FirstRengar");
             MainnMenu.AddLabel("Coded by Rexy");
 
             ComboMenu = MainnMenu.AddSubMenu("Combo Menu", "Combo");
