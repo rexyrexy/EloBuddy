@@ -16,14 +16,14 @@ using Color = System.Drawing.Color;
 
 namespace First_Class_Rengar
 {
-    internal class Rengar : Standarts
+    internal class Rengar
     {
         public static Menu MainMenu;
+        public static Menu ComboMenu, ClearMenu, MainnMenu, JungleClear, Heal, KillSteal, BetaMenu, MiscMenu;
         public static Spell.Active Q;
         public static Spell.Active W;
         public static Spell.Skillshot E;
         public static Spell.Active R;
-        public static Menu ComboMenu, ClearMenu, MainnMenu, JungleClear, Heal, KillSteal, BetaMenu, MiscMenu;
         public static AIHeroClient Me { get { return ObjectManager.Player; } }
 
         public static int LastAutoAttack, Lastrengarq;
@@ -32,13 +32,46 @@ namespace First_Class_Rengar
 
         public static Obj_AI_Base SelectedEnemy;
 
+        public static int Ferocity
+        {
+            get
+            {
+                return (int)Me.Mana;
+            }
+        }
+        public static bool HasPassive
+        {
+            get
+            {
+                return Me.HasBuff("rengarpassivebuff");
+            }
+        }
+        protected static bool RengarR
+        {
+            get
+            {
+                return Me.Buffs.Any(x => x.Name.Contains("RengarR"));
+            }
+        }
+
         private static IEnumerable<AIHeroClient> Enemies
         {
             get
             {
-                return HeroManager.Enemies;
+                return EntityManager.Heroes.Enemies;
             }
         }
+        public static int LastSwitch;
+        public static void Spelll()
+        {
+            Q = new Spell.Active(SpellSlot.Q, (uint)(Me.GetAutoAttackRange(Me) + 100));
+            W = new Spell.Active(SpellSlot.W, 500);
+            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear, 250, 1500, 70);
+            R = new Spell.Active(SpellSlot.R, 2000);
+        }
+
+        public static Item Tiamat { get; private set; }
+        public static Item Hydra { get; private set; }
 
         public static void OnClick(WndEventArgs args)
         {
@@ -84,12 +117,14 @@ namespace First_Class_Rengar
             Chat.Print("First Class Loaded..");
             Chat.Print("#1 Rengar Script..");
             Chat.Print("Best Port From L$ Kappa");
+            Chat.Print("Have Fun :) :) :)");
         }
 
         private static void Game_OnTick(EventArgs args)
         {
             Orbwalker.OnPreAttack += BeforeAttack;
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
+            Game.OnWndProc += OnClick;
             Heall();
             KillstealHandler();
             Dash.OnDash += OnDash;
@@ -98,9 +133,157 @@ namespace First_Class_Rengar
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                ActiveModes.Combo();
+                ComboXxX();
             }    
             
+        }
+
+        public static void ComboXxX()
+        {
+            try
+            {
+                // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
+                var target = TargetSelector.SelectedTarget != null
+                                 ? TargetSelector.SelectedTarget
+                                 : TargetSelector.GetTarget(R.Range, DamageType.Physical);
+
+                if (target == null)
+                {
+                    return;
+                }
+
+                if (Rengar.SelectedEnemy.IsValidTarget(E.Range))
+                {
+                    TargetSelector.GetPriority(target);
+                    if (TargetSelector.SelectedTarget != null)
+                    {
+                        TargetSelector.GetPriority(TargetSelector.SelectedTarget);
+                    }
+                }
+
+                CastItems(target);
+
+                #region RengarR
+
+                if (Ferocity <= 4)
+                {
+                    if (MenuInit.ComboMenu["Combo.Use.W"].Cast<CheckBox>().CurrentValue && W.IsReady())
+                    {
+                        CastW(target);
+                    }
+
+                    if (Q.IsReady() && MenuInit.ComboMenu["Combo.Use.Q"].Cast<CheckBox>().CurrentValue
+                        && target.IsValidTarget(Q.Range))
+                    {
+                        Q.Cast();
+                    }
+
+                    if (!HasPassive && MenuInit.ComboMenu["Combo.Use.E"].Cast<CheckBox>().CurrentValue && E.IsReady())
+                    {
+                        if (target.IsValidTarget(E.Range) && !RengarR)
+                        {
+                            CastE(target);
+                        }
+                    }
+                }
+
+                if (Ferocity == 5)
+                {
+                    switch (MenuInit.ComboMenu["css"].Cast<Slider>().CurrentValue)
+                    {
+                        case 0:
+                            if (!RengarR && target.IsValidTarget(E.Range) && E.IsReady())
+                            {
+                                var prediction = E.GetPrediction(target);
+                                if (prediction.HitChance >= HitChance.High && prediction.CollisionObjects.Count() == 0)
+                                {
+                                    E.Cast(target.ServerPosition);
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (MenuInit.ComboMenu["Combo.Use.W"].Cast<CheckBox>().CurrentValue && W.IsReady()
+                                && target.IsValidTarget(W.Range) && !HasPassive)
+                            {
+                                CastW(target);
+                            }
+                            break;
+                        case 2:
+                            if (MenuInit.ComboMenu["Combo.Use.Q"].Cast<CheckBox>().CurrentValue && Q.IsReady()
+                                && target.IsValidTarget(Q.Range))
+                            {
+                                Q.Cast();
+                            }
+                            break;
+                    }
+
+                    if (!RengarR)
+                    {
+                        if (MenuInit.ComboMenu["Combo.Use.E.OutOfRange"].Cast<CheckBox>().CurrentValue && target.IsValidTarget(E.Range))
+                        {
+                            var prediction = E.GetPrediction(target);
+                            if (prediction.HitChance >= HitChance.Dashing && prediction.CollisionObjects.Count() == 0)
+                            {
+                                E.Cast(target);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        private static void CastE(Obj_AI_Base target)
+        {
+            if (!E.IsReady() || !target.IsValidTarget(E.Range))
+            {
+                return;
+            }
+
+            var prediction = E.GetPrediction(target);
+
+            if (prediction.HitChance >= HitChance.High)
+            {
+                E.Cast(target.ServerPosition);
+            }
+        }
+
+        private static void CastW(Obj_AI_Base target)
+        {
+            if (!target.IsValidTarget(W.Range) || !W.IsReady())
+            {
+                return;
+            }
+            W.Cast();
+        }
+
+        #endregion
+
+        public static void CastItems(Obj_AI_Base target)
+        {
+
+            Tiamat = new Item(3077, 400f);
+            Hydra = new Item(3074, 400f);
+
+            if (target.IsValidTarget(400f))
+            {
+                if (Tiamat.IsReady())
+                {
+                    Tiamat.Cast();
+                }
+
+                if (Hydra.IsReady())
+                {
+                    Hydra.Cast();
+                }
+            }
         }
 
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -136,7 +319,7 @@ namespace First_Class_Rengar
 
         private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
-            var options = ComboMenu["css"].DisplayName;
+            var options = MenuInit.ComboMenu["css"].DisplayName;
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Me.HasBuff("rengarpassivebuff") && Q.IsReady() && options != "E" | options != "W" && Me.Mana == 5)
             {
                 var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int)Me.AttackCastDelay + (int)0.04f);
@@ -199,7 +382,7 @@ namespace First_Class_Rengar
             {
                 if (Ferocity == 5)
                 {
-                    switch (ComboMenu["css"].Cast<Slider>().CurrentValue)
+                    switch (MenuInit.ComboMenu["css"].Cast<Slider>().CurrentValue)
                     {
                         case 0:
                             if (E.IsReady() && target.IsValidTarget(E.Range))
@@ -223,7 +406,7 @@ namespace First_Class_Rengar
                                     }
 
                                     E.Cast(target);
-                                    ActiveModes.CastItems(target);
+                                    CastItems(target);
                                 };
                             }
 
@@ -232,7 +415,7 @@ namespace First_Class_Rengar
                 }
             }
 
-            switch (ComboMenu["css"].Cast<Slider>().CurrentValue)
+            switch (MenuInit.ComboMenu["css"].Cast<Slider>().CurrentValue)
             {
                 case 0:
                     if (E.IsReady() && target.IsValidTarget(E.Range))
@@ -252,15 +435,15 @@ namespace First_Class_Rengar
             if (args.Duration - 100 - Game.Ping / 2 > 0)
             {
                 Core.DelayAction(null, (int)(args.Duration - 100 - Game.Ping / 2));
-                { ActiveModes.CastItems(target); };
+                { CastItems(target); };
 
 
             }
         }
         private static void OnDraw(EventArgs args)
         {
-            var drawW = MiscMenu["Misc.Drawings.W"].Cast<CheckBox>().CurrentValue;
-            var drawE = MiscMenu["Misc.Drawings.E"].Cast<CheckBox>().CurrentValue;
+            var drawW = MenuInit.MiscMenu["Misc.Drawings.W"].Cast<CheckBox>().CurrentValue;
+            var drawE = MenuInit.MiscMenu["Misc.Drawings.E"].Cast<CheckBox>().CurrentValue;
 
             if (Me.IsDead)
             {
@@ -277,7 +460,7 @@ namespace First_Class_Rengar
                     "Selected Target");
             }
 
-            if (MiscMenu["Misc.Drawings.Off"].Cast<CheckBox>().CurrentValue)
+            if (MenuInit.MiscMenu["Misc.Drawings.Off"].Cast<CheckBox>().CurrentValue)
             {
                 return;
             }
@@ -298,9 +481,9 @@ namespace First_Class_Rengar
                 }
             }
 
-            if (MiscMenu["Misc.Drawings.Prioritized"].Cast<CheckBox>().CurrentValue)
+            if (MenuInit.MiscMenu["Misc.Drawings.Prioritized"].Cast<CheckBox>().CurrentValue)
             {
-                switch (ComboMenu["css"].Cast<Slider>().CurrentValue)
+                switch (MenuInit.ComboMenu["css"].Cast<Slider>().CurrentValue)
                 {
                     case 0:
                         Drawing.DrawText(
