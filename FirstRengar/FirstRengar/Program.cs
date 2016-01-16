@@ -97,7 +97,36 @@ namespace First_Class_Rengar
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
         }
 
-        private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
+        private static void Loading_OnLoadingComplete(EventArgs args)
+        {
+            if (Player.Instance.Hero != Champion.Rengar) { return; }
+            MenuInit.Initialize();
+            Game.OnTick += Game_OnTick;
+            KillstealHandler();
+            Dash.OnDash += OnDash;
+            Drawing.OnDraw += OnDraw;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
+            Orbwalker.OnPreAttack += BeforeAttack;
+            Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
+            Game.OnWndProc += OnClick;
+            Chat.Print("First Class Loaded..");
+            Chat.Print("#1 Rengar Script..");
+            Chat.Print("Best Port From L$ Kappa");
+            Chat.Print("Have Fun :) :) :)");
+        }
+
+        static void Game_OnTick(EventArgs args)
+        {
+            Heall();
+
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                ComboXxX();
+            }
+
+        }
+
+        static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
         {
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
@@ -109,48 +138,12 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void Loading_OnLoadingComplete(EventArgs args)
-        {
-            if (Player.Instance.Hero != Champion.Rengar) { return; }
-            MenuInit.Initialize();
-            Game.OnTick += Game_OnTick;
-            Chat.Print("First Class Loaded..");
-            Chat.Print("#1 Rengar Script..");
-            Chat.Print("Best Port From L$ Kappa");
-            Chat.Print("Have Fun :) :) :)");
-        }
-
-        private static void Game_OnTick(EventArgs args)
-        {
-            Orbwalker.OnPreAttack += BeforeAttack;
-            Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
-            Game.OnWndProc += OnClick;
-            Heall();
-            KillstealHandler();
-            Dash.OnDash += OnDash;
-            Drawing.OnDraw += OnDraw;
-            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
-
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-            {
-                ComboXxX();
-            }    
-            
-        }
-
-        public static void ComboXxX()
+        static void ComboXxX()
         {
             try
             {
                 // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
-                var target = TargetSelector.SelectedTarget != null
-                                 ? TargetSelector.SelectedTarget
-                                 : TargetSelector.GetTarget(R.Range, DamageType.Physical);
-
-                if (target == null)
-                {
-                    return;
-                }
+                var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
 
                 if (Rengar.SelectedEnemy.IsValidTarget(E.Range))
                 {
@@ -163,7 +156,7 @@ namespace First_Class_Rengar
 
                 CastItems(target);
 
-                #region RengarR
+              
 
                 if (Ferocity <= 4)
                 {
@@ -236,9 +229,9 @@ namespace First_Class_Rengar
             }
         }
 
-        #endregion
+      
 
-        #region Methods
+        
 
         private static void CastE(Obj_AI_Base target)
         {
@@ -264,7 +257,7 @@ namespace First_Class_Rengar
             W.Cast();
         }
 
-        #endregion
+      
 
         public static void CastItems(Obj_AI_Base target)
         {
