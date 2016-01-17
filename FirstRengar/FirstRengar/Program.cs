@@ -73,31 +73,12 @@ namespace First_Class_Rengar
         public static Item Tiamat { get; private set; }
         public static Item Hydra { get; private set; }
 
-        public static void OnClick(WndEventArgs args)
-        {
-            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
-            {
-                return;
-            }
-            var unit2 =
-                ObjectManager.Get<Obj_AI_Base>()
-                    .FirstOrDefault(
-                        a =>
-                        (a.IsValid()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
-                        && a.IsValidTarget());
-            if (unit2 != null)
-            {
-                SelectedEnemy = unit2;
-            }
-        }
-
-
         static void Main(string[] args)
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
         }
 
-        private static void Loading_OnLoadingComplete(EventArgs args)
+        static void Loading_OnLoadingComplete(EventArgs args)
         {
             if (Player.Instance.Hero != Champion.Rengar) { return; }
             MenuInit.Initialize();
@@ -115,6 +96,24 @@ namespace First_Class_Rengar
             Chat.Print("Have Fun :) :) :)");
         }
 
+		public static void OnClick(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
+            {
+                return;
+            }
+            var unit2 =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .FirstOrDefault(
+                        a =>
+                        (a.IsValid()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        );
+            if (unit2 != null)
+            {
+                SelectedEnemy = unit2;
+            }
+        }
+		
         static void Game_OnTick(EventArgs args)
         {
             Heall();
@@ -233,7 +232,7 @@ namespace First_Class_Rengar
 
         
 
-        private static void CastE(Obj_AI_Base target)
+        static void CastE(Obj_AI_Base target)
         {
             if (!E.IsReady() || !target.IsValidTarget(E.Range))
             {
@@ -248,7 +247,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void CastW(Obj_AI_Base target)
+        static void CastW(Obj_AI_Base target)
         {
             if (!target.IsValidTarget(W.Range) || !W.IsReady())
             {
@@ -259,7 +258,7 @@ namespace First_Class_Rengar
 
       
 
-        public static void CastItems(Obj_AI_Base target)
+        static void CastItems(Obj_AI_Base target)
         {
 
             Tiamat = new Item(3077, 400f);
@@ -279,7 +278,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
             {
@@ -310,7 +309,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
             var options = MenuInit.ComboMenu["css"].DisplayName;
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Me.HasBuff("rengarpassivebuff") && Q.IsReady() && options != "E" | options != "W" && Me.Mana == 5)
@@ -324,7 +323,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void Heall()
+        static void Heall()
         {
             var hpactive = Heal["Heal.AutoHeal"].Cast<CheckBox>().CurrentValue;
             var hpslider = Heal["Heal.HP"].Cast<Slider>().CurrentValue;
@@ -342,7 +341,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void KillstealHandler()
+        static void KillstealHandler()
         {
             if (!KillSteal["Killsteal.On"].Cast<CheckBox>().CurrentValue || Me.IsDead)
             {
@@ -358,7 +357,7 @@ namespace First_Class_Rengar
             }
         }
 
-        private static void OnDash(Obj_AI_Base sender, Dash.DashEventArgs args)
+        static void OnDash(Obj_AI_Base sender, Dash.DashEventArgs args)
         {
             if (!sender.IsMe)
             {
@@ -433,7 +432,7 @@ namespace First_Class_Rengar
 
             }
         }
-        private static void OnDraw(EventArgs args)
+        static void OnDraw(EventArgs args)
         {
             var drawW = MenuInit.MiscMenu["Misc.Drawings.W"].Cast<CheckBox>().CurrentValue;
             var drawE = MenuInit.MiscMenu["Misc.Drawings.E"].Cast<CheckBox>().CurrentValue;
