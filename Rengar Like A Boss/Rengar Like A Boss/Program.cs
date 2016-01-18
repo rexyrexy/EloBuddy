@@ -43,10 +43,10 @@ namespace Rengar_Like_A_Boss
         {
             if(Rengar.Hero != Champion.Rengar) { return; }
             Bootstrap.Init(null);
-            Q = new Spell.Active(SpellSlot.Q, 250);
+            Q = new Spell.Active(SpellSlot.Q, (uint)(Rengar.GetAutoAttackRange()) + 100);
             W = new Spell.Active(SpellSlot.W, 500);
-            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear);
-            R = new Spell.Active(SpellSlot.R);
+            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,(int)0.25,1500,70);
+            R = new Spell.Active(SpellSlot.R, 2000);
             Drawing.OnDraw += Drawing_OnDraw;
             Dash.OnDash += OnDash;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
@@ -83,6 +83,7 @@ namespace Rengar_Like_A_Boss
                     && target.IsValidTarget(Q.Range) && target.IsEnemy)
                 {
                     Q.Cast();
+                    Orbwalker.ResetAutoAttack();
                 }
             }
         }
@@ -90,13 +91,14 @@ namespace Rengar_Like_A_Boss
         private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
             var options = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Rengar.HasBuff("rengarpassivebuff") && Q.IsReady() && options != 2 && Rengar.Mana == 5)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Rengar.HasBuff("rengarpassivebuff") && Q.IsReady() && options != 2 || options != 3 && Rengar.Mana == 5)
             {
                 var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int)Rengar.AttackCastDelay + (int)0.04f);
                 if (Rengar.Distance(x) <= Rengar.BoundingRadius + Rengar.AttackRange + target.BoundingRadius)
                 {
                     args.Process = false;
                     Q.Cast();
+                    Orbwalker.ResetAutoAttack();
                 }
             }
         }
@@ -161,6 +163,7 @@ namespace Rengar_Like_A_Boss
                             if (Q.IsReady() && target.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
+                                Orbwalker.ResetAutoAttack();
                             }
 
                             if (target.IsValidTarget(Q.Range))
@@ -196,6 +199,7 @@ namespace Rengar_Like_A_Boss
                     if (RengarUltiActive)
                     {
                         Q.Cast();
+                        Orbwalker.ResetAutoAttack();
                     }
                     break;
             }
@@ -293,18 +297,9 @@ namespace Rengar_Like_A_Boss
 
                 AutoHeal();
                 Skin();
-				
-				if (AutoYoumuActive)
-				{
-				 AutoYoumu();	
-				}
-				else
-				{
-					return;
-				}
-                
-				
-				
+
+
+
             }
         }
 
@@ -403,6 +398,7 @@ namespace Rengar_Like_A_Boss
                     if (Q.IsReady() && target.IsValidTarget(Q.Range))
                     {
                         Q.Cast();
+                        Orbwalker.ResetAutoAttack();
                     }
 
                     if (!RengarHasPassive && E.IsReady())
@@ -413,7 +409,16 @@ namespace Rengar_Like_A_Boss
                         }
                     }
                 }
+                if (RengarUltiActive && Rengar.Mana == 5)
+                {
+                    if (target.Distance(Rengar.ServerPosition) <= 1000)
+                    {
+                        Core.DelayAction(null,500);
+                        Q.Cast();
+                        Orbwalker.ResetAutoAttack();
 
+                    }
+                }
                 if (Rengar.Mana == 5)
                 {
                     switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
@@ -433,6 +438,7 @@ namespace Rengar_Like_A_Boss
                                 && target.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
+                                Orbwalker.ResetAutoAttack();
                             }
                             break;
                         case 3:
@@ -479,7 +485,6 @@ namespace Rengar_Like_A_Boss
             AllMenu.AddGroupLabel("Combo Mode");
             AllMenu.AddLabel("| 1 -> Q || 2 -> E || 3 -> W |");
             AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 3));
-            AllMenu.Add("autoyoumu", new CheckBox("Auto Youmu When Ulti"));
             AllMenu.Add("eoutofq", new CheckBox("Use E out of Q Range"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("Draw Settingz");
@@ -520,19 +525,6 @@ namespace Rengar_Like_A_Boss
         {
             if (Item.CanUseItem(3144)) { Item.UseItem(3144, targetforuseBotRK); }
             if (Item.CanUseItem(3153)) { Item.UseItem(3153, targetforuseBotRK); }
-        }
-
-        private static void AutoYoumu()
-        {
-            var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
-            
-            {
-                if (AutoYoumuActive && RengarUltiActive && Item.CanUseItem(3142))
-                {
-                    Item.UseItem(3142);
-                }
-            }
-            
         }
     }
 }
