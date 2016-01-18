@@ -46,7 +46,6 @@ namespace Rengar_Like_A_Boss
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnTick += Game_OnTick;
             MenuInit();
-            Skin();
         }
 
         private static void Skin()
@@ -100,6 +99,8 @@ namespace Rengar_Like_A_Boss
                 AutoHeal();
 
                 AutoYoumu();
+				
+				Skin();
             }
         }
 
