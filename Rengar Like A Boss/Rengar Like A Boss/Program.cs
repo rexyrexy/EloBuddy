@@ -83,7 +83,6 @@ namespace Rengar_Like_A_Boss
                     && target.IsValidTarget(Q.Range) && target.IsEnemy)
                 {
                     Q.Cast();
-                    Orbwalker.ResetAutoAttack();
                 }
             }
         }
@@ -98,7 +97,6 @@ namespace Rengar_Like_A_Boss
                 {
                     args.Process = false;
                     Q.Cast();
-                    Orbwalker.ResetAutoAttack();
                 }
             }
         }
@@ -163,7 +161,6 @@ namespace Rengar_Like_A_Boss
                             if (Q.IsReady() && target.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
                             }
 
                             if (target.IsValidTarget(Q.Range))
@@ -199,7 +196,6 @@ namespace Rengar_Like_A_Boss
                     if (RengarUltiActive)
                     {
                         Q.Cast();
-                        Orbwalker.ResetAutoAttack();
                     }
                     break;
             }
@@ -317,7 +313,6 @@ namespace Rengar_Like_A_Boss
                     if (UseQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
                     {
                         Q.Cast();
-                        Orbwalker.ResetAutoAttack();
                         Items();
                     }
                     if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
@@ -349,7 +344,6 @@ namespace Rengar_Like_A_Boss
                 if (UseQActive && Q.IsReady())
                 {
                     Q.Cast();
-                    Orbwalker.ResetAutoAttack();
                     Items();
                 }
                 if (UseEActive && E.IsReady())
@@ -398,7 +392,6 @@ namespace Rengar_Like_A_Boss
                     if (Q.IsReady() && target.IsValidTarget(Q.Range))
                     {
                         Q.Cast();
-                        Orbwalker.ResetAutoAttack();
                     }
 
                     if (!RengarHasPassive && E.IsReady())
@@ -415,7 +408,6 @@ namespace Rengar_Like_A_Boss
                     {
                         Core.DelayAction(null,500);
                         Q.Cast();
-                        Orbwalker.ResetAutoAttack();
 
                     }
                 }
@@ -438,7 +430,6 @@ namespace Rengar_Like_A_Boss
                                 && target.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
                             }
                             break;
                         case 3:
