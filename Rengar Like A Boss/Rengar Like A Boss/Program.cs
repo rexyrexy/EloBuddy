@@ -53,8 +53,17 @@ namespace Rengar_Like_A_Boss
             Orbwalker.OnPreAttack += BeforeAttack;
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Game.OnWndProc += OnClick;
-            Game.OnTick += Game_OnTick;
+            Game.OnUpdate += Game_OnUpdate;
             MenuInit();
+        }
+
+        private static void Game_OnUpdate(EventArgs args)
+        {
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) { JungleClear(); }
+            AutoHeal();
+            Skin();
         }
 
         private static void OnClick(WndEventArgs args)
@@ -279,26 +288,6 @@ namespace Rengar_Like_A_Boss
 
             }
         }
-
-        private static void Game_OnTick(EventArgs args)
-        {
-            {
-               var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
-			   
-			   if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
-
-               if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
-
-               if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) { JungleClear(); }
-
-                AutoHeal();
-                Skin();
-
-
-
-            }
-        }
-
         private static void JungleClear()
         {
             var UseQActive = AllMenu["jungleclear.q"].Cast<CheckBox>().CurrentValue;

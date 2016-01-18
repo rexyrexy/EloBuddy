@@ -1,0 +1,10 @@
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\Rengar Like A Boss.exe.config
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\Rengar Like A Boss.exe
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\Rengar Like A Boss.pdb
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\EloBuddy.dll
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\EloBuddy.SDK.dll
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\SharpDX.dll
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\SharpDX.Direct3D9.dll
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\Newtonsoft.Json.dll
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\obj\Debug\Rengar Like A Boss.exe
+c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\obj\Debug\Rengar Like A Boss.pdb
