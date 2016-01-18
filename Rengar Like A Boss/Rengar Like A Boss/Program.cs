@@ -67,7 +67,7 @@ namespace Rengar_Like_A_Boss
                 ObjectManager.Get<Obj_AI_Base>()
                     .FirstOrDefault(
                         a =>
-                        (a.IsValid()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        (a.IsValidTarget()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
                         );
             if (unit2 != null)
             {
