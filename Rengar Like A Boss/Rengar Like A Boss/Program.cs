@@ -64,6 +64,25 @@ namespace Rengar_Like_A_Boss
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) { JungleClear(); }
             AutoHeal();
             Skin();
+            BetaQ();
+        }
+
+        private static void BetaQ()
+        {
+            var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+            if (SelectedEnemy.IsValidTarget(E.Range))
+            {
+                TargetSelector.GetPriority(target);
+                if (TargetSelector.SelectedTarget != null)
+                {
+                    TargetSelector.GetPriority(TargetSelector.SelectedTarget);
+                }
+            }
+            if (RengarUltiActive && Rengar.Mana == 5 && target.Distance(Rengar.ServerPosition) <= 1000)
+            {
+               Core.DelayAction(null, 250);
+               Q.Cast();
+            }
         }
 
         private static void OnClick(WndEventArgs args)
@@ -389,15 +408,6 @@ namespace Rengar_Like_A_Boss
                         {
                             E.Cast(target);
                         }
-                    }
-                }
-                if (RengarUltiActive && Rengar.Mana == 5)
-                {
-                    if (target.Distance(Rengar.ServerPosition) <= 1000)
-                    {
-                        Core.DelayAction(null,500);
-                        Q.Cast();
-
                     }
                 }
                 if (Rengar.Mana == 5)

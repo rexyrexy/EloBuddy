@@ -8,3 +8,4 @@ c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar L
 c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\bin\Debug\Newtonsoft.Json.dll
 c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\obj\Debug\Rengar Like A Boss.exe
 c:\users\berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\obj\Debug\Rengar Like A Boss.pdb
+C:\Users\Berkk\documents\visual studio 2015\Projects\Rengar Like A Boss\Rengar Like A Boss\obj\Debug\Rengar Like A Boss.csprojResolveAssemblyReference.cache
