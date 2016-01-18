@@ -70,6 +70,7 @@ namespace Rengar_Like_A_Boss
         private static void BetaQ()
         {
             var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+            var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             if (SelectedEnemy.IsValidTarget(E.Range))
             {
                 TargetSelector.GetPriority(target);
@@ -78,7 +79,7 @@ namespace Rengar_Like_A_Boss
                     TargetSelector.GetPriority(TargetSelector.SelectedTarget);
                 }
             }
-            if (RengarUltiActive && Rengar.Mana == 5 && target.Distance(Rengar.ServerPosition) <= 1000)
+            if (RengarUltiActive && Rengar.Mana == 5 && comboselecctedd == 1 && target.Distance(Rengar.ServerPosition) <= 1000)
             {
                Core.DelayAction(null, 250);
                Q.Cast();
