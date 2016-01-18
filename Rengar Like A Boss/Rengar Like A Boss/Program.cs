@@ -59,12 +59,12 @@ namespace Rengar_Like_A_Boss
             {
                 case 1:
                     {
-                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.DarkBlue,"Mode : OneShot");
+                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.White,"Mode : OneShot");
                         break;
                     }
                 case 2:
                     {
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.DarkBlue, "Mode : Snare");
+                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
                         break;
                     }
 
