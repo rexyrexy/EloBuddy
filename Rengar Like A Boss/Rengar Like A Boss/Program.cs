@@ -30,6 +30,10 @@ namespace Rengar_Like_A_Boss
         public static Menu Menu, AllMenu;
         public static bool RengarHasPassive { get { return Rengar.HasBuff("rengarpassivebuff"); } }
         public static bool RengarUltiActive { get { return Rengar.HasBuff("RengarR"); } }
+        public static Obj_AI_Base SelectedEnemy;
+        public static int LastAutoAttack, Lastrengarq;
+
+        public static int LastQ, LastE, LastW, LastSpell;
         static void Main(string[] args)
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
@@ -44,8 +48,165 @@ namespace Rengar_Like_A_Boss
             E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear);
             R = new Spell.Active(SpellSlot.R);
             Drawing.OnDraw += Drawing_OnDraw;
+            Dash.OnDash += OnDash;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
+            Orbwalker.OnPreAttack += BeforeAttack;
+            Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
+            Game.OnWndProc += OnClick;
             Game.OnTick += Game_OnTick;
             MenuInit();
+        }
+
+        private static void OnClick(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
+            {
+                return;
+            }
+            var unit2 =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .FirstOrDefault(
+                        a =>
+                        (a.IsValid()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        );
+            if (unit2 != null)
+            {
+                SelectedEnemy = unit2;
+            }
+        }
+
+        private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                if (target.IsMe && Q.IsReady() && target is AIHeroClient
+                    && target.IsValidTarget(Q.Range) && target.IsEnemy)
+                {
+                    Q.Cast();
+                }
+            }
+        }
+
+        private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        {
+            var options = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Rengar.HasBuff("rengarpassivebuff") && Q.IsReady() && options != 2 && Rengar.Mana == 5)
+            {
+                var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int)Rengar.AttackCastDelay + (int)0.04f);
+                if (Rengar.Distance(x) <= Rengar.BoundingRadius + Rengar.AttackRange + target.BoundingRadius)
+                {
+                    args.Process = false;
+                    Q.Cast();
+                }
+            }
+        }
+
+        private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                switch (args.SData.Name.ToLower())
+                {
+                    case "rengarr":
+                        if (Item.CanUseItem(3142))
+                            Core.DelayAction(null, 2000);
+                        Item.UseItem(3142);
+                        break;
+                    case "rengarq":
+                        LastQ = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        Orbwalker.ResetAutoAttack();
+                        break;
+
+                    case "rengare":
+                        LastE = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        if (Orbwalker.LastAutoAttack < Core.GameTickCount - Game.Ping / 2 && Core.GameTickCount - Game.Ping / 2 < Orbwalker.LastAutoAttack + Rengar.AttackCastDelay * 1000 + 40) Orbwalker.ResetAutoAttack();
+                        break;
+
+                    case "rengarw":
+                        LastW = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        break;
+                }
+            }
+        }
+
+        private static void OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
+        {
+            if (!sender.IsMe)
+            {
+                return;
+            }
+
+            var target = TargetSelector.GetTarget(1500, DamageType.Physical);
+            if (!target.IsValidTarget())
+            {
+                return;
+            }
+
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                if (Rengar.Mana == 5)
+                {
+                    switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
+                    {
+                        case 2:
+                            if (E.IsReady() && target.IsValidTarget(E.Range))
+                            {
+                                E.Cast(target);
+                            }
+                            break;
+                        case 1:
+                            if (Q.IsReady() && target.IsValidTarget(Q.Range))
+                            {
+                                Q.Cast();
+                            }
+
+                            if (target.IsValidTarget(Q.Range))
+                            {
+                                Core.DelayAction(null, 50);
+                                {
+                                    if (target.IsValidTarget(W.Range))
+                                    {
+                                        W.Cast();
+                                    }
+
+                                    E.Cast(target);
+                                    Items();
+                                    BotrkAndBilgewater(target);
+                                };
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
+            {
+                case 2:
+                    if (E.IsReady() && target.IsValidTarget(E.Range))
+                    {
+                        E.Cast(target);
+                    }
+                    break;
+
+                case 1:
+                    if (RengarUltiActive)
+                    {
+                        Q.Cast();
+                    }
+                    break;
+            }
+
+            if (e.Duration - 100 - Game.Ping / 2 > 0)
+            {
+                Core.DelayAction(null, (int)(e.Duration - 100 - Game.Ping / 2));
+                { Items(); BotrkAndBilgewater(target); };
+
+
+            }
         }
 
         private static void Skin()
@@ -71,21 +232,32 @@ namespace Rengar_Like_A_Boss
         {
             var ComboModeDrawActive = AllMenu["draw.mode"].Cast<CheckBox>().CurrentValue;
             var ComboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-           
-            if(!ComboModeDrawActive) { return; }
+            var SelectedEnemyDrawActive = AllMenu["draw.selectedenemy"].Cast<CheckBox>().CurrentValue;
 
-            switch (ComboModeSelected)
+            if(ComboModeDrawActive)
             {
-                case 1:
-                    {
-                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.White,"Mode : OneShot");
-                        break;
-                    }
-                case 2:
-                    {
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
-                        break;
-                    }
+                switch (ComboModeSelected)
+                {
+                    case 1:
+                        {
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : OneShot");
+                            break;
+                        }
+                    case 2:
+                        {
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
+                            break;
+                        }
+                }
+
+                if (SelectedEnemyDrawActive && SelectedEnemy.IsValidTarget() && SelectedEnemy.IsVisible && !SelectedEnemy.IsDead)
+                {
+                    Drawing.DrawText(
+                    Drawing.WorldToScreen(SelectedEnemy.Position).X - 40,
+                    Drawing.WorldToScreen(SelectedEnemy.Position).Y + 10,
+                    Color.White,
+                    "Selected Target");
+                }
 
 
             }
@@ -177,79 +349,84 @@ namespace Rengar_Like_A_Boss
 
         private static void Combo()
         {
-            var ComboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            var UltiTarget = TargetSelector.GetTarget(2000, DamageType.Physical);
-            var NormalTarget = TargetSelector.GetTarget(1000, DamageType.Physical);
-            var EPrediction = E.GetPrediction(NormalTarget);
-
-            switch (ComboModeSelected)
+            try
             {
-                case 1://OneShot Mode Active
+                var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+
+                if (SelectedEnemy.IsValidTarget(E.Range))
+                {
+                    TargetSelector.GetPriority(target);
+                    if (TargetSelector.SelectedTarget != null)
                     {
-                        if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
-                        {
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                        }
-
-                        if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use Q
-                        {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                        }
-
-                        if (RengarUltiActive && !RengarHasPassive && Q.IsReady() && UltiTarget.IsValidTarget(600)) { Q.Cast(); } //Cast Q Before Jump Target When Ulti
-
-                        if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
-                        {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                        }
-                        if (RengarHasPassive && Rengar.Mana == 5)
-                        {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                        }
-                        break;
+                        TargetSelector.GetPriority(TargetSelector.SelectedTarget);
                     }
-                case 0://Snare Combo
+                }
+
+                Items();
+                BotrkAndBilgewater(target);
+
+
+
+                if (Rengar.Mana <= 4)
+                {
+                    if (W.IsReady() && target.IsValidTarget(W.Range))
                     {
-                        if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
-                        {
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                        }
-
-                        if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use E
-                        {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                        }
-
-                        if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
-                        {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
-                            BotrkAndBilgewater(NormalTarget);
-                        }
-                        if (RengarHasPassive && Rengar.Mana == 5)
-                        {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
-                        }
-                        break;
+                        W.Cast();
                     }
+
+                    if (Q.IsReady() && target.IsValidTarget(Q.Range))
+                    {
+                        Q.Cast();
+                    }
+
+                    if (!RengarHasPassive && E.IsReady())
+                    {
+                        if (target.IsValidTarget(E.Range) && !RengarUltiActive)
+                        {
+                            E.Cast(target);
+                        }
+                    }
+                }
+
+                if (Rengar.Mana == 5)
+                {
+                    switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
+                    {
+                        case 2:
+                            if (!RengarUltiActive && target.IsValidTarget(E.Range) && E.IsReady())
+                            {
+                                var prediction = E.GetPrediction(target);
+                                if (prediction.HitChance >= HitChance.High && prediction.CollisionObjects.Count() == 0)
+                                {
+                                    E.Cast(target.ServerPosition);
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (Q.IsReady()
+                                && target.IsValidTarget(Q.Range))
+                            {
+                                Q.Cast();
+                            }
+                            break;
+                    }
+
+                    if (!RengarUltiActive)
+                    {
+                        if (AllMenu["eoutofq"].Cast<CheckBox>().CurrentValue && target.IsValidTarget(E.Range))
+                        {
+                            var prediction = E.GetPrediction(target);
+                            if (prediction.HitChance >= HitChance.Dashing && prediction.CollisionObjects.Count() == 0)
+                            {
+                                E.Cast(target);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
             }
         }
         private static void MenuInit()
@@ -268,7 +445,9 @@ namespace Rengar_Like_A_Boss
             AllMenu.AddLabel("| 1 -> One Shot || 2 -> Snare |");
             AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 2));
             AllMenu.Add("autoyoumu", new CheckBox("Auto Youmu When Ulti"));
+            AllMenu.Add("eoutofq", new CheckBox("Use E out of Q Range"));
             AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
+            AllMenu.Add("draw.selectedenemy", new CheckBox("Draw Selected Enemy"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("LaneClear Mode");
             AllMenu.Add("laneclear.q", new CheckBox("Use Q"));
