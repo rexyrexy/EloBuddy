@@ -362,7 +362,7 @@ namespace Rengar_Like_A_Boss
                     }
                 }
 
-                if (target.IsValidTarget(250)
+                if (target.IsValidTarget(250))
 				{
 			        Items();
                     BotrkAndBilgewater(target);
