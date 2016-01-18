@@ -53,7 +53,11 @@ namespace Rengar_Like_A_Boss
             var SkinHackActive = AllMenu["skin.active"].Cast<CheckBox>().CurrentValue;
             var SkinHackSelected = AllMenu["skin.value"].Cast<Slider>().CurrentValue;
 
-            if(!SkinHackActive) { return; }
+            if(!SkinHackActive)
+            {
+                Rengar.SetSkinId(0);
+                return;
+            }
 
             switch (SkinHackSelected)
             {
@@ -118,6 +122,7 @@ namespace Rengar_Like_A_Boss
                     if (UseQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
                     {
                         Q.Cast();
+                        Orbwalker.ResetAutoAttack();
                         Items();
                     }
                     if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
@@ -149,6 +154,7 @@ namespace Rengar_Like_A_Boss
                 if (UseQActive && Q.IsReady() && LaneTarget.IsValidTarget())
                 {
                     Q.Cast();
+                    Orbwalker.ResetAutoAttack();
                 }
                 if (LaneTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
                 {
@@ -183,15 +189,15 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                         }
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                         }
@@ -200,15 +206,15 @@ namespace Rengar_Like_A_Boss
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                         }
                         if (RengarHasPassive && Rengar.Mana == 5)
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                         }
@@ -219,28 +225,28 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                         }
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                         }
                         if (RengarHasPassive && Rengar.Mana == 5)
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.Medium) { E.Cast(NormalTarget); }
                         }
                         break;
                     }
