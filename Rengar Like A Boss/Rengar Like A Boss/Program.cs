@@ -46,6 +46,22 @@ namespace Rengar_Like_A_Boss
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnTick += Game_OnTick;
             MenuInit();
+            Skin();
+        }
+
+        private static void Skin()
+        {
+            var SkinHackActive = AllMenu["skin.active"].Cast<CheckBox>().CurrentValue;
+            var SkinHackSelected = AllMenu["skin.value"].Cast<Slider>().CurrentValue;
+
+            if(!SkinHackActive) { return; }
+
+            switch (SkinHackSelected)
+            {
+                case 1: { Rengar.SetSkinId(1); break; }
+                case 2: { Rengar.SetSkinId(2); break; }
+                case 3: { Rengar.SetSkinId(3); break; }
+            }
         }
 
         private static void Drawing_OnDraw(EventArgs args)
@@ -77,7 +93,70 @@ namespace Rengar_Like_A_Boss
             {
                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
 
+               if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
+
+               if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) { JungleClear(); }
+
                 AutoHeal();
+
+                AutoYoumu();
+            }
+        }
+
+        private static void JungleClear()
+        {
+            var UseQActive = AllMenu["jungleclear.q"].Cast<CheckBox>().CurrentValue;
+            var UseWActive = AllMenu["jungleclear.w"].Cast<CheckBox>().CurrentValue;
+            var UseEActive = AllMenu["jungleclear.e"].Cast<CheckBox>().CurrentValue;
+            var JungleClearSaveStacksActive = AllMenu["jungleclear.save"].Cast<CheckBox>().CurrentValue;
+            foreach (var jungleMinion in EntityManager.MinionsAndMonsters.Monsters)
+            {
+                if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !JungleClearSaveStacksActive))
+                {
+
+                    if (UseQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
+                    {
+                        Q.Cast();
+                        Items();
+                    }
+                    if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
+                    {
+                        W.Cast();
+                    }
+                    if (UseEActive && E.IsReady() && Rengar.Distance(jungleMinion) <= E.Range)
+                    {
+                        E.Cast(jungleMinion);
+                    }
+                }
+            }
+        }
+
+        private static void LaneClear()
+        {
+            var UseQActive = AllMenu["laneclear.q"].Cast<CheckBox>().CurrentValue;
+            var UseWActive = AllMenu["laneclear.w"].Cast<CheckBox>().CurrentValue;
+            var UseEActive = AllMenu["laneclear.e"].Cast<CheckBox>().CurrentValue;
+            var LaneClearSaveStacksActive = AllMenu["laneclear.save"].Cast<CheckBox>().CurrentValue;
+            var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && Q.IsInRange(x));
+
+            if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !LaneClearSaveStacksActive))
+            {
+                if (UseWActive && W.IsReady() && LaneTarget.IsValidTarget())
+                {
+                    W.Cast(LaneTarget);
+                }
+                if (UseQActive && Q.IsReady() && LaneTarget.IsValidTarget())
+                {
+                    Q.Cast();
+                }
+                if (LaneTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
+                {
+                    Items();
+                }
+                if (UseEActive && E.IsReady() && LaneTarget.IsValidTarget())
+                {
+                    E.Cast(LaneTarget);
+                }
             }
         }
 
@@ -104,27 +183,33 @@ namespace Rengar_Like_A_Boss
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
-                            if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
                             Items();
+                            BotrkAndBilgewater(NormalTarget);
                             if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                         }
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use Q
                         {
                             if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
-                            Orbwalker.ResetAutoAttack();
                             Items();
+                            BotrkAndBilgewater(NormalTarget);
                         }
 
                         if (RengarUltiActive && !RengarHasPassive && Q.IsReady() && UltiTarget.IsValidTarget(600)) { Q.Cast(); } //Cast Q Before Jump Target When Ulti
 
-                        if (RengarHasPassive) //Passive Logic
+                        if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
                             if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
                             Items();
-                            if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
+                            BotrkAndBilgewater(NormalTarget);
+                        }
+                        if (RengarHasPassive && Rengar.Mana == 5)
+                        {
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
+                            Items();
+                            BotrkAndBilgewater(NormalTarget);
                         }
                         break;
                     }
@@ -134,8 +219,8 @@ namespace Rengar_Like_A_Boss
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
-                            if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
                             Items();
+                            BotrkAndBilgewater(NormalTarget);
                             if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                         }
 
@@ -150,13 +235,14 @@ namespace Rengar_Like_A_Boss
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
                             Items();
-                            if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
+                            BotrkAndBilgewater(NormalTarget);
                         }
-                        if(RengarHasPassive && Rengar.Mana == 5) { if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); } }
+                        if (RengarHasPassive && Rengar.Mana == 5)
+                        {
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
+                        }
                         break;
                     }
-
-
             }
         }
         private static void MenuInit()
@@ -164,7 +250,7 @@ namespace Rengar_Like_A_Boss
             Menu = MainMenu.AddMenu("Rengar LAB", "_RengarLAB");
             Menu.AddGroupLabel("Rengar Like A Boss Loaded Suckssfully (No Subliminal)..");
             Menu.AddLabel("This great addon made by Rexy..");
-            Menu.AddLabel("If you found an Bug, pls feedback it on my Thread..");
+            Menu.AddLabel("If you found a Bug, pls feedback it on my Thread..");
             Menu.AddLabel("I need your feedback for make this addon more cool..");
             Menu.AddLabel("My main aim for making this addon, i wanted oneshot addon for Rengod..");
             Menu.AddLabel("Have fun !");
@@ -174,18 +260,47 @@ namespace Rengar_Like_A_Boss
             AllMenu.AddGroupLabel("Combo Mode");
             AllMenu.AddLabel("| 1 -> One Shot || 2 -> Snare |");
             AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 2));
+            AllMenu.Add("autoyoumu", new CheckBox("Auto Youmu When Ulti"));
+            AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
+            AllMenu.AddSeparator();
+            AllMenu.AddGroupLabel("LaneClear Mode");
+            AllMenu.Add("laneclear.q", new CheckBox("Use Q"));
+            AllMenu.Add("laneclear.w", new CheckBox("Use W"));
+            AllMenu.Add("laneclear.e", new CheckBox("Use E"));
+            AllMenu.Add("laneclear.save", new CheckBox("Save Stacks", false));
+            AllMenu.AddSeparator();
+            AllMenu.Add("jungleclear.q", new CheckBox("Use Q"));
+            AllMenu.Add("jungleclear.w", new CheckBox("Use W"));
+            AllMenu.Add("jungleclear.e", new CheckBox("Use E"));
+            AllMenu.Add("jungleclear.save", new CheckBox("Save Stacks", false));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("Auto Hp %x when 5 prio");
             AllMenu.Add("autohp.active", new CheckBox("AutoHP Active"));
             AllMenu.Add("autohp.value", new Slider("AutoHP Value", 30, 1, 100));
             AllMenu.AddSeparator();
-            AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
+            AllMenu.Add("skin.active", new CheckBox("Skin Hack Active"));
+            AllMenu.AddLabel("| 1 -> HeadHunter || 2 -> NighHunter || 3-> SSW");
+            AllMenu.Add("skin.value", new Slider("Selected Skin", 3, 1, 3));
         }
 
         private static void Items()
         {
             if (Item.CanUseItem(3074)) { Item.UseItem(3074); }
             if (Item.CanUseItem(3077)) { Item.UseItem(3077); }
+        }
+
+        private static void BotrkAndBilgewater(AIHeroClient targetforuseBotRK)
+        {
+            if (Item.CanUseItem(3144)) { Item.UseItem(3144, targetforuseBotRK); }
+            if (Item.CanUseItem(3153)) { Item.UseItem(3153, targetforuseBotRK); }
+        }
+
+        private static void AutoYoumu()
+        {
+            var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
+            
+            if (!AutoYoumuActive) { return; }
+            if (RengarUltiActive && Item.CanUseItem(3142)) { Item.UseItem(3142); }
         }
     }
 }
