@@ -233,6 +233,8 @@ namespace Rengar_Like_A_Boss
             var ComboModeDrawActive = AllMenu["draw.mode"].Cast<CheckBox>().CurrentValue;
             var ComboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             var SelectedEnemyDrawActive = AllMenu["draw.selectedenemy"].Cast<CheckBox>().CurrentValue;
+            var DrawWActive = AllMenu["draw.w"].Cast<CheckBox>().CurrentValue;
+            var DrawEActive = AllMenu["draw.e"].Cast<CheckBox>().CurrentValue;
 
             if(ComboModeDrawActive)
             {
@@ -240,14 +242,29 @@ namespace Rengar_Like_A_Boss
                 {
                     case 1:
                         {
-                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : OneShot");
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Q");
                             break;
                         }
                     case 2:
                         {
-                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : E");
                             break;
                         }
+                    case 3:
+                        {
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : W");
+                            break;
+                        }
+                }
+
+                if(DrawEActive)
+                {
+                    Drawing.DrawCircle(Rengar.Position, E.Range, Color.White);
+                }
+
+                if(DrawWActive)
+                {
+                    Drawing.DrawCircle(Rengar.Position, W.Range, Color.White);
                 }
 
                 if (SelectedEnemyDrawActive && SelectedEnemy.IsValidTarget() && SelectedEnemy.IsVisible && !SelectedEnemy.IsDead)
@@ -295,11 +312,11 @@ namespace Rengar_Like_A_Boss
                     {
                         Q.Cast();
                         Orbwalker.ResetAutoAttack();
-                        Items();
                     }
                     if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
                     {
                         W.Cast();
+                        Items();
                     }
                     if (UseEActive && E.IsReady() && Rengar.Distance(jungleMinion) <= E.Range)
                     {
@@ -315,24 +332,21 @@ namespace Rengar_Like_A_Boss
             var UseWActive = AllMenu["laneclear.w"].Cast<CheckBox>().CurrentValue;
             var UseEActive = AllMenu["laneclear.e"].Cast<CheckBox>().CurrentValue;
             var LaneClearSaveStacksActive = AllMenu["laneclear.save"].Cast<CheckBox>().CurrentValue;
-            var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && Q.IsInRange(x));
+            var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(W.Range));
 
             if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !LaneClearSaveStacksActive))
             {
-                if (UseWActive && W.IsReady() && LaneTarget.IsValidTarget())
+                if (UseWActive && W.IsReady())
                 {
                     W.Cast(LaneTarget);
+                    Items();
                 }
-                if (UseQActive && Q.IsReady() && LaneTarget.IsValidTarget())
+                if (UseQActive && Q.IsReady())
                 {
                     Q.Cast();
                     Orbwalker.ResetAutoAttack();
                 }
-                if (LaneTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
-                {
-                    Items();
-                }
-                if (UseEActive && E.IsReady() && LaneTarget.IsValidTarget())
+                if (UseEActive && E.IsReady())
                 {
                     E.Cast(LaneTarget);
                 }
@@ -410,6 +424,15 @@ namespace Rengar_Like_A_Boss
                                 Q.Cast();
                             }
                             break;
+                        case 3:
+                            {
+                                if(W.IsReady()
+                                && target.IsValidTarget(W.Range) && !RengarHasPassive)
+                                {
+                                    W.Cast();
+                                }
+                                break;
+                            }
                     }
 
                     if (!RengarUltiActive)
@@ -443,24 +466,30 @@ namespace Rengar_Like_A_Boss
             AllMenu = Menu.AddSubMenu("All Settingz", "_AllMenu");
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("Combo Mode");
-            AllMenu.AddLabel("| 1 -> One Shot || 2 -> Snare |");
-            AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 2));
+            AllMenu.AddLabel("| 1 -> Q || 2 -> E || 3 -> W |");
+            AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 3));
             AllMenu.Add("autoyoumu", new CheckBox("Auto Youmu When Ulti"));
             AllMenu.Add("eoutofq", new CheckBox("Use E out of Q Range"));
+            AllMenu.AddSeparator();
+            AllMenu.AddGroupLabel("Draw Settingz");
             AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
+            AllMenu.Add("draw.w", new CheckBox("Draw W"));
+            AllMenu.Add("draw.e", new CheckBox("Draw E"));
             AllMenu.Add("draw.selectedenemy", new CheckBox("Draw Selected Enemy"));
             AllMenu.AddSeparator();
-            AllMenu.AddGroupLabel("LaneClear Mode");
+            AllMenu.AddGroupLabel("LaneClear Settingz");
             AllMenu.Add("laneclear.q", new CheckBox("Use Q"));
             AllMenu.Add("laneclear.w", new CheckBox("Use W"));
             AllMenu.Add("laneclear.e", new CheckBox("Use E"));
             AllMenu.Add("laneclear.save", new CheckBox("Save Stacks", false));
             AllMenu.AddSeparator();
+            AllMenu.AddGroupLabel("JungleClear Settingz");
             AllMenu.Add("jungleclear.q", new CheckBox("Use Q"));
             AllMenu.Add("jungleclear.w", new CheckBox("Use W"));
             AllMenu.Add("jungleclear.e", new CheckBox("Use E"));
             AllMenu.Add("jungleclear.save", new CheckBox("Save Stacks", false));
             AllMenu.AddSeparator();
+            AllMenu.AddGroupLabel("Misc Settingz");
             AllMenu.AddGroupLabel("Auto Hp %x when 5 prio");
             AllMenu.Add("autohp.active", new CheckBox("AutoHP Active"));
             AllMenu.Add("autohp.value", new Slider("AutoHP Value", 30, 1, 100));
