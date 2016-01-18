@@ -59,12 +59,12 @@ namespace Rengar_Like_A_Boss
             {
                 case 1:
                     {
-                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.White,"Mode : OneShot");
+                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.DarkBlue,"Mode : OneShot");
                         break;
                     }
                 case 2:
                     {
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
+                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.DarkBlue, "Mode : Snare");
                         break;
                     }
 
@@ -103,15 +103,15 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack && !Orbwalker.IsAutoAttacking) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
                             if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
                             Items();
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                         }
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack && !Orbwalker.IsAutoAttacking) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
                             Orbwalker.ResetAutoAttack();
                             Items();
                         }
@@ -120,7 +120,7 @@ namespace Rengar_Like_A_Boss
 
                         if (RengarHasPassive) //Passive Logic
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
                             Items();
@@ -133,20 +133,20 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack && !Orbwalker.IsAutoAttacking) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
                             if (!Q.IsReady()) { Orbwalker.ResetAutoAttack(); }
                             Items();
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                         }
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(EPrediction.CastPosition); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { Q.Cast(); }
                             Items();
