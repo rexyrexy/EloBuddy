@@ -283,17 +283,28 @@ namespace Rengar_Like_A_Boss
         private static void Game_OnTick(EventArgs args)
         {
             {
-               if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
+               var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
+			   
+			   if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
 
                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
 
                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) { JungleClear(); }
 
                 AutoHeal();
-
-                AutoYoumu();
+                Skin();
 				
-				Skin();
+				if (AutoYoumuActive)
+				{
+				 AutoYoumu();	
+				}
+				else
+				{
+					return;
+				}
+                
+				
+				
             }
         }
 
@@ -515,9 +526,8 @@ namespace Rengar_Like_A_Boss
         {
             var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
             
-            if (AutoYoumuActive)
             {
-                if (RengarUltiActive && Item.CanUseItem(3142))
+                if (AutoYoumuActive && RengarUltiActive && Item.CanUseItem(3142))
                 {
                     Item.UseItem(3142);
                 }
