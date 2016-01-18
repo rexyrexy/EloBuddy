@@ -183,7 +183,7 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                             if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
@@ -191,7 +191,7 @@ namespace Rengar_Like_A_Boss
 
                         if (Rengar.Mana == 5 && !RengarHasPassive && !RengarUltiActive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                         }
@@ -219,7 +219,7 @@ namespace Rengar_Like_A_Boss
                         if (Rengar.Mana <= 4 && !RengarHasPassive && !RengarUltiActive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range) && Orbwalker.CanAutoAttack) { Q.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { Q.Cast(); }
                             Items();
                             BotrkAndBilgewater(NormalTarget);
                             if (E.IsReady() && NormalTarget.IsValidTarget(E.Range) && EPrediction.HitChance >= HitChance.High && EPrediction.CollisionObjects.Count() == 0) { E.Cast(NormalTarget); }
