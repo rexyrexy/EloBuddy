@@ -485,6 +485,22 @@ namespace Rengar_Like_A_Boss
             AllMenu.AddGroupLabel("Combo Mode");
             AllMenu.AddLabel("| 1 -> Q || 2 -> E || 3 -> W |");
             AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 3));
+            var switcher = AllMenu.Add("Switcher", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive, (uint)'T'));
+            switcher.OnValueChange += delegate (ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
+            {
+                if (args.NewValue == true)
+                {
+                    var cast = AllMenu["combo.mode"].Cast<Slider>();
+                    if (cast.CurrentValue == cast.MaxValue)
+                    {
+                        cast.CurrentValue = 0;
+                    }
+                    else
+                    {
+                        cast.CurrentValue++;
+                    }
+                }
+            };
             AllMenu.Add("eoutofq", new CheckBox("Use E out of Q Range"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("Draw Settingz");
