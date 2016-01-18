@@ -362,10 +362,11 @@ namespace Rengar_Like_A_Boss
                     }
                 }
 
-                Items();
-                BotrkAndBilgewater(target);
-
-
+                if (target.IsValidTarget(250)
+				{
+			        Items();
+                    BotrkAndBilgewater(target);
+				}
 
                 if (Rengar.Mana <= 4)
                 {
