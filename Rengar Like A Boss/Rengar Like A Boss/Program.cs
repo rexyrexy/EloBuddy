@@ -312,13 +312,13 @@ namespace Rengar_Like_A_Boss
                     {
                         Q.Cast();
                         Orbwalker.ResetAutoAttack();
-                    }
-                    if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
-                    {
-                        W.Cast();
                         Items();
                     }
-                    if (UseEActive && E.IsReady() && Rengar.Distance(jungleMinion) <= E.Range)
+                    if (UseWActive && W.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
+                    {
+                        W.Cast();
+                    }
+                    if (UseEActive && E.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
                     {
                         E.Cast(jungleMinion);
                     }
@@ -332,19 +332,19 @@ namespace Rengar_Like_A_Boss
             var UseWActive = AllMenu["laneclear.w"].Cast<CheckBox>().CurrentValue;
             var UseEActive = AllMenu["laneclear.e"].Cast<CheckBox>().CurrentValue;
             var LaneClearSaveStacksActive = AllMenu["laneclear.save"].Cast<CheckBox>().CurrentValue;
-            var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(W.Range));
+            var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(Rengar.AttackRange));
 
             if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !LaneClearSaveStacksActive))
             {
                 if (UseWActive && W.IsReady())
                 {
-                    W.Cast(LaneTarget);
-                    Items();
+                    W.Cast();
                 }
                 if (UseQActive && Q.IsReady())
                 {
                     Q.Cast();
                     Orbwalker.ResetAutoAttack();
+                    Items();
                 }
                 if (UseEActive && E.IsReady())
                 {
@@ -358,7 +358,7 @@ namespace Rengar_Like_A_Boss
             var TickedAutoHp = AllMenu["autohp.active"].Cast<CheckBox>().CurrentValue;
             var ValueOfAutoHp = AllMenu["autohp.value"].Cast<Slider>().CurrentValue;
 
-            if(TickedAutoHp && Rengar.Mana == 5 && Rengar.HealthPercent <= ValueOfAutoHp) { W.Cast(); }
+            if(TickedAutoHp && Rengar.Mana == 5 && !RengarUltiActive && Rengar.HealthPercent <= ValueOfAutoHp) { W.Cast(); }
         }
 
         private static void Combo()
@@ -515,8 +515,14 @@ namespace Rengar_Like_A_Boss
         {
             var AutoYoumuActive = AllMenu["autoyoumu"].Cast<CheckBox>().CurrentValue;
             
-            if (!AutoYoumuActive) { return; }
-            if (RengarUltiActive && Item.CanUseItem(3142)) { Item.UseItem(3142); }
+            if (AutoYoumuActive)
+            {
+                if (RengarUltiActive && Item.CanUseItem(3142))
+                {
+                    Item.UseItem(3142);
+                }
+            }
+            
         }
     }
 }
