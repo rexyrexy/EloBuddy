@@ -65,6 +65,20 @@ namespace Rengar_Like_A_Boss
             AutoHeal();
             Skin();
             BetaQ();
+            AutoYoumuu();
+        }
+
+        private static void AutoYoumuu()
+        {
+            var AutoYoumuuActive = AllMenu["auto.youmuu"].Cast<CheckBox>().CurrentValue;
+            if (!AutoYoumuuActive)
+            {
+                return;
+            }
+            if (Item.CanUseItem(3142) && RengarUltiActive)
+            {
+                Item.UseItem(3142);
+            }
         }
 
         private static void BetaQ()
@@ -108,7 +122,7 @@ namespace Rengar_Like_A_Boss
         {
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                if (target.IsMe && Q.IsReady() && target is AIHeroClient
+                if (!target.IsMe && Q.IsReady() && target is AIHeroClient
                     && target.IsValidTarget(Q.Range) && target.IsEnemy)
                 {
                     Q.Cast();
@@ -136,11 +150,6 @@ namespace Rengar_Like_A_Boss
             {
                 switch (args.SData.Name.ToLower())
                 {
-                    case "rengarr":
-                        if (Item.CanUseItem(3142))
-                            Core.DelayAction(null, 2000);
-                        Item.UseItem(3142);
-                        break;
                     case "rengarq":
                         LastQ = Environment.TickCount;
                         LastSpell = Environment.TickCount;
@@ -190,7 +199,7 @@ namespace Rengar_Like_A_Boss
                             if (Q.IsReady() && target.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
-                            }
+                            }   
 
                             if (target.IsValidTarget(Q.Range))
                             {
@@ -227,6 +236,14 @@ namespace Rengar_Like_A_Boss
                         Q.Cast();
                     }
                     break;
+                case 0:
+                {
+                    if (W.IsReady() && target.IsValidTarget(W.Range))
+                    {
+                        W.Cast();
+                    }
+                    break;
+                }
             }
 
             if (e.Duration - 100 - Game.Ping / 2 > 0)
@@ -265,7 +282,12 @@ namespace Rengar_Like_A_Boss
             var DrawWActive = AllMenu["draw.w"].Cast<CheckBox>().CurrentValue;
             var DrawEActive = AllMenu["draw.e"].Cast<CheckBox>().CurrentValue;
 
-            if(ComboModeDrawActive)
+            if (Rengar.IsDead)
+            {
+                return;
+            }
+
+            if (ComboModeDrawActive)
             {
                 switch (ComboModeSelected)
                 {
@@ -493,6 +515,7 @@ namespace Rengar_Like_A_Boss
                 }
             };
             AllMenu.Add("eoutofq", new CheckBox("Use E out of Q Range"));
+            AllMenu.Add(("auto.youmuu"), new CheckBox("Auto Youmuu When Ulti"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("Draw Settingz");
             AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
