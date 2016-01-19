@@ -131,7 +131,7 @@ namespace Rengar_Like_A_Boss
         private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
             var options = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Rengar.HasBuff("rengarpassivebuff") && Q.IsReady() && options != 2 || options != 3 && Rengar.Mana == 5)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !Rengar.HasBuff("rengarpassivebuff") && Q.IsReady() && !(options == 2 || options == 3 && Rengar.Mana == 5))
             {
                 var x = Prediction.Position.PredictUnitPosition(target as Obj_AI_Base, (int)Rengar.AttackCastDelay + (int)0.04f);
                 if (Rengar.Distance(x) <= Rengar.BoundingRadius + Rengar.AttackRange + target.BoundingRadius)
@@ -336,7 +336,11 @@ namespace Rengar_Like_A_Boss
             var JungleClearSaveStacksActive = AllMenu["jungleclear.save"].Cast<CheckBox>().CurrentValue;
             foreach (var jungleMinion in EntityManager.MinionsAndMonsters.Monsters)
             {
-                if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !JungleClearSaveStacksActive))
+                if (Rengar.Mana == 5 && JungleClearSaveStacksActive)
+                {
+                    Items();
+                }
+                else if (Rengar.Mana < 5 || Rengar.Mana == 5)
                 {
 
                     if (UseQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
@@ -363,8 +367,11 @@ namespace Rengar_Like_A_Boss
             var UseEActive = AllMenu["laneclear.e"].Cast<CheckBox>().CurrentValue;
             var LaneClearSaveStacksActive = AllMenu["laneclear.save"].Cast<CheckBox>().CurrentValue;
             var LaneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(Rengar.AttackRange));
-
-            if (Rengar.Mana < 5 || (Rengar.Mana == 5 && !LaneClearSaveStacksActive))
+            if (Rengar.Mana == 5 && LaneClearSaveStacksActive)
+            {
+                Items();
+            }
+            else if (Rengar.Mana < 5 || Rengar.Mana == 5)
             {
                 if (UseWActive && W.IsReady())
                 {
@@ -441,7 +448,7 @@ namespace Rengar_Like_A_Boss
                                 var prediction = E.GetPrediction(target);
                                 if (prediction.HitChance >= HitChance.High && prediction.CollisionObjects.Count() == 0)
                                 {
-                                    E.Cast(target.ServerPosition);
+                                    E.Cast(target);
                                 }
                             }
                             break;
