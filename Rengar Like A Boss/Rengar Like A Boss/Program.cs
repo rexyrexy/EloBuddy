@@ -32,17 +32,15 @@ namespace Rengar_Like_A_Boss
         public static bool RengarUltiActive { get { return Rengar.HasBuff("RengarR"); } }
         public static Obj_AI_Base SelectedEnemy;
         public static int LastAutoAttack, Lastrengarq;
-
         public static int LastQ, LastE, LastW, LastSpell;
         static void Main(string[] args)
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
         }
-
         private static void Loading_OnLoadingComplete(EventArgs args)
         {
             if(Rengar.Hero != Champion.Rengar) { return; }
-            Bootstrap.Init(null);
+            //Bootstrap.Init(null);
             Q = new Spell.Active(SpellSlot.Q, (uint)(Rengar.GetAutoAttackRange()) + 100);
             W = new Spell.Active(SpellSlot.W, 500);
             E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,(int)0.25,1500,70);
