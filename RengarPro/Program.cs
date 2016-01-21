@@ -285,7 +285,9 @@ namespace RengarPro
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Medium) { E.Cast(normalTarget); }
                         }
+
                         break;
+
                     }
             }
         }
