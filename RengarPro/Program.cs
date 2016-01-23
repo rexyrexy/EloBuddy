@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -19,6 +20,9 @@ namespace RengarPro
                 return Player.Instance;
             }
         }
+        private static readonly int[] BlueSmite = { 3706, 1400, 1401, 1402, 1403 };
+        private static readonly int[] RedSmite = { 3715, 1415, 1414, 1413, 1412 };
+        protected static SpellSlot Smite;
         public static Obj_AI_Base SelectedEnemy;
         public static Spell.Active Q;
         public static Spell.Active W;
@@ -41,7 +45,22 @@ namespace RengarPro
                 return Rengar.HasBuff("RengarR");
             }
         }
+        protected static void SmiteCombo()
+        {
+            if (BlueSmite.Any(id => Item.HasItem(id)))
+            {
+                Smite = Rengar.GetSpellSlotFromName("s5_summonersmiteplayerganker");
+                return;
+            }
 
+            if (RedSmite.Any(id => Item.HasItem(id)))
+            {
+                Smite = Rengar.GetSpellSlotFromName("s5_summonersmiteduel");
+                return;
+            }
+
+            Smite = Rengar.GetSpellSlotFromName("summonersmite");
+        }
         static void Main()
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
@@ -174,6 +193,7 @@ namespace RengarPro
             AutoYoumu();
             Skin();
             BetaQ();
+            SmiteCombo();
         }
 
         private static void BetaQ()
@@ -194,6 +214,15 @@ namespace RengarPro
                 Core.DelayAction(null, 500);
                 Q.Cast();
                 Orbwalker.ResetAutoAttack();
+            }
+        }
+
+        private static void CastSmite(SpellSlot smiteSlotx, AIHeroClient target)
+        {
+            if (AllMenu["use.smite"].Cast<CheckBox>().CurrentValue && !RengarUltiActive && Smite != SpellSlot.Unknown
+                    && Rengar.Spellbook.CanUseSpell(Smite) == SpellState.Ready && target.IsValidTarget(500))
+            {
+                Rengar.Spellbook.CastSpell(smiteSlotx, target);
             }
         }
 
@@ -344,6 +373,7 @@ namespace RengarPro
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
@@ -352,6 +382,7 @@ namespace RengarPro
                         {
                             if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                         }
 
@@ -359,6 +390,7 @@ namespace RengarPro
                         {
                             if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
@@ -366,13 +398,14 @@ namespace RengarPro
                         {
                             if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                         }
                         if (!RengarHasPassive && normalTarget.Distance(Rengar) <= E.Range &&
                             useEOutQRangeActive)//Use E out of Range Q When One Shot Mode Active
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) &&
-                                ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0 && !RengarHasPassive)
+                                ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0 && !RengarHasPassive)
                             {
                                 E.Cast(normalTarget);
                             }
@@ -386,6 +419,7 @@ namespace RengarPro
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                             if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
@@ -399,6 +433,7 @@ namespace RengarPro
                         {
                             if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
                             Items();
+                            CastSmite(Smite, normalTarget);
                             BotrkAndBilgewater(normalTarget);
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
@@ -406,9 +441,7 @@ namespace RengarPro
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
-
                         break;
-
                     }
             }
         }
@@ -447,6 +480,7 @@ namespace RengarPro
             AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
             AllMenu.Add("draw.selectedenemy", new CheckBox("Draw Selected Target"));
             AllMenu.Add("magnet.enable", new CheckBox("Enable Magnet"));
+            AllMenu.Add("use.smite", new CheckBox("Use Smite on Combo"));
             AllMenu.Add("useeoutofq", new CheckBox("Use E out of Q Range"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("LaneClear Mode");
@@ -472,7 +506,7 @@ namespace RengarPro
 
         private static void Items()
         {
-            var normalTarget = TargetSelector.GetTarget(1000, DamageType.Physical);
+            var normalTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
             if (Item.CanUseItem(3074) && normalTarget.IsValidTarget(400))
             {
                 Item.UseItem(3074);
@@ -496,7 +530,7 @@ namespace RengarPro
             if (!autoYoumuActive) { return; }
             if (RengarUltiActive && Item.CanUseItem(3142)) 
 			{
-            Core.DelayAction(null,800);
+            Core.DelayAction(null,600);
 			Item.UseItem(3142); 
 			}
         }
