@@ -19,6 +19,7 @@ namespace RengarPro
                 return Player.Instance;
             }
         }
+        public static Obj_AI_Base SelectedEnemy;
         public static Spell.Active Q;
         public static Spell.Active W;
         public static Spell.Skillshot E;
@@ -53,13 +54,32 @@ namespace RengarPro
                 return;
             }
 
-            Q = new Spell.Active(SpellSlot.Q, 250);
+            Q = new Spell.Active(SpellSlot.Q, (uint)(Rengar.GetAutoAttackRange() + 100));
             W = new Spell.Active(SpellSlot.W, 500);
-            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear);
-            R = new Spell.Active(SpellSlot.R);
+            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,(int)0.25,1500,70);
+            R = new Spell.Active(SpellSlot.R, 2500);
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnUpdate;
+            Game.OnWndProc += Game_OnWndProc;
             MenuInit();
+        }
+
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
+            {
+                return;
+            }
+            var unit2 =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .FirstOrDefault(
+                        a =>
+                        (a.IsValidTarget()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        );
+            if (unit2 != null)
+            {
+                SelectedEnemy = unit2;
+            }
         }
 
         private static void Game_OnUpdate(EventArgs args)
@@ -84,9 +104,18 @@ namespace RengarPro
 
         private static void BetaQ()
         {
-            var betaQTarget = TargetSelector.GetTarget(2000, DamageType.Physical);
+            var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+
+            if (SelectedEnemy.IsValidTarget(2500))
+            {
+                TargetSelector.GetPriority(target);
+                if (TargetSelector.SelectedTarget != null)
+                {
+                    TargetSelector.GetPriority(TargetSelector.SelectedTarget);
+                }
+            }
             var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            if (RengarUltiActive && (int)Rengar.Mana == 5 && comboselecctedd == 1 && betaQTarget.Distance(Rengar.ServerPosition) <= 1000)
+            if (RengarUltiActive && (int)Rengar.Mana == 5 && comboselecctedd == 1 && target.Distance(Rengar.ServerPosition) <= 1000)
             {
                 Core.DelayAction(null, 500);
                 Q.Cast();
@@ -117,23 +146,31 @@ namespace RengarPro
         {
             var comboModeDrawActive = AllMenu["draw.mode"].Cast<CheckBox>().CurrentValue;
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-           
-            if(!comboModeDrawActive) { return; }
+            var selectedEnemyDrawActive = AllMenu["draw.selectedenemy"].Cast<CheckBox>().CurrentValue;
 
-            switch (comboModeSelected)
+            if (comboModeDrawActive)
             {
-                case 1:
-                    {
-                        Drawing.DrawText(Drawing.Width * 0.70f,Drawing.Height * 0.95f,Color.White,"Mode : OneShot");
-                        break;
-                    }
-                case 2:
-                    {
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
-                        break;
-                    }
-
-
+                switch (comboModeSelected)
+                {
+                    case 1:
+                        {
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : OneShot");
+                            break;
+                        }
+                    case 2:
+                        {
+                            Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Mode : Snare");
+                            break;
+                        }
+                }
+            }
+            if (selectedEnemyDrawActive && SelectedEnemy.IsValidTarget() && SelectedEnemy.IsVisible && !SelectedEnemy.IsDead && !(SelectedEnemy.IsMinion || SelectedEnemy.IsMonster))
+            {
+                Drawing.DrawText(
+                Drawing.WorldToScreen(SelectedEnemy.Position).X - 40,
+                Drawing.WorldToScreen(SelectedEnemy.Position).Y + 10,
+                Color.White,
+                "Selected Target");
             }
         }
         private static void JungleClear()
@@ -206,9 +243,19 @@ namespace RengarPro
         private static void Combo()
         {
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            var normalTarget = TargetSelector.GetTarget(1000, DamageType.Physical);
+            var normalTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
             var ePrediction = E.GetPrediction(normalTarget);
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
+            
+
+            if (SelectedEnemy.IsValidTarget(2500))
+            {
+                TargetSelector.GetPriority(normalTarget);
+                if (TargetSelector.SelectedTarget != null)
+                {
+                    TargetSelector.GetPriority(TargetSelector.SelectedTarget);
+                }
+            }
 
             if (RengarUltiActive)
             {
@@ -324,6 +371,7 @@ namespace RengarPro
             };
             AllMenu.Add("autoyoumu", new CheckBox("Auto Youmu When Ulti"));
             AllMenu.Add("draw.mode", new CheckBox("Draw Mode"));
+            AllMenu.Add("draw.selectedenemy", new CheckBox("Draw Selected Target"));
             AllMenu.Add("useeoutofq", new CheckBox("Use E out of Q Range"));
             AllMenu.AddSeparator();
             AllMenu.AddGroupLabel("LaneClear Mode");
@@ -332,6 +380,7 @@ namespace RengarPro
             AllMenu.Add("laneclear.e", new CheckBox("Use E"));
             AllMenu.Add("laneclear.save", new CheckBox("Save Stacks", false));
             AllMenu.AddSeparator();
+            AllMenu.AddGroupLabel("JungleClear Mode");
             AllMenu.Add("jungleclear.q", new CheckBox("Use Q"));
             AllMenu.Add("jungleclear.w", new CheckBox("Use W"));
             AllMenu.Add("jungleclear.e", new CheckBox("Use E"));
