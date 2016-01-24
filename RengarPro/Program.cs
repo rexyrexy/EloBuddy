@@ -371,7 +371,7 @@ namespace RengarPro
                             if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
                             FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use Q
@@ -398,7 +398,7 @@ namespace RengarPro
                             useEOutQRangeActive)//Use E out of Range Q When One Shot Mode Active
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) &&
-                                ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0)
+                                ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0)
                             {
                                 E.Cast(normalTarget);
                             }
@@ -413,12 +413,12 @@ namespace RengarPro
                             if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
                             FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
@@ -430,7 +430,7 @@ namespace RengarPro
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
                         break;
                     }
