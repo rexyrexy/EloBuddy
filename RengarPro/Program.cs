@@ -198,7 +198,7 @@ namespace RengarPro
             var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             if (RengarUltiActive && comboselecctedd == 1 && SelectedEnemy.Distance(Rengar.ServerPosition) <= 1000)
             {
-                Core.DelayAction(() => QCastResetAa(), 500);
+                Core.DelayAction(() => QCastResetAa(), 180);
             }
         }
 
