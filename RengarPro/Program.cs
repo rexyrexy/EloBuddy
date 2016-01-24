@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -99,7 +98,7 @@ namespace RengarPro
             }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                if (Rengar.Mana == 5)
+                if ((int)Rengar.Mana == 5)
                 {
                     switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
                     {
@@ -112,12 +111,11 @@ namespace RengarPro
                         case 1:
                             if (Q.IsReady() && target.IsValidTarget(Q.Range))
                             {
-                                Q.Cast();
+                                QCastResetAa();
                             }
 
                             if (target.IsValidTarget(Q.Range))
                             {
-                                Core.DelayAction(null, 50);
                                 {
                                     if (target.IsValidTarget(W.Range))
                                     {
@@ -125,9 +123,8 @@ namespace RengarPro
                                     }
 
                                     E.Cast(target);
-                                    Items();
-                                    BotrkAndBilgewater(target);
-                                };
+                                    FullItem(target);
+                                }
                             }
 
                             break;
@@ -146,14 +143,14 @@ namespace RengarPro
                 case 1:
                     if (RengarUltiActive)
                     {
-                        Q.Cast();
+                        QCastResetAa();
                     }
                     break;
             }
             if (e.Duration - 100 - Game.Ping / 2 > 0)
             {
-                Core.DelayAction(null, (int)(e.Duration - 100 - Game.Ping / 2));
-                { Items(); BotrkAndBilgewater(target); };
+              
+                Core.DelayAction(() => FullItem(target), (e.Duration - 100 - Game.Ping / 2));
             }
         }
 
@@ -198,23 +195,23 @@ namespace RengarPro
 
         private static void BetaQ()
         {
-            var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
-
-            if (SelectedEnemy.IsValidTarget(2500))
-            {
-                TargetSelector.GetPriority(target);
-                if (TargetSelector.SelectedTarget != null)
-                {
-                    TargetSelector.GetPriority(TargetSelector.SelectedTarget);
-                }
-            }
             var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            if (RengarUltiActive && (int)Rengar.Mana == 5 && comboselecctedd == 1 && target.Distance(Rengar.ServerPosition) <= 1000)
+            if (RengarUltiActive && comboselecctedd == 1 && SelectedEnemy.Distance(Rengar.ServerPosition) <= 1000)
             {
-                Core.DelayAction(null, 500);
-                Q.Cast();
-                Orbwalker.ResetAutoAttack();
+                Core.DelayAction(() => QCastResetAa(), 500);
             }
+        }
+
+        private static void QCastResetAa()
+        {
+            Q.Cast();
+            Orbwalker.ResetAutoAttack();
+        }
+
+        private static void FullItem(AIHeroClient target)
+        {
+            Items();
+            BotrkAndBilgewater(target);
         }
 
         private static void CastSmite(SpellSlot smiteSlotx, AIHeroClient target)
@@ -267,7 +264,7 @@ namespace RengarPro
                         }
                 }
             }
-            if (selectedEnemyDrawActive && SelectedEnemy.IsValidTarget() && SelectedEnemy.IsVisible && !SelectedEnemy.IsDead && !(SelectedEnemy.IsMinion || SelectedEnemy.IsMonster))
+            if (selectedEnemyDrawActive && SelectedEnemy.IsValidTarget() && SelectedEnemy.IsVisible && !SelectedEnemy.IsDead && !(SelectedEnemy.IsMinion || SelectedEnemy.IsMonster) && !(SelectedEnemy is Obj_AI_Turret))
             {
                 Drawing.DrawText(
                 Drawing.WorldToScreen(SelectedEnemy.Position).X - 40,
@@ -289,8 +286,7 @@ namespace RengarPro
 
                     if (useQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
                     {
-                        Q.Cast();
-                        Orbwalker.ResetAutoAttack();
+                        QCastResetAa();
                         Items();
                     }
                     if (useWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
@@ -317,12 +313,11 @@ namespace RengarPro
             {
                 if (useWActive && W.IsReady() && laneTarget.IsValidTarget())
                 {
-                    W.Cast(laneTarget);
+                    W.Cast();
                 }
                 if (useQActive && Q.IsReady() && laneTarget.IsValidTarget())
                 {
-                    Q.Cast();
-                    Orbwalker.ResetAutoAttack();
+                    QCastResetAa();
                 }
                 if (laneTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
                 {
@@ -346,12 +341,14 @@ namespace RengarPro
         private static void Combo()
         {
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            var normalTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+            var normalTarget = TargetSelector.SelectedTarget != null
+                                ? TargetSelector.SelectedTarget
+                                : TargetSelector.GetTarget(E.Range, DamageType.Physical);
             var ePrediction = E.GetPrediction(normalTarget);
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
             
 
-            if (SelectedEnemy.IsValidTarget(2500))
+            if (SelectedEnemy.IsValidTarget(E.Range))
             {
                 TargetSelector.GetPriority(normalTarget);
                 if (TargetSelector.SelectedTarget != null)
@@ -360,7 +357,7 @@ namespace RengarPro
                 }
             }
 
-            if (RengarUltiActive)
+            if (RengarUltiActive || normalTarget == null)
             {
                 return;
             }
@@ -371,41 +368,37 @@ namespace RengarPro
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
                         }
                         if (!RengarHasPassive && normalTarget.Distance(Rengar) <= E.Range &&
                             useEOutQRangeActive)//Use E out of Range Q When One Shot Mode Active
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) &&
-                                ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0 && !RengarHasPassive)
+                                ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0)
                             {
                                 E.Cast(normalTarget);
                             }
@@ -417,29 +410,27 @@ namespace RengarPro
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { Q.Cast(); Orbwalker.ResetAutoAttack(); }
-                            Items();
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
                             CastSmite(Smite, normalTarget);
-                            BotrkAndBilgewater(normalTarget);
                             if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.Dashing && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
                         }
                         break;
                     }
@@ -530,8 +521,7 @@ namespace RengarPro
             if (!autoYoumuActive) { return; }
             if (RengarUltiActive && Item.CanUseItem(3142)) 
 			{
-            Core.DelayAction(null,600);
-			Item.UseItem(3142); 
+            Core.DelayAction((() => Item.UseItem(3142)),600); 
 			}
         }
     }
