@@ -19,6 +19,8 @@ namespace RengarPro
                 return Player.Instance;
             }
         }
+
+        public static AIHeroClient NormalTarget;
         private static readonly int[] BlueSmite = { 3706, 1400, 1401, 1402, 1403 };
         private static readonly int[] RedSmite = { 3715, 1415, 1414, 1413, 1412 };
         protected static SpellSlot Smite;
@@ -74,7 +76,7 @@ namespace RengarPro
 
             Q = new Spell.Active(SpellSlot.Q, (uint)(Rengar.GetAutoAttackRange() + 100));
             W = new Spell.Active(SpellSlot.W, 500);
-            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,250,1500,70);
+            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,(int)0.25,1500,100);
             R = new Spell.Active(SpellSlot.R, 2500);
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnUpdate;
@@ -174,7 +176,11 @@ namespace RengarPro
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            if (Rengar.IsDead)
+			{
+				return;
+			}
+			if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 Combo();
             }
@@ -198,7 +204,7 @@ namespace RengarPro
             var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             if (RengarUltiActive && comboselecctedd == 1 && SelectedEnemy.Distance(Rengar.ServerPosition) <= 1000)
             {
-                Core.DelayAction(() => QCastResetAa(), 180);
+                Core.DelayAction(() => QCastResetAa(), 85);
             }
         }
 
@@ -287,7 +293,10 @@ namespace RengarPro
                     if (useQActive && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
                     {
                         QCastResetAa();
-                        Items();
+                    }
+                    if (jungleMinion.IsValidTarget(Rengar.GetAutoAttackRange()))
+                    {
+                       MinionItems();
                     }
                     if (useWActive && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
                     {
@@ -321,7 +330,7 @@ namespace RengarPro
                 }
                 if (laneTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
                 {
-                    Items();
+                    MinionItems();
                 }
                 if (useEActive && E.IsReady() && laneTarget.IsValidTarget())
                 {
@@ -346,16 +355,6 @@ namespace RengarPro
                                 : TargetSelector.GetTarget(E.Range, DamageType.Physical);
             var ePrediction = E.GetPrediction(normalTarget);
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
-            
-
-            if (SelectedEnemy.IsValidTarget(E.Range))
-            {
-                TargetSelector.GetPriority(normalTarget);
-                if (TargetSelector.SelectedTarget != null)
-                {
-                    TargetSelector.GetPriority(TargetSelector.SelectedTarget);
-                }
-            }
 
             if (RengarUltiActive || normalTarget == null)
             {
@@ -395,7 +394,7 @@ namespace RengarPro
                             CastSmite(Smite, normalTarget);
                         }
                         if (!RengarHasPassive && normalTarget.Distance(Rengar) <= E.Range &&
-                            useEOutQRangeActive)//Use E out of Range Q When One Shot Mode Active
+                            useEOutQRangeActive && !(Rengar.HasBuff("rengarqbase") || Rengar.HasBuff("rengarqemp")))//Use E out of Range Q When One Shot Mode Active
                         {
                             if (E.IsReady() && normalTarget.IsValidTarget(E.Range) &&
                                 ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0)
@@ -497,12 +496,24 @@ namespace RengarPro
 
         private static void Items()
         {
-            var normalTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
-            if (Item.CanUseItem(3074) && normalTarget.IsValidTarget(400))
+            var tTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+            if (Item.CanUseItem(3074) && tTarget.IsValidTarget(400))
             {
                 Item.UseItem(3074);
             }
-            if (Item.CanUseItem(3077) && normalTarget.IsValidTarget(400))
+            if (Item.CanUseItem(3077) && tTarget.IsValidTarget(400))
+            {
+                Item.UseItem(3077);
+            }
+        }
+
+        private static void MinionItems()
+        {
+            if (Item.CanUseItem(3074))
+            {
+                Item.UseItem(3074);
+            }
+            if (Item.CanUseItem(3077))
             {
                 Item.UseItem(3077);
             }
