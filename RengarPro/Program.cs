@@ -76,7 +76,7 @@ namespace RengarPro
 
             Q = new Spell.Active(SpellSlot.Q, (uint)(Rengar.GetAutoAttackRange() + 100));
             W = new Spell.Active(SpellSlot.W, 500);
-            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,(int)0.25,1500,100);
+            E = new Spell.Skillshot(SpellSlot.E, 1000, SkillShotType.Linear,250,1500,70);
             R = new Spell.Active(SpellSlot.R, 2500);
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnUpdate;
@@ -344,19 +344,23 @@ namespace RengarPro
             var tickedAutoHp = AllMenu["autohp.active"].Cast<CheckBox>().CurrentValue;
             var valueOfAutoHp = AllMenu["autohp.value"].Cast<Slider>().CurrentValue;
 
-            if(tickedAutoHp && (int)Rengar.Mana == 5 && Rengar.HealthPercent <= valueOfAutoHp) { W.Cast(); }
+            if (tickedAutoHp && (int)Rengar.Mana == 5 && Rengar.HealthPercent <= valueOfAutoHp) { W.Cast(); }
         }
 
         private static void Combo()
         {
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            var normalTarget = TargetSelector.SelectedTarget != null
-                                ? TargetSelector.SelectedTarget
-                                : TargetSelector.GetTarget(E.Range, DamageType.Physical);
-            var ePrediction = E.GetPrediction(normalTarget);
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
+            if (TargetSelector.SelectedTarget != null)
+            {
+                NormalTarget = TargetSelector.SelectedTarget;
+            }
+            else
+            {
+                NormalTarget = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+            }
 
-            if (RengarUltiActive || normalTarget == null)
+            if (RengarUltiActive || NormalTarget == null)
             {
                 return;
             }
@@ -366,40 +370,39 @@ namespace RengarPro
                     {
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
-                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
-                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
+                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
                         }
-                        if (!RengarHasPassive && normalTarget.Distance(Rengar) <= E.Range &&
+                        if (!RengarHasPassive && NormalTarget.Distance(Rengar) <= E.Range &&
                             useEOutQRangeActive && !(Rengar.HasBuff("rengarqbase") || Rengar.HasBuff("rengarqemp")))//Use E out of Range Q When One Shot Mode Active
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) &&
-                                ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0)
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range))
                             {
-                                E.Cast(normalTarget);
+                                E.Cast(NormalTarget);
                             }
                         }
                         break;
@@ -408,28 +411,28 @@ namespace RengarPro
                     {
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
-                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(normalTarget);
-                            CastSmite(Smite, normalTarget);
-                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(NormalTarget);
+                            CastSmite(Smite, NormalTarget);
+                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range) && ePrediction.HitChance >= HitChance.High && ePrediction.CollisionObjects.Count() == 0) { E.Cast(normalTarget); }
+                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
                         }
                         break;
                     }
