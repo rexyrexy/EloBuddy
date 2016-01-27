@@ -9,3 +9,14 @@ C:\Users\Berkk\Desktop\RengarPro\bin\Debug\RengarPro.pdb
 C:\Users\Berkk\Desktop\RengarPro\obj\Debug\RengarPro.csprojResolveAssemblyReference.cache
 C:\Users\Berkk\Desktop\RengarPro\obj\Debug\RengarPro.exe
 C:\Users\Berkk\Desktop\RengarPro\obj\Debug\RengarPro.pdb
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\RengarPro.exe.config
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\obj\Debug\RengarPro.exe
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\obj\Debug\RengarPro.pdb
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\RengarPro.exe
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\RengarPro.pdb
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\EloBuddy.dll
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\SharpDX.dll
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Berkk\Desktop\asdasdsd\RengarPro\obj\Debug\RengarPro.csprojResolveAssemblyReference.cache

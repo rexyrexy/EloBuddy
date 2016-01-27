@@ -19,8 +19,6 @@ namespace RengarPro
                 return Player.Instance;
             }
         }
-
-        public static AIHeroClient NormalTarget;
         private static readonly int[] BlueSmite = { 3706, 1400, 1401, 1402, 1403 };
         private static readonly int[] RedSmite = { 3715, 1415, 1414, 1413, 1412 };
         protected static SpellSlot Smite;
@@ -30,7 +28,6 @@ namespace RengarPro
         public static Spell.Skillshot E;
         public static Spell.Active R;
         public static Menu Menu, AllMenu;
-
         public static bool RengarHasPassive
         {
             get
@@ -62,7 +59,7 @@ namespace RengarPro
 
             Smite = Rengar.GetSpellSlotFromName("summonersmite");
         }
-        static void Main()
+        static void Main(string[] args)
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
         }
@@ -80,11 +77,39 @@ namespace RengarPro
             R = new Spell.Active(SpellSlot.R, 2500);
             Drawing.OnDraw += Drawing_OnDraw;
             Game.OnUpdate += Game_OnUpdate;
+            Game.OnTick += Game_OnTick;
             Game.OnWndProc += Game_OnWndProc;
+			Dash.OnDash += Dash_OnDash;
             MenuInit();
-            Dash.OnDash += Dash_OnDash;
             Magnet.Initialize();
             Targetting.Initialize();
+        }
+
+        private static void Game_OnTick(EventArgs args)
+        {
+            AutoHeal();
+            AutoYoumu();
+            BetaQ();
+            Skin();
+            SmiteCombo();
+        }
+
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
+            {
+                return;
+            }
+            var unit2 =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .FirstOrDefault(
+                        a =>
+                        (a.IsValidTarget()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        );
+            if (unit2 != null)
+            {
+                SelectedEnemy = unit2;
+            }
         }
 
         private static void Dash_OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
@@ -133,53 +158,10 @@ namespace RengarPro
                     }
                 }
             }
-            switch (AllMenu["combo.mode"].Cast<Slider>().CurrentValue)
-            {
-                case 2:
-                    if (E.IsReady() && target.IsValidTarget(E.Range))
-                    {
-                        E.Cast(target);
-                    }
-                    break;
-
-                case 1:
-                    if (RengarUltiActive)
-                    {
-                        QCastResetAa();
-                    }
-                    break;
-            }
-            if (e.Duration - 100 - Game.Ping / 2 > 0)
-            {
-              
-                Core.DelayAction(() => FullItem(target), (e.Duration - 100 - Game.Ping / 2));
-            }
-        }
-
-        private static void Game_OnWndProc(WndEventArgs args)
-        {
-            if (args.Msg != (uint)WindowMessages.LeftButtonDown)
-            {
-                return;
-            }
-            var unit2 =
-                ObjectManager.Get<Obj_AI_Base>()
-                    .FirstOrDefault(
-                        a =>
-                        (a.IsValidTarget()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
-                        );
-            if (unit2 != null)
-            {
-                SelectedEnemy = unit2;
-            }
         }
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            if (Rengar.IsDead)
-			{
-				return;
-			}
 			if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 Combo();
@@ -192,26 +174,25 @@ namespace RengarPro
             {
                 JungleClear();
             }
-            AutoHeal();
-            AutoYoumu();
-            Skin();
-            BetaQ();
-            SmiteCombo();
         }
 
         private static void BetaQ()
         {
             var comboselecctedd = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
-            if (RengarUltiActive && comboselecctedd == 1 && SelectedEnemy.Distance(Rengar.ServerPosition) <= 1000)
+            if (RengarUltiActive && comboselecctedd == 1 && SelectedEnemy.IsValidTarget(1000))
             {
-                Core.DelayAction(() => QCastResetAa(), 85);
+                QCastResetAa();
+                return;
             }
         }
 
         private static void QCastResetAa()
         {
+            if (Q.IsReady())
+            { 
             Q.Cast();
             Orbwalker.ResetAutoAttack();
+            }
         }
 
         private static void FullItem(AIHeroClient target)
@@ -351,16 +332,18 @@ namespace RengarPro
         {
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
+            AIHeroClient normalTarget;
+
             if (TargetSelector.SelectedTarget != null)
             {
-                NormalTarget = TargetSelector.SelectedTarget;
+                normalTarget = TargetSelector.SelectedTarget;
             }
             else
             {
-                NormalTarget = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                normalTarget = TargetSelector.GetTarget(E.Range, DamageType.Physical);
             }
-
-            if (RengarUltiActive || NormalTarget == null)
+            
+            if (RengarUltiActive)
             {
                 return;
             }
@@ -370,39 +353,39 @@ namespace RengarPro
                     {
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
+                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range)) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use Q
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
+                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
                         }
-                        if (!RengarHasPassive && NormalTarget.Distance(Rengar) <= E.Range &&
+                        if (!RengarHasPassive && normalTarget.Distance(Rengar) <= E.Range &&
                             useEOutQRangeActive && !(Rengar.HasBuff("rengarqbase") || Rengar.HasBuff("rengarqemp")))//Use E out of Range Q When One Shot Mode Active
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range))
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range))
                             {
-                                E.Cast(NormalTarget);
+                                E.Cast(normalTarget);
                             }
                         }
                         break;
@@ -411,28 +394,28 @@ namespace RengarPro
                     {
                         if (Rengar.Mana <= 4 && !RengarHasPassive) //Normal Lane Target Logic
                         {
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
+                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && normalTarget.IsValidTarget(Q.Range)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range)) { E.Cast(normalTarget); }
                         }
 
                         if ((int)Rengar.Mana == 5 && !RengarHasPassive) //When Have 5 Prio Use E
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range)) { E.Cast(normalTarget); }
                         }
 
                         if (RengarHasPassive && Rengar.Mana <= 4) //Passive Logic
                         {
-                            if (Q.IsReady() && NormalTarget.IsValidTarget(600)) { QCastResetAa(); }
-                            FullItem(NormalTarget);
-                            CastSmite(Smite, NormalTarget);
-                            if (W.IsReady() && NormalTarget.IsValidTarget(W.Range)) { W.Cast(); }
+                            if (Q.IsReady() && normalTarget.IsValidTarget(600)) { QCastResetAa(); }
+                            FullItem(normalTarget);
+                            CastSmite(Smite, normalTarget);
+                            if (W.IsReady() && normalTarget.IsValidTarget(W.Range)) { W.Cast(); }
                         }
                         if (RengarHasPassive && (int)Rengar.Mana == 5)
                         {
-                            if (E.IsReady() && NormalTarget.IsValidTarget(E.Range)) { E.Cast(NormalTarget); }
+                            if (E.IsReady() && normalTarget.IsValidTarget(E.Range)) { E.Cast(normalTarget); }
                         }
                         break;
                     }
@@ -453,10 +436,10 @@ namespace RengarPro
             AllMenu.AddGroupLabel("Combo Mode");
             AllMenu.AddLabel("| 1 -> One Shot || 2 -> Snare |");
             AllMenu.Add("combo.mode", new Slider("Combo Mode", 1, 1, 2));
-            var switcher = AllMenu.Add("Switcher", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive, 'T'));
+            var switcher = AllMenu.Add("Switcher", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive, (uint)'T'));
             switcher.OnValueChange += delegate (ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
             {
-                if (args.NewValue)
+                if (args.NewValue == true)
                 {
                     var cast = AllMenu["combo.mode"].Cast<Slider>();
                     if (cast.CurrentValue == cast.MaxValue)
