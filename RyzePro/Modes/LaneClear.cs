@@ -39,6 +39,11 @@ namespace RyzePro.Modes
             {
                 Spells.E.Cast(minions);
             }
+
+            if (Checker.LaneClearUseR && Spells.R.IsReady())
+            {
+                Spells.R.Cast();
+            }
         }
     }
 }

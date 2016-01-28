@@ -35,6 +35,11 @@ namespace RyzePro.Modes
                 {
                     Spells.E.Cast(minions);
                 }
+
+                if (Checker.JungleClearUseR && Spells.R.IsReady() && minions.IsValidTarget(Spells.W.Range))
+                {
+                    Spells.R.Cast();
+                }
             }
         }
     }

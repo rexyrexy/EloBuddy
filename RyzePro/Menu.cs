@@ -31,12 +31,14 @@ namespace RyzePro
             LaneClearMenu.Add("laneclear.useQ", new CheckBox("Use Q"));
             LaneClearMenu.Add("laneclear.useW", new CheckBox("Use W"));
             LaneClearMenu.Add("laneclear.useE", new CheckBox("Use E"));
+            LaneClearMenu.Add("laneclear.useR", new CheckBox("Use R"));
             LaneClearMenu.Add("laneclear.mana", new Slider("Min % Mana", 55));
 
             JungleClearMenu = MaiinMenu.AddSubMenu("JungleClear");
             JungleClearMenu.Add("jungleclear.useQ", new CheckBox("Use Q"));
             JungleClearMenu.Add("jungleclear.useW", new CheckBox("Use W"));
             JungleClearMenu.Add("jungleclear.useE", new CheckBox("Use E"));
+            JungleClearMenu.Add("jungleclear.useR", new CheckBox("Use R"));
             JungleClearMenu.Add("jungleclear.mana", new Slider("Min % Mana", 55));
 
             LastHitMenu = MaiinMenu.AddSubMenu("LastHit");

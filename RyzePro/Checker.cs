@@ -108,5 +108,15 @@ namespace RyzePro
         {
             get { return Menu.ComboMenu["combo.gapcloser"].Cast<CheckBox>().CurrentValue; }
         }
+
+        public static bool LaneClearUseR
+        {
+            get { return Menu.LaneClearMenu["laneclear.useR"].Cast<CheckBox>().CurrentValue; }
+        }
+
+        public static bool JungleClearUseR
+        {
+            get { return Menu.JungleClearMenu["jungleclear.useR"].Cast<CheckBox>().CurrentValue; }
+        }
     }
 }

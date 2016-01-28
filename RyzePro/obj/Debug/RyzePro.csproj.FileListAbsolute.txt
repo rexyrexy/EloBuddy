@@ -8,3 +8,13 @@ c:\users\berkk\documents\visual studio 2015\Projects\RyzePro\RyzePro\bin\Debug\S
 c:\users\berkk\documents\visual studio 2015\Projects\RyzePro\RyzePro\bin\Debug\Newtonsoft.Json.dll
 c:\users\berkk\documents\visual studio 2015\Projects\RyzePro\RyzePro\obj\Debug\RyzePro.exe
 c:\users\berkk\documents\visual studio 2015\Projects\RyzePro\RyzePro\obj\Debug\RyzePro.pdb
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\RyzePro.exe.config
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\obj\Debug\RyzePro.exe
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\obj\Debug\RyzePro.pdb
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\RyzePro.exe
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\RyzePro.pdb
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\EloBuddy.dll
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\SharpDX.dll
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\Newtonsoft.Json.dll

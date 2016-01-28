@@ -36,7 +36,7 @@ namespace RyzePro.Modes
                     Spells.W.Cast(Target);
                 }
 
-                if (Checker.ComboUseR && Spells.R.IsReady() && Target.IsRooted)
+                if (Checker.ComboUseR && Spells.R.IsReady() && Target.HasBuff("RyzeW") && Target.IsValidTarget(Spells.W.Range))
                 {
                     Spells.R.Cast();
                 }
@@ -73,7 +73,7 @@ namespace RyzePro.Modes
                     }
                 }
 
-                if (Checker.ComboUseR && Spells.R.IsReady() && Target.IsRooted)
+                if (Checker.ComboUseR && Spells.R.IsReady() && Target.HasBuff("RyzeW") && Target.IsValidTarget(Spells.W.Range))
                 {
                     Spells.R.Cast();
                 }
