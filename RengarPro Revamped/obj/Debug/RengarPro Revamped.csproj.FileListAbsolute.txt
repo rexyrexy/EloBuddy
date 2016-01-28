@@ -1,0 +1,11 @@
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\RengarPro Revamped.exe.config
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\obj\Debug\RengarPro Revamped.csprojResolveAssemblyReference.cache
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\RengarPro Revamped.exe
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\RengarPro Revamped.pdb
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\EloBuddy.dll
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\EloBuddy.SDK.dll
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\SharpDX.dll
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\SharpDX.Direct3D9.dll
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\bin\Debug\Newtonsoft.Json.dll
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\obj\Debug\RengarPro Revamped.exe
+c:\users\berkk\documents\visual studio 2015\Projects\RengarPro Revamped\RengarPro Revamped\obj\Debug\RengarPro Revamped.pdb
