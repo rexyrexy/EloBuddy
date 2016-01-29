@@ -85,7 +85,7 @@ namespace RengarPro_Revamped.Modes
                                 Orbwalker.ResetAutoAttack();
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(1000) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ)
+                        if (EnemyTarget.IsValidTarget(1000) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
                         {
                             E.Cast(EnemyTarget);
                         }
