@@ -334,11 +334,11 @@ namespace RengarPro
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
             AIHeroClient normalTarget;
 
-            if (TargetSelector.SelectedTarget.IsValidTarget())
+            if (TargetSelector.SelectedTarget.IsValidTarget(R.Range))
             {
                 normalTarget = TargetSelector.SelectedTarget;
             }
-            else if (!TargetSelector.SelectedTarget.IsValidTarget())
+            else if (!TargetSelector.SelectedTarget.IsValidTarget(R.Range))
             {
                 normalTarget = TargetSelector.GetTarget(E.Range, DamageType.Physical);
             }
