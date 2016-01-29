@@ -5,7 +5,7 @@ namespace RyzePro
 {
     class Menu
     {
-        public static EloBuddy.SDK.Menu.Menu MaiinMenu, ComboMenu, LaneClearMenu, JungleClearMenu, HarassMenu, LastHitMenu, DrawMenu;
+        public static EloBuddy.SDK.Menu.Menu MaiinMenu, ComboMenu, LaneClearMenu, JungleClearMenu, HarassMenu, LastHitMenu, DrawMenu, HumanizerMenu;
         public static void Init()
         {
             MaiinMenu = MainMenu.AddMenu("RyzePro", "RyzePro");
@@ -49,6 +49,11 @@ namespace RyzePro
             DrawMenu.Add("draw.Q", new CheckBox("Draw Q range"));
             DrawMenu.Add("draw.W", new CheckBox("Draw W range"));
             DrawMenu.Add("draw.E", new CheckBox("Draw E range"));
+
+            HumanizerMenu = MaiinMenu.AddSubMenu("Humanizer");
+            HumanizerMenu.Add("humanizer.active", new CheckBox("Humanizer Active", false));
+            HumanizerMenu.Add("humanizer.mindelay", new Slider("Min Delay", 150, 0, 400));
+            HumanizerMenu.Add("humanizer.maxdelay", new Slider("Max Delay", 250, 0, 500));
         }
     }
 }

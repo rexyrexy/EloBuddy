@@ -18,3 +18,4 @@ C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\EloBuddy.SDK.dll
 C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\SharpDX.Direct3D9.dll
 C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\SharpDX.dll
 C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Berkk\Desktop\Ryze Addon Template\RyzePro\obj\Debug\RyzePro.csprojResolveAssemblyReference.cache

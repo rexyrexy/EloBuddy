@@ -118,5 +118,20 @@ namespace RyzePro
         {
             get { return Menu.JungleClearMenu["jungleclear.useR"].Cast<CheckBox>().CurrentValue; }
         }
+
+        public static bool HumanizerActive
+        {
+            get { return Menu.HumanizerMenu["humanizer.active"].Cast<CheckBox>().CurrentValue; }
+        }
+
+        public static int HumanizerMinValue
+        {
+            get { return Menu.HumanizerMenu["humanizer.mindelay"].Cast<Slider>().CurrentValue; }
+        }
+
+        public static int HumanizerMaxValue
+        {
+            get { return Menu.HumanizerMenu["humanizer.maxdelay"].Cast<Slider>().CurrentValue; }
+        }
     }
 }
