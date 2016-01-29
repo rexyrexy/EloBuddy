@@ -19,6 +19,7 @@ namespace RengarPro
                 return Player.Instance;
             }
         }
+        public static AIHeroClient normalTarget;
         private static readonly int[] BlueSmite = { 3706, 1400, 1401, 1402, 1403 };
         private static readonly int[] RedSmite = { 3715, 1415, 1414, 1413, 1412 };
         protected static SpellSlot Smite;
@@ -332,7 +333,6 @@ namespace RengarPro
         {
             var comboModeSelected = AllMenu["combo.mode"].Cast<Slider>().CurrentValue;
             var useEOutQRangeActive = AllMenu["useeoutofq"].Cast<CheckBox>().CurrentValue;
-            AIHeroClient normalTarget;
 
             if (TargetSelector.SelectedTarget.IsValidTarget(R.Range))
             {
@@ -347,6 +347,12 @@ namespace RengarPro
             {
                 return;
             }
+
+            if (!RengarHasPassive && normalTarget.IsValidTarget(Q.Range) && Rengar.HasBuff("rengarqbase") || Rengar.HasBuff("rengarqemp"))
+            {
+                Player.IssueOrder(GameObjectOrder.AttackUnit, normalTarget);
+            }
+
             switch (comboModeSelected)
             {
                 case 1://OneShot Mode Active
