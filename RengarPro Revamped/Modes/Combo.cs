@@ -1,5 +1,6 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Events;
 
 namespace RengarPro_Revamped.Modes
 {
@@ -85,7 +86,7 @@ namespace RengarPro_Revamped.Modes
                                 Orbwalker.ResetAutoAttack();
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(1000) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive && !ObjectManager.Player.IsDashing)
+                        if (EnemyTarget.IsValidTarget(1000) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive && !Rengar.IsDashing())
                         {
                             E.Cast(EnemyTarget);
                         }
