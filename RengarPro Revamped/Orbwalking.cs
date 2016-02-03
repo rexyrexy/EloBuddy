@@ -184,12 +184,33 @@ namespace RengarPro_Revamped
             Player = ObjectManager.Player;
             _championName = Player.ChampionName;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpell;
-            
-            //Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
-            //Spellbook.OnStopCast += SpellbookOnStopCast;
+            Obj_AI_Base.OnSpellCast += Obj_AI_Base_OnSpellCast;
+            Spellbook.OnStopCast += Spellbook_OnStopCast;
         }
 
-        
+        private static void Spellbook_OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
+        {
+            if (sender.IsValid && sender.IsMe && args.DestroyMissile && args.StopAnimation)
+            {
+                ResetAutoAttackTimer();
+            }
+        }
+
+        private static void Obj_AI_Base_OnSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                if (Game.Ping <= 30) //First world problems kappa
+                {
+                    Core.DelayAction(() => Obj_AI_Base_OnDoCast_Delayed(sender, args), 30);
+                    return;
+                }
+
+                Obj_AI_Base_OnDoCast_Delayed(sender, args);
+            }
+        }
+
+
 
         /// <summary>
         ///     Delegate AfterAttackEvenH
@@ -585,25 +606,6 @@ namespace RengarPro_Revamped
         }
 
         /// <summary>
-        ///     Fired when an auto attack is fired.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private static void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender.IsMe)
-            {
-                if (Game.Ping <= 30) //First world problems kappa
-                {
-                    Core.DelayAction(() => Obj_AI_Base_OnDoCast_Delayed(sender, args), 30);
-                    return;
-                }
-
-                Obj_AI_Base_OnDoCast_Delayed(sender, args);
-            }
-        }
-
-        /// <summary>
         ///     Fired 30ms after an auto attack is launched.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -668,20 +670,6 @@ namespace RengarPro_Revamped
             }
         }
 
-        /// <summary>
-        ///     Fired when the spellbook stops casting a spell.
-        /// </summary>
-        /// <param name="spellbook">The spellbook.</param>
-        /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
-        {
-            if (spellbook.Owner.IsValid && spellbook.Owner.IsMe && args.DestroyMissile && args.StopAnimation)
-            {
-                ResetAutoAttackTimer();
-            }
-        }
-
-        
 
         /// <summary>
         ///     The before attack event arguments.

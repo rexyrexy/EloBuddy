@@ -28,6 +28,7 @@ namespace RengarPro_Revamped
             Helper.Magnet.Initialize();
             Helper.Targetting.Initialize();
         }
+        
 
         private static void Dash_OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
         {
