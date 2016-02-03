@@ -1,6 +1,7 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
+using RengarPro_Revamped;
 
 namespace RengarPro_Revamped.Modes
 {
@@ -46,7 +47,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                                Orbwalking.ResetAutoAttackTimer();
                             }
                         }
                         if (!RengarHasPassive && Ferocity == 5)
@@ -54,7 +55,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                                Orbwalking.ResetAutoAttackTimer();
                             }
                         }
                         if (RengarHasPassive && Ferocity <= 4)
@@ -62,7 +63,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(600) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                                Orbwalking.ResetAutoAttackTimer();
                             }
                             if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
@@ -83,7 +84,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(600) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                               
                             }
                         }
                         if (EnemyTarget.IsValidTarget(1000) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
@@ -113,7 +114,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                                Orbwalking.ResetAutoAttackTimer();
                             }
                         }
                         if (!RengarHasPassive && Ferocity == 5)
@@ -128,7 +129,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(600) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalker.ResetAutoAttack();
+                                Orbwalking.ResetAutoAttackTimer();
                             }
                             if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
