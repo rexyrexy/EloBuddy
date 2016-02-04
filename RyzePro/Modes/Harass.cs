@@ -14,7 +14,7 @@ namespace RyzePro.Modes
         {
             if (!TargetSelector.SelectedTarget.IsValidTarget(2500))
             {
-                Target = TargetSelector.GetTarget(Spells.Q.Range, DamageType.Physical);
+                Target = TargetSelector.GetTarget(2500, DamageType.Magical);
             }
             else if (TargetSelector.SelectedTarget.IsValidTarget(2500))
             {

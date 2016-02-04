@@ -15,11 +15,7 @@ namespace RyzePro.Modes
                 return;
             }
 
-            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && Spells.W.IsInRange(x));
-            if (minions == null)
-            {
-                return;
-            }
+            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(Spells.W.Range));
 
             if (Checker.LaneClearUseW && Spells.W.IsReady())
             {

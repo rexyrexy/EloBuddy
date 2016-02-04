@@ -16,11 +16,6 @@ namespace RyzePro.Modes
 
             foreach (var minions in EntityManager.MinionsAndMonsters.Monsters)
             {
-                if (minions == null)
-                {
-                    return;
-                }
-
                 if (Checker.JungleClearUseQ && Spells.Q.IsReady() && minions.IsValidTarget(Spells.Q.Range))
                 {
                     Spells.Q.Cast(minions);

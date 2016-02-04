@@ -13,7 +13,7 @@ namespace RyzePro.Modes
         {
             if (!TargetSelector.SelectedTarget.IsValidTarget(2500))
             {
-                Target = TargetSelector.GetTarget(Spells.Q.Range, DamageType.Physical);
+                Target = TargetSelector.GetTarget(2500, DamageType.Magical);
             }
             else if (TargetSelector.SelectedTarget.IsValidTarget(2500))
             {
@@ -50,12 +50,7 @@ namespace RyzePro.Modes
 
                 if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
                 {
-                    var prediction = Spells.Q.GetPrediction(Target);
-                    if (prediction.HitChance != HitChance.Impossible && prediction.HitChance != HitChance.Unknown
-                        && prediction.HitChance != HitChance.Collision)
-                    {
                         Spells.Q.Cast(Target);
-                    }
                 }
 
                 if (Checker.ComboUseE && Spells.E.IsReady() && Target.IsValidTarget(Spells.E.Range))
@@ -65,12 +60,7 @@ namespace RyzePro.Modes
 
                 if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
                 {
-                    var prediction = Spells.Q.GetPrediction(Target);
-                    if (prediction.HitChance != HitChance.Impossible && prediction.HitChance != HitChance.Unknown
-                        && prediction.HitChance != HitChance.Collision)
-                    {
                         Spells.Q.Cast(Target);
-                    }
                 }
 
                 if (Checker.ComboUseR && Spells.R.IsReady() && Target.HasBuff("RyzeW") && Target.IsValidTarget(Spells.W.Range))
@@ -87,12 +77,7 @@ namespace RyzePro.Modes
 
                 if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
                 {
-                    var prediction = Spells.Q.GetPrediction(Target);
-                    if (prediction.HitChance != HitChance.Impossible && prediction.HitChance != HitChance.Unknown
-                        && prediction.HitChance != HitChance.Collision)
-                    {
-                        Spells.Q.Cast(Target);
-                    }
+                    Spells.Q.Cast(Target);
                 }
 
                 if (Checker.ComboUseE && Spells.E.IsReady() && Target.IsValidTarget(Spells.E.Range))
