@@ -16,6 +16,10 @@ namespace AutoCast
 
         private static void Game_OnTick(EventArgs args)
         {
+            if (!Player.Instance.IsVisible)
+            {
+                return;
+            }
             Items.GetSmite();
             Items.CastHydra();
             Items.CastTiamat();

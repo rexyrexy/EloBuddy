@@ -28,6 +28,10 @@ namespace AutoCast
         }
         public static void CastHydra()
         {
+            if (!Player.Instance.IsVisible)
+            {
+                return;
+            }
             Targetting();
             if (Item.HasItem(ItemId.Ravenous_Hydra_Melee_Only) && Item.CanUseItem(ItemId.Ravenous_Hydra_Melee_Only)
                 && MenuCheck.CastHydra)
@@ -41,6 +45,10 @@ namespace AutoCast
 
         public static void CastTiamat()
         {
+            if (!Player.Instance.IsVisible)
+            {
+                return;
+            }
             Targetting();
             if (Item.HasItem(ItemId.Tiamat_Melee_Only) && Item.CanUseItem(ItemId.Tiamat_Melee_Only)
                 && MenuCheck.CastTiamat)
@@ -67,6 +75,10 @@ namespace AutoCast
 
         public static void CastSmite()
         {
+            if (!Player.Instance.IsVisible)
+            {
+                return;
+            }
             Targetting();
             if (MenuCheck.CastSmite && !Player.Instance.HasBuff("RengarR") && Smite != SpellSlot.Unknown
                         && Player.Instance.Spellbook.CanUseSpell(Smite) == SpellState.Ready && EnemyTarget.IsValidTarget(500))

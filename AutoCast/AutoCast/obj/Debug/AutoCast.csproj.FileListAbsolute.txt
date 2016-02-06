@@ -19,3 +19,4 @@ C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\EloBuddy.SD
 C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\SharpDX.dll
 C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\SharpDX.Direct3D9.dll
 C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\obj\Debug\AutoCast.csprojResolveAssemblyReference.cache
