@@ -7,6 +7,10 @@ namespace AutoCast
     {
         public static void Cast()
         {
+            if (!Player.Instance.IsVisible)
+            {
+                return;
+            }
             Game.OnTick += Game_OnTick;
         }
 

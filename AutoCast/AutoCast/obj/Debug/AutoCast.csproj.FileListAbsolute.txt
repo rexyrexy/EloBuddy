@@ -9,3 +9,13 @@ c:\users\berkk\documents\visual studio 2015\Projects\AutoHydra\AutoHydra\bin\Deb
 c:\users\berkk\documents\visual studio 2015\Projects\AutoHydra\AutoHydra\bin\Debug\Newtonsoft.Json.dll
 c:\users\berkk\documents\visual studio 2015\Projects\AutoHydra\AutoHydra\obj\Debug\AutoHydra.exe
 c:\users\berkk\documents\visual studio 2015\Projects\AutoHydra\AutoHydra\obj\Debug\AutoHydra.pdb
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\AutoHydra.exe.config
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\obj\Debug\AutoHydra.exe
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\obj\Debug\AutoHydra.pdb
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\AutoHydra.exe
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\AutoHydra.pdb
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\EloBuddy.dll
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\SharpDX.dll
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Berkk\Documents\GitHub\EloBuddy\AutoCast\AutoCast\bin\Debug\Newtonsoft.Json.dll
