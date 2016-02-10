@@ -24,13 +24,13 @@ namespace RengarPro_Revamped
             Drawing.OnDraw += Drawing_OnDraw;
             Helper.Misc.Init();
             ModeChecker.Do();
-            Dash.OnDash += Dash_OnDash;
+            //Dash.OnDash += Dash_OnDash;
             Helper.Magnet.Initialize();
             Helper.Targetting.Initialize();
         }
         
 
-        private static void Dash_OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
+        /*private static void Dash_OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
         {
             if (!sender.IsMe)
             {
@@ -106,6 +106,7 @@ namespace RengarPro_Revamped
                 }
             }
         }
+        */
 
         private static void Drawing_OnDraw(EventArgs args)
         {

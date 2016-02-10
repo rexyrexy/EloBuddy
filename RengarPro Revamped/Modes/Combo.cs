@@ -1,7 +1,5 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Events;
-using RengarPro_Revamped;
 
 namespace RengarPro_Revamped.Modes
 {

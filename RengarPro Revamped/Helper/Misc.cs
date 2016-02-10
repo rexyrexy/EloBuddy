@@ -25,10 +25,10 @@ namespace RengarPro_Revamped.Helper
 
         public static void BetaQ()
         {
-            if (TargetSelector.SelectedTarget.IsValidTarget(1000) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
+            if (TargetSelector.SelectedTarget.IsValidTarget(875) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
             {
                 Standarts.Q.Cast();
-                Orbwalker.ResetAutoAttack();
+                Orbwalking.ResetAutoAttackTimer();
             }
         }
 

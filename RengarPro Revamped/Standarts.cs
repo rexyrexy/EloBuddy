@@ -9,7 +9,7 @@ namespace RengarPro_Revamped
     {
         public static Spell.Active Q = new Spell.Active(SpellSlot.Q, (uint)Player.Instance.GetAutoAttackRange() + 100);
         public static Spell.Active W = new Spell.Active(SpellSlot.W, (uint)Player.Instance.Spellbook.GetSpell(SpellSlot.W).SData.CastRange);
-        public static Spell.Skillshot E = new Spell.Skillshot(SpellSlot.E, (uint)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.CastRange, SkillShotType.Linear, (int)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.CastTime, (int)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.MissileSpeed, (int)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.LineWidth);
+        public static Spell.Skillshot E = new Spell.Skillshot(SpellSlot.E, 900, SkillShotType.Linear, (int)0.125f, (int)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.MissileSpeed, (int)Player.Instance.Spellbook.GetSpell(SpellSlot.E).SData.LineWidth);
         public static Spell.Active R = new Spell.Active(SpellSlot.R, 2500);
         public static AIHeroClient Rengar
         {
