@@ -20,9 +20,8 @@ namespace RengarPro_Revamped.Helper
             SmiteCombo();
             SkinHack();
             AutoYoumuu();
-            BetaQ(); 
+            BetaQ();
         }
-
         public static void BetaQ()
         {
             if (TargetSelector.SelectedTarget.IsValidTarget(875) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())

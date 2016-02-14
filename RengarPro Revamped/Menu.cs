@@ -15,8 +15,8 @@ namespace RengarPro_Revamped
             //Combo Menu
             ComboM = RengarMenu.AddSubMenu("Combo");
             ComboM.AddGroupLabel("Combo Menu");
-            ComboM.AddLabel("1- OneShot | 2- Snare");
-            ComboM.Add("combo.mode", new Slider("Combo Mode", 1, 1, 2));
+            ComboM.AddLabel("1- OneShot | 2- Snare | 3- AP Rengo");
+            ComboM.Add("combo.mode", new Slider("Combo Mode", 1, 1, 3));
             var switcher = ComboM.Add("switch", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive, (uint)'T'));
             switcher.OnValueChange += delegate (ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args1)
             {
