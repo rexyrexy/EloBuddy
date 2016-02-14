@@ -87,7 +87,7 @@ namespace RengarPro_Revamped.Modes
 
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
+                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive && !(W.IsReady() || Q.IsReady()))
                         {
                             E.Cast(EnemyTarget);
                         }
@@ -228,7 +228,7 @@ namespace RengarPro_Revamped.Modes
                                 W.Cast();
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
+                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && Helper.MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive && !(W.IsReady() || Q.IsReady()) && !(W.IsReady() || Q.IsReady()))
                         {
                             E.Cast(EnemyTarget);
                         }
