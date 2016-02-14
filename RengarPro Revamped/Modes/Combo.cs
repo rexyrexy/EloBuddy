@@ -157,6 +157,20 @@ namespace RengarPro_Revamped.Modes
                 case 3:
                     {
                         //Ap Rengoo
+                        if (!RengarHasPassive && Ferocity == 4)
+                        {
+                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            {
+                                W.Cast();
+                            }
+                        }
+                        if (RengarHasPassive && Ferocity == 4)
+                        {
+                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            {
+                                W.Cast();
+                            }
+                        }
                         if (!RengarHasPassive && Ferocity <= 4)
                         {
                             if (W.IsReady() && EnemyTarget.IsValidTarget(W.Range))
@@ -242,9 +256,11 @@ namespace RengarPro_Revamped.Modes
         }
         public static void QPriority(AIHeroClient Target)
         {
-            if (RengarQ)
+            if (RengarQ && !RengarHasPassive)
             {
+                if (Target.IsValidTarget(Q.Range)) { 
                 Player.IssueOrder(GameObjectOrder.AttackTo, Target);
+            }
             }
         }
     }
