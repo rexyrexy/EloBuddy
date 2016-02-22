@@ -23,6 +23,7 @@ namespace RengarPro_Revamped.Modes
                 return;
             }
 
+            Orbwalker.ForcedTarget = EnemyTarget;
             QPriority(EnemyTarget);
 
             switch (Helper.MenuChecker.ComboModeSelected)
@@ -262,7 +263,7 @@ namespace RengarPro_Revamped.Modes
             if (RengarQ && !RengarHasPassive && !Q.IsOnCooldown)
             {
                 if (Target.IsValidTarget(Q.Range)) { 
-                Player.IssueOrder(GameObjectOrder.AttackUnit, Target);
+                Player.IssueOrder(GameObjectOrder.AutoAttack, Target);
             }
             }
         }

@@ -24,9 +24,41 @@ namespace RengarPro_Revamped
             Helper.Misc.Init();
             Helper.Magnet.Initialize();
             Helper.Targetting.Initialize();
-            
+            Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
+            Orbwalker.OnPreAttack += Orbwalker_OnPreAttack;
             Drawing.OnDraw += Drawing_OnDraw;
         }
+
+        private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        {
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !RengarHasPassive && Q.IsReady()
+                    && !(Helper.MenuChecker.ComboModeSelected == 2 || Helper.MenuChecker.ComboModeSelected == 3 && Ferocity == 5))
+            {
+                 if (Player.Instance.Position.To2D().Distance(target.Position.To2D())
+                    >= Player.Instance.BoundingRadius + Player.Instance.AttackRange + args.Target.BoundingRadius)
+                {
+                    args.Process = false;
+                    Q.Cast();
+                }
+            }
+        }
+
+        private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            if (!target.IsMe || target == null || !(target is AIHeroClient))
+            {
+                return;
+            }
+
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                if (target.IsValidTarget(Q.Range))
+                {
+                    Q.Cast();
+                }
+            }
+        }
+
         private static void Drawing_OnDraw(EventArgs args)
         {
             if (Helper.MenuChecker.DrawComboModeActive)

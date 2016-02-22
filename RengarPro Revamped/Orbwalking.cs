@@ -738,29 +738,7 @@ namespace RengarPro_Revamped
             ///     The player
             /// </summary>
             private readonly AIHeroClient Player;
-
-            /// <summary>
-            ///     The forced target
-            /// </summary>
-            private Obj_AI_Base _forcedTarget;
-
-            /// <summary>
-            ///     The orbalker mode
-            /// </summary>
-            private OrbwalkingMode _mode = OrbwalkingMode.None;
-
-            /// <summary>
-            ///     The orbwalking point
-            /// </summary>
-            private Vector3 _orbwalkingPoint;
-
-            /// <summary>
-            ///     The previous minion the orbwalker was targeting.
-            /// </summary>
-            private Obj_AI_Minion _prevMinion;
-
             
-
             /// <summary>
             ///     Initializes a new instance of the <see cref="Orbwalker" /> class.
             /// </summary>

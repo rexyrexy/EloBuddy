@@ -19,4 +19,3 @@ C:\Users\Berkk\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\EloBuddy.S
 C:\Users\Berkk\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\SharpDX.dll
 C:\Users\Berkk\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\SharpDX.Direct3D9.dll
 C:\Users\Berkk\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Berkk\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Debug\RengarPro Revamped.csprojResolveAssemblyReference.cache
