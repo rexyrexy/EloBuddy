@@ -24,6 +24,7 @@ namespace RengarPro_Revamped
             Helper.Misc.Init();
             Helper.Magnet.Initialize();
             Helper.Targetting.Initialize();
+            
             Drawing.OnDraw += Drawing_OnDraw;
         }
         private static void Drawing_OnDraw(EventArgs args)
