@@ -1,6 +1,7 @@
 ﻿using System;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Menu.Values;
 
 namespace RengarPro_Revamped.Helper
 {
@@ -37,7 +38,8 @@ namespace RengarPro_Revamped.Helper
             var target = TargetSelector.SelectedTarget.IsValidTarget(Standarts.R.Range)
                                  ? TargetSelector.SelectedTarget
                                  : TargetSelector.GetTarget(Standarts.E.Range, DamageType.Physical);
-            if (target.IsValidTarget(300))
+            var MagnetRange = Menu.MiscM["magnet.range"].Cast<Slider>().CurrentValue;
+            if (target.IsValidTarget(MagnetRange))
             {
                 IsDoingMagnet = true;
                 if (!Orbwalker.DisableMovement)

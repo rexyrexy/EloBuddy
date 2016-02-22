@@ -1,5 +1,6 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Menu.Values;
 
 namespace RengarPro_Revamped.Modes
 {
@@ -47,7 +48,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                         }
                         if (!RengarHasPassive && Ferocity == 5)
@@ -55,7 +56,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                         }
                         if (RengarHasPassive && Ferocity <= 4)
@@ -63,7 +64,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                             if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
@@ -114,7 +115,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                         }
                         if (!RengarHasPassive && Ferocity == 5)
@@ -129,7 +130,7 @@ namespace RengarPro_Revamped.Modes
                             if (EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                             if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
@@ -190,7 +191,7 @@ namespace RengarPro_Revamped.Modes
                             if (Q.IsReady() && EnemyTarget.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                         }
                         if (!RengarHasPassive && Ferocity == 5)
@@ -205,7 +206,7 @@ namespace RengarPro_Revamped.Modes
                             if (Q.IsReady() && EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
                             {
                                 Q.Cast();
-                                Orbwalking.ResetAutoAttackTimer();
+                                Orbwalker.ResetAutoAttack();
                             }
                             if (W.IsReady() && EnemyTarget.IsValidTarget(W.Range))
                             {
@@ -256,10 +257,12 @@ namespace RengarPro_Revamped.Modes
         }
         public static void QPriority(AIHeroClient Target)
         {
-            if (RengarQ && !RengarHasPassive)
+            var QPrioActive = Menu.ComboM["qprio.active"].Cast<CheckBox>().CurrentValue;
+            if (!QPrioActive) { return; }
+            if (RengarQ && !RengarHasPassive && !Q.IsOnCooldown)
             {
                 if (Target.IsValidTarget(Q.Range)) { 
-                Player.IssueOrder(GameObjectOrder.AttackTo, Target);
+                Player.IssueOrder(GameObjectOrder.AutoAttack, Target);
             }
             }
         }

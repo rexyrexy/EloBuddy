@@ -2,6 +2,7 @@
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Menu.Values;
 
 namespace RengarPro_Revamped.Helper
 {
@@ -24,16 +25,20 @@ namespace RengarPro_Revamped.Helper
         }
         public static void BetaQ()
         {
-            if (TargetSelector.SelectedTarget.IsValidTarget(875) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
+            var BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
+            var BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
+            if (!BetaQActive) { return; }
+            if (TargetSelector.SelectedTarget.IsValidTarget(BetaQRange) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
             {
                 Standarts.Q.Cast();
-                Orbwalking.ResetAutoAttackTimer();
+                Orbwalker.ResetAutoAttack();
             }
         }
 
         public static void AutoYoumuu()
         {
-            if (MenuChecker.AutoYoumuuActive && Standarts.RengarHasUltimate && Item.CanUseItem(ItemId.Youmuus_Ghostblade))
+            if (!MenuChecker.AutoYoumuuActive) { return; }
+            if (Standarts.RengarHasUltimate && Item.CanUseItem(ItemId.Youmuus_Ghostblade))
             {
                 Core.DelayAction(() => Item.UseItem(ItemId.Youmuus_Ghostblade), 600);
             }

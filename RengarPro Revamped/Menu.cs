@@ -35,6 +35,15 @@ namespace RengarPro_Revamped
             };
 
             ComboM.Add("combo.useEoutofQ", new CheckBox("Use E out Q Range"));
+            ComboM.AddSeparator();
+            ComboM.AddLabel("The settings on the bottom are the recommended settings");
+            ComboM.AddLabel("I suggest dont change settings, if you are not a developer");
+            ComboM.AddSeparator();
+            ComboM.AddLabel("BetaQ => Its Cast Your Q before jump when ulti activated");
+            ComboM.AddLabel("Q Priority => Its forcing auto attack to enemy when q casted");
+            ComboM.Add("betaq.active", new CheckBox("BetaQ Active"));
+            ComboM.Add("betaq.range", new Slider("Beta Q Range", 875, 600, 1000));
+            ComboM.Add("qprio.active", new CheckBox("Q Priority Active"));
 
             //Lane Clear Menu
             LaneM = RengarMenu.AddSubMenu("Lane Clear");
@@ -63,6 +72,7 @@ namespace RengarPro_Revamped
             MiscM.AddGroupLabel("Misc Menu");
             MiscM.Add("misc.autoyoumuu", new CheckBox("Auto Youmuu when Ulti"));
             MiscM.Add("misc.magnet", new CheckBox("Enable Magnet"));
+            MiscM.Add("magnet.range", new Slider("Magnet Range", 225, 100, 500));
             MiscM.Add("misc.smite", new CheckBox("Use Smite On Combo"));
             MiscM.Add("misc.autohp", new CheckBox("Auto HP Active"));
             MiscM.Add("misc.hp.value", new Slider("Auto HP %",30,1,100));
