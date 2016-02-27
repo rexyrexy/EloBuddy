@@ -11,20 +11,26 @@ namespace RengarPro_Revamped.Modes
             {
                 if (Ferocity < 5 || (Ferocity == 5 && !Helper.MenuChecker.JungleClearSaveStacks))
                 {
-                    if (Helper.MenuChecker.JungleClearUseQ && Q.IsReady() && Rengar.Distance(jungleMinion) < Rengar.AttackRange)
+                    if (Helper.MenuChecker.JungleClearUseQ && Ferocity == 5)
+                    {
+                        if (Q.IsReady())
+                        {
+                            Q.Cast();
+                        }
+                    }
+                    if (Helper.MenuChecker.JungleClearUseQ && Q.IsReady() && Q.IsInRange(jungleMinion))
                     {
                         Q.Cast();
-                        Orbwalker.ResetAutoAttack();
                     }
-                    if (jungleMinion.IsValidTarget(Rengar.GetAutoAttackRange()))
+                    if (jungleMinion.IsInAutoAttackRange(Rengar))
                     {
                        CastItems();
                     }
-                    if (Helper.MenuChecker.JungleClearUseW && W.IsReady() && Rengar.Distance(jungleMinion) <= W.Range)
+                    if (Helper.MenuChecker.JungleClearUseW && W.IsReady() && W.IsInRange(jungleMinion))
                     {
                         W.Cast();
                     }
-                    if (Helper.MenuChecker.JungleClearUseE && E.IsReady() && Rengar.Distance(jungleMinion) <= E.Range)
+                    if (Helper.MenuChecker.JungleClearUseE && E.IsReady() && E.IsInRange(jungleMinion))
                     {
                         E.Cast(jungleMinion);
                     }

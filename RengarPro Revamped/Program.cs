@@ -7,7 +7,11 @@ using Color = System.Drawing.Color;
 namespace RengarPro_Revamped
 {
     class Program : Standarts
+
     {
+        public static int LastAutoAttack, Lastrengarq;
+
+        public static int LastQ, LastE, LastW, LastSpell;
         static void Main(string[] args)
         {
             Loading.OnLoadingComplete += Loading_OnLoadingComplete;
@@ -26,7 +30,40 @@ namespace RengarPro_Revamped
             Helper.Targetting.Initialize();
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Orbwalker.OnPreAttack += Orbwalker_OnPreAttack;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
+            Dash.OnDash += Modes.Combo.Dash_OnDash;
             Drawing.OnDraw += Drawing_OnDraw;
+        }
+
+        private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                switch (args.SData.Name.ToLower())
+                {
+                    case "rengarq":
+                        LastQ = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        Orbwalking.ResetAutoAttackTimer();
+                        break;
+
+                    case "rengare":
+                        LastE = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        if (Orbwalker.LastAutoAttack < Core.GameTickCount - Game.Ping / 2
+                            && Core.GameTickCount - Game.Ping / 2
+                            < Orbwalker.LastAutoAttack + Player.Instance.AttackDelay * 1000 + 40)
+                        {
+                            Orbwalking.ResetAutoAttackTimer();
+                        }
+                        break;
+
+                    case "rengarw":
+                        LastW = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        break;
+                }
+            }
         }
 
         private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
@@ -39,23 +76,23 @@ namespace RengarPro_Revamped
                 {
                     args.Process = false;
                     Q.Cast();
+                    
                 }
             }
         }
 
         private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            if (!target.IsMe || target == null || !(target is AIHeroClient))
+            if (target.IsMe || target == null || !(target is AIHeroClient) || !target.IsValidTarget((Q.Range)))
             {
                 return;
             }
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                if (target.IsValidTarget(Q.Range))
-                {
                     Q.Cast();
-                }
+                    
+                    Modes.Combo.CastItems();
             }
         }
 

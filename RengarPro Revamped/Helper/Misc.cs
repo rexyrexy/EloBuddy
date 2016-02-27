@@ -31,7 +31,7 @@ namespace RengarPro_Revamped.Helper
             if (TargetSelector.SelectedTarget.IsValidTarget(BetaQRange) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
             {
                 Standarts.Q.Cast();
-                Orbwalking.ResetAutoAttackTimer();
+                
             }
         }
 
