@@ -342,7 +342,7 @@ namespace RengarPro_Revamped.Modes
             if (RengarQ && !RengarHasPassive && !Q.IsOnCooldown)
             {
                 if (Target.IsValidTarget(Q.Range)) { 
-                Player.IssueOrder(GameObjectOrder.AttackTo, Target);
+                Player.IssueOrder(GameObjectOrder.AttackUnit, Target);
             }
             }
         }
