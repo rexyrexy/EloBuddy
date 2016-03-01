@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
@@ -256,6 +257,14 @@ namespace RengarPro_Revamped.Modes
                 return;
             }
 
+            if (Ferocity == 5 && Helper.MenuChecker.ComboModeSelected == 1)
+            {
+                if (Q.IsReady())
+                {
+                    Q.Cast();
+                }
+            }
+
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
                 if (Ferocity == 5)
@@ -349,14 +358,20 @@ namespace RengarPro_Revamped.Modes
 
         public static void CastEPrediction(AIHeroClient eCastTarget)
         {
-            var predictionOfE = E.GetPrediction(eCastTarget);
-            if (predictionOfE.HitChance >= HitChance.High)
+            var predictione = E.GetPrediction(eCastTarget);
+            if (predictione.HitChance >= HitChance.High && predictione.CollisionObjects.Count() == 0)
             {
-                E.Cast(predictionOfE.CastPosition);
+                E.Cast(predictione.CastPosition);
+            }
+            else if (predictione.HitChance < HitChance.High && predictione.CollisionObjects.Count() == 0)
+            {
+                E.Cast(eCastTarget.ServerPosition);
             }
             else
             {
-                E.Cast(eCastTarget.ServerPosition);
+                E.AllowedCollisionCount = 0;
+                E.MinimumHitChance = HitChance.High;
+                E.Cast(eCastTarget);
             }
         }
     }

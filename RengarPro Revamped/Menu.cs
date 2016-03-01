@@ -71,9 +71,9 @@ namespace RengarPro_Revamped
             MiscM = RengarMenu.AddSubMenu("Misc");
             MiscM.AddGroupLabel("Misc Menu");
             MiscM.Add("misc.autoyoumuu", new CheckBox("Auto Youmuu when Ulti"));
-            MiscM.Add("misc.magnet", new CheckBox("Enable Magnet"));
+            /*MiscM.Add("misc.magnet", new CheckBox("Enable Magnet"));
             MiscM.Add("magnet.range", new Slider("Magnet Range", 225, 100, 500));
-            MiscM.Add("misc.smite", new CheckBox("Use Smite On Combo"));
+  */        MiscM.Add("misc.smite", new CheckBox("Use Smite On Combo"));
             MiscM.Add("misc.autohp", new CheckBox("Auto HP Active"));
             MiscM.Add("misc.hp.value", new Slider("Auto HP %",30,1,100));
             MiscM.AddLabel("1- HeadHunter 2- NightHunter 3- SSW");

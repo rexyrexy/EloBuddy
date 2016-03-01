@@ -9,7 +9,6 @@ namespace RengarPro_Revamped
     class Program : Standarts
 
     {
-        public static int LastAutoAttack, Lastrengarq;
 
         public static int LastQ, LastE, LastW, LastSpell;
         static void Main(string[] args)
@@ -26,7 +25,7 @@ namespace RengarPro_Revamped
             ModeChecker.Do();
             Menu.Init();
             Helper.Misc.Init();
-            Helper.Magnet.Initialize();
+            //Helper.Magnet.Initialize();
             Helper.Targetting.Initialize();
             Orbwalker.OnPostAttack += Orbwalker_OnPostAttack;
             Orbwalker.OnPreAttack += Orbwalker_OnPreAttack;
@@ -44,7 +43,7 @@ namespace RengarPro_Revamped
                     case "rengarq":
                         LastQ = Environment.TickCount;
                         LastSpell = Environment.TickCount;
-                        Orbwalking.ResetAutoAttackTimer();
+                       Orbwalker.ResetAutoAttack();
                         break;
 
                     case "rengare":
@@ -54,7 +53,7 @@ namespace RengarPro_Revamped
                             && Core.GameTickCount - Game.Ping / 2
                             < Orbwalker.LastAutoAttack + Player.Instance.AttackDelay * 1000 + 40)
                         {
-                            Orbwalking.ResetAutoAttackTimer();
+                            Orbwalker.ResetAutoAttack();
                         }
                         break;
 
