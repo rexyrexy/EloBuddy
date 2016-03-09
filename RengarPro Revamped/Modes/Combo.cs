@@ -361,17 +361,11 @@ namespace RengarPro_Revamped.Modes
             var predictione = E.GetPrediction(eCastTarget);
             if (predictione.HitChance >= HitChance.High && predictione.CollisionObjects.Count() == 0)
             {
-                E.Cast(predictione.CastPosition);
+                E.Cast(eCastTarget.Position);
             }
             else if (predictione.HitChance < HitChance.High && predictione.CollisionObjects.Count() == 0)
             {
                 E.Cast(eCastTarget.ServerPosition);
-            }
-            else
-            {
-                E.AllowedCollisionCount = 0;
-                E.MinimumHitChance = HitChance.High;
-                E.Cast(eCastTarget);
             }
         }
     }
