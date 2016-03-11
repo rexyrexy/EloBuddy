@@ -1,5 +1,6 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
+using System.Linq;
 
 namespace RengarPro_Revamped.Modes
 {
@@ -7,8 +8,12 @@ namespace RengarPro_Revamped.Modes
     {
         public static void Do()
         {
-            foreach (var jungleMinion in EntityManager.MinionsAndMonsters.Monsters)
+                var jungleMinion = EntityManager.MinionsAndMonsters.GetJungleMonsters(Player.Instance.ServerPosition, 400).OrderByDescending(a => a.MaxHealth).FirstOrDefault();
+
+            if (jungleMinion == null)
             {
+                return;
+            }
                 if (Ferocity < 5 || (Ferocity == 5 && !Helper.MenuChecker.JungleClearSaveStacks))
                 {
                     if (Helper.MenuChecker.JungleClearUseQ && Ferocity == 5)
@@ -36,7 +41,6 @@ namespace RengarPro_Revamped.Modes
                     }
                 }
             }
-        }
         public static void CastItems()
         {
             if (!(Item.CanUseItem(ItemId.Ravenous_Hydra_Melee_Only) || Item.CanUseItem(ItemId.Tiamat_Melee_Only)))

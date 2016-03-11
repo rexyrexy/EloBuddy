@@ -2,6 +2,8 @@
 using EloBuddy;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Menu.Values;
+using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace RengarPro_Revamped
@@ -33,7 +35,6 @@ namespace RengarPro_Revamped
             Dash.OnDash += Modes.Combo.Dash_OnDash;
             Drawing.OnDraw += Drawing_OnDraw;
         }
-
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
@@ -67,6 +68,10 @@ namespace RengarPro_Revamped
 
         private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
+            if (RengarHasUltimate)
+            {
+                return;
+            }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !RengarHasPassive && Q.IsReady()
                     && !(Helper.MenuChecker.ComboModeSelected == 2 || Helper.MenuChecker.ComboModeSelected == 3 && Ferocity == 5))
             {
@@ -82,7 +87,7 @@ namespace RengarPro_Revamped
 
         private static void Orbwalker_OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            if (target.IsMe || target == null || !(target is AIHeroClient) || !target.IsValidTarget((Q.Range)))
+            if (target.IsMe || target == null || !(target is AIHeroClient) || !target.IsValidTarget((Q.Range)) || RengarHasUltimate)
             {
                 return;
             }

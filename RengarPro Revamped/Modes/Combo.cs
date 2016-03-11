@@ -361,7 +361,7 @@ namespace RengarPro_Revamped.Modes
             var predictione = E.GetPrediction(eCastTarget);
             if (predictione.HitChance >= HitChance.High && predictione.CollisionObjects.Count() == 0)
             {
-                E.Cast(eCastTarget.Position);
+                E.Cast(eCastTarget);
             }
             else if (predictione.HitChance < HitChance.High && predictione.CollisionObjects.Count() == 0)
             {

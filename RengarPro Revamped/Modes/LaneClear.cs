@@ -8,7 +8,12 @@ namespace RengarPro_Revamped.Modes
     {
         public static void Do()
         {
-            var laneTarget = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && W.IsInRange(x));
+            var laneTarget = EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.ServerPosition, 400).OrderByDescending(a => a.MaxHealth).FirstOrDefault();
+
+            if (laneTarget == null)
+            {
+                return;
+            }
 
             if (Ferocity < 5 || (Ferocity == 5 && !Helper.MenuChecker.LaneClearSaveStacks))
             {
