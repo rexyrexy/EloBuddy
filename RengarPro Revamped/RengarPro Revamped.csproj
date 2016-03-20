@@ -54,15 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\Misc.cs" />
-    <Compile Include="Helper\Magnet.cs" />
     <Compile Include="Helper\MenuChecker.cs" />
     <Compile Include="Helper\Targetting.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="ModeChecker.cs" />
+    <Compile Include="Modes\Clear.cs" />
     <Compile Include="Modes\Combo.cs" />
-    <Compile Include="Modes\JungleClear.cs" />
-    <Compile Include="Modes\LaneClear.cs" />
-    <Compile Include="Orbwalking.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Standarts.cs" />

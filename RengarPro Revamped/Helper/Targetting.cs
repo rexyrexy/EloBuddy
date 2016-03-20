@@ -7,7 +7,7 @@ namespace RengarPro_Revamped.Helper
 {
     class Targetting
     {
-        public static AIHeroClient RjumpTarget = null, PassiveJumpTarget = null;
+        public static AIHeroClient RjumpTarget, PassiveJumpTarget;
         public static void Initialize()
         {
             Game.OnTick += Game_OnTick;
@@ -17,6 +17,8 @@ namespace RengarPro_Revamped.Helper
 
         private static void Player_OnIssueOrder(Obj_AI_Base sender, PlayerIssueOrderEventArgs args)
         {
+            try
+            {
             if (Standarts.Rengar.IsDead)
             {
                 return;
@@ -29,10 +31,19 @@ namespace RengarPro_Revamped.Helper
                 || args.Target == null || !args.Target.IsValid || !(args.Target is AIHeroClient))
                 return;
             UltimateTargetingOnIssue(sender, args);
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
+            try
+            {
             if (Standarts.Rengar.IsDead)
             {
                 return;
@@ -45,10 +56,19 @@ namespace RengarPro_Revamped.Helper
                 args.Process = false;
                 BushTargeting();
             }
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void Game_OnTick(EventArgs args)
         {
+            try
+            {
             if (Standarts.Rengar.IsDead)
             {
                 return;
@@ -65,41 +85,71 @@ namespace RengarPro_Revamped.Helper
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
                 return;
             UltimateTargetingOnTick();
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void UltimateTargetingOnIssue(Obj_AI_Base sender, PlayerIssueOrderEventArgs args)
         {
+            try
+            {
             var target = args.Target as AIHeroClient;
             var ultTarget = GetUltimateTarget();
             if (!target.IsValid() || !ultTarget.IsValidTarget() || target.NetworkId != ultTarget.NetworkId)
                 args.Process = false;
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         private static void UltimateTargetingOnTick()
         {
-            if (!Standarts.RengarHasUltimate)
-                return;
-            var ultTarget = GetUltimateTarget();
-            if (!ultTarget.IsValid() || !Player.Instance.IsInAutoAttackRange(ultTarget) || !Orbwalker.CanAutoAttack)
-                return;
-            Player.IssueOrder(GameObjectOrder.AttackUnit, ultTarget);
+            try
+            {
+                if (!Standarts.RengarHasUltimate)
+                    return;
+                var ultTarget = GetUltimateTarget();
+                if (!ultTarget.IsValid() || !Player.Instance.IsInAutoAttackRange(ultTarget) || !Orbwalker.CanAutoAttack)
+                    return;
+                Player.IssueOrder(GameObjectOrder.AttackUnit, ultTarget);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void BushTargeting()
         {
-            var target = GetBushTarget();
-            if (!target.IsValid() || !Player.Instance.IsInAutoAttackRange(target) || !Orbwalker.CanAutoAttack)
-                return;
-            Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+            try
+            {
+                var target = GetBushTarget();
+                if (!target.IsValid() || !Player.Instance.IsInAutoAttackRange(target) || !Orbwalker.CanAutoAttack)
+                    return;
+                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static AIHeroClient GetUltimateTarget()
         {
-            if (TargetSelector.SelectedTarget.IsValid())
-            {
-                return TargetSelector.SelectedTarget;
-            }
-            var target = EntityManager.Heroes.Enemies.Where(hero => hero.IsValid()).OrderBy(hero => hero.Distance(Player.Instance)).FirstOrDefault();
-            return target != null ? target : TargetSelector.SelectedTarget;
+                if (TargetSelector.SelectedTarget.IsValid())
+                {
+                    return TargetSelector.SelectedTarget;
+                }
+                var target = EntityManager.Heroes.Enemies.Where(hero => hero.IsValid()).OrderBy(hero => hero.Distance(Player.Instance)).FirstOrDefault();
+                return target != null ? target : TargetSelector.SelectedTarget;
         }
 
         private static AIHeroClient GetBushTarget()

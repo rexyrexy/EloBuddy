@@ -23,69 +23,110 @@ namespace RengarPro_Revamped.Helper
             AutoYoumuu();
             BetaQ();
         }
+
+        public static class BetaQVariables
+        {
+            public static bool BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
+            public static int BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
+        }
         public static void BetaQ()
         {
-            var BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
-            var BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
-            if (!BetaQActive) { return; }
-            if (TargetSelector.SelectedTarget.IsValidTarget(BetaQRange) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
+            try
             {
-                Standarts.Q.Cast();
-                
+            if (!BetaQVariables.BetaQActive) { return; }
+            if (TargetSelector.SelectedTarget.IsValidTarget(BetaQVariables.BetaQRange) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
+            {
+                Standarts.Q.Cast();    
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         public static void AutoYoumuu()
         {
-            if (!MenuChecker.AutoYoumuuActive) { return; }
-            if (Standarts.RengarHasUltimate && Item.CanUseItem(ItemId.Youmuus_Ghostblade))
+            try
             {
-                Core.DelayAction(() => Item.UseItem(ItemId.Youmuus_Ghostblade), 600);
+                if (!MenuChecker.AutoYoumuuActive)
+                {
+                    return;
+                }
+                if (Standarts.RengarHasUltimate && Item.CanUseItem(ItemId.Youmuus_Ghostblade))
+                {
+                    Core.DelayAction(() => Item.UseItem(ItemId.Youmuus_Ghostblade), 600);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         public static void SkinHack()
         {
-            if (!MenuChecker.SkinHackActive)
+            try
             {
-                Standarts.Rengar.SetSkinId(0);
-                return;
-            }
+                if (!MenuChecker.SkinHackActive)
+                {
+                    Standarts.Rengar.SetSkinId(0);
+                    return;
+                }
 
-            switch (MenuChecker.SkinHackValue)
+                switch (MenuChecker.SkinHackValue)
+                {
+                    case 1: { Standarts.Rengar.SetSkinId(1); break; }
+                    case 2: { Standarts.Rengar.SetSkinId(2); break; }
+                    case 3: { Standarts.Rengar.SetSkinId(3); break; }
+                }
+            }
+            catch (Exception e)
             {
-                case 1: { Standarts.Rengar.SetSkinId(1); break; }
-                case 2: { Standarts.Rengar.SetSkinId(2); break; }
-                case 3: { Standarts.Rengar.SetSkinId(3); break; }
+                Console.WriteLine(e);
             }
         }
 
         public static void SmiteCombo()
         {
-            if (BlueSmite.Any(id => Item.HasItem(id)))
+            try
             {
-                Smite = Standarts.Rengar.GetSpellSlotFromName("s5_summonersmiteplayerganker");
-                return;
-            }
+                if (BlueSmite.Any(id => Item.HasItem(id)))
+                {
+                    Smite = Standarts.Rengar.GetSpellSlotFromName("s5_summonersmiteplayerganker");
+                    return;
+                }
 
-            if (RedSmite.Any(id => Item.HasItem(id)))
+                if (RedSmite.Any(id => Item.HasItem(id)))
+                {
+                    Smite = Standarts.Rengar.GetSpellSlotFromName("s5_summonersmiteduel");
+                    return;
+                }
+
+                Smite = Standarts.Rengar.GetSpellSlotFromName("summonersmite");
+            }
+            catch (Exception e)
             {
-                Smite = Standarts.Rengar.GetSpellSlotFromName("s5_summonersmiteduel");
-                return;
+                Console.WriteLine(e);
             }
-
-            Smite = Standarts.Rengar.GetSpellSlotFromName("summonersmite");
         }
 
         public static void AutoHp()
         {
-            if (!MenuChecker.AutoHpActive)
+            try
             {
-                return;
+                if (!MenuChecker.AutoHpActive)
+                {
+                    return;
+                }
+                if (Standarts.Rengar.HealthPercent <= MenuChecker.AutoHpValue && Standarts.Ferocity == 5 && Standarts.W.IsReady())
+                {
+                    Standarts.W.Cast();
+                }
             }
-            if (Standarts.Rengar.HealthPercent <= MenuChecker.AutoHpValue && Standarts.Ferocity == 5 && Standarts.W.IsReady())
+            catch (Exception e)
             {
-                Standarts.W.Cast();
+                Console.WriteLine(e);
             }
         }
     }

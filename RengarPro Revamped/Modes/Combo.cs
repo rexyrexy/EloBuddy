@@ -2,7 +2,6 @@
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu.Values;
 using RengarPro_Revamped.Helper;
@@ -11,16 +10,18 @@ namespace RengarPro_Revamped.Modes
 {
     class Combo : Standarts
     {
-        private static AIHeroClient EnemyTarget;
+        private static AIHeroClient _enemyTarget;
         public static void Do()
         {
+            try
+            {
             if (!TargetSelector.SelectedTarget.IsValidTarget(1750))
             {
-                EnemyTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+                _enemyTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
             }
             else if (TargetSelector.SelectedTarget.IsValidTarget(1750))
             {
-                EnemyTarget = TargetSelector.SelectedTarget;
+                _enemyTarget = TargetSelector.SelectedTarget;
             }
 
             if (RengarHasUltimate)
@@ -28,8 +29,8 @@ namespace RengarPro_Revamped.Modes
                 return;
             }
 
-            Orbwalker.ForcedTarget = EnemyTarget;
-            QPriority(EnemyTarget);
+            Orbwalker.ForcedTarget = _enemyTarget;
+            QPriority(_enemyTarget);
 
             switch (MenuChecker.ComboModeSelected)
             {
@@ -38,20 +39,20 @@ namespace RengarPro_Revamped.Modes
                         //One Shot Mode Logic
                         if (!RengarHasPassive && Ferocity <= 4)
                         {
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Misc.Smite, EnemyTarget);
-                            if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady())
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady())
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
-                            if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
                                 
@@ -59,7 +60,7 @@ namespace RengarPro_Revamped.Modes
                         }
                         if (!RengarHasPassive && Ferocity == 5)
                         {
-                            if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
                                 
@@ -67,36 +68,36 @@ namespace RengarPro_Revamped.Modes
                         }
                         if (RengarHasPassive && Ferocity <= 4)
                         {
-                            if (EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
                             {
                                 Q.Cast();
                                 
                             }
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Helper.Misc.Smite, EnemyTarget);
-                            if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady())
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady())
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
                         }
                         if (RengarHasPassive && Ferocity == 5)
                         {
-                            if (EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
                             {
                                 Q.Cast();
 
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
+                        if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady() && MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
                         {
-                            CastEPrediction(EnemyTarget);
+                            CastEPrediction(_enemyTarget);
                         }
                         break;
                     }
@@ -105,20 +106,20 @@ namespace RengarPro_Revamped.Modes
                         //Snare Logic
                         if (!RengarHasPassive && Ferocity <= 4)
                         {
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Helper.Misc.Smite, EnemyTarget);
-                            if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady())
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady())
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
-                            if (EnemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Q.Range) && Q.IsReady())
                             {
                                 Q.Cast();
                                 
@@ -126,37 +127,37 @@ namespace RengarPro_Revamped.Modes
                         }
                         if (!RengarHasPassive && Ferocity == 5)
                         {
-                            if (E.IsReady() && EnemyTarget.IsValidTarget(E.Range))
+                            if (E.IsReady() && _enemyTarget.IsValidTarget(E.Range))
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
                         }
                         if (RengarHasPassive && Ferocity <= 4)
                         {
-                            if (EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
+                            if (_enemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()) && Q.IsReady())
                             {
                                 Q.Cast();
                                 
                             }
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Helper.Misc.Smite, EnemyTarget);
-                            if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady())
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady())
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
                         }
                         if (RengarHasPassive && Ferocity == 5)
                         {
-                            if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady())
+                            if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady())
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
                         }
                         break;
@@ -166,35 +167,35 @@ namespace RengarPro_Revamped.Modes
                         //Ap Rengoo
                         if (!RengarHasPassive && Ferocity == 4)
                         {
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
                         }
                         if (RengarHasPassive && Ferocity == 4)
                         {
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
                         }
                         if (!RengarHasPassive && Ferocity <= 4)
                         {
-                            if (W.IsReady() && EnemyTarget.IsValidTarget(W.Range))
+                            if (W.IsReady() && _enemyTarget.IsValidTarget(W.Range))
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Helper.Misc.Smite, EnemyTarget);
-                            if (E.IsReady() && EnemyTarget.IsValidTarget(E.Range))
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (E.IsReady() && _enemyTarget.IsValidTarget(E.Range))
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
 
-                            if (Q.IsReady() && EnemyTarget.IsValidTarget(Q.Range))
+                            if (Q.IsReady() && _enemyTarget.IsValidTarget(Q.Range))
                             {
                                 Q.Cast();
                                 
@@ -202,50 +203,57 @@ namespace RengarPro_Revamped.Modes
                         }
                         if (!RengarHasPassive && Ferocity == 5)
                         {
-                            if (EnemyTarget.IsValidTarget(W.Range) && W.IsReady())
+                            if (_enemyTarget.IsValidTarget(W.Range) && W.IsReady())
                             {
                                 W.Cast();
                             }
                         }   
                         if (RengarHasPassive && Ferocity <= 4)
                         {
-                            if (Q.IsReady() && EnemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
+                            if (Q.IsReady() && _enemyTarget.IsValidTarget(Rengar.GetAutoAttackRange()))
                             {
                                 Q.Cast();
                                 
                             }
-                            if (W.IsReady() && EnemyTarget.IsValidTarget(W.Range))
+                            if (W.IsReady() && _enemyTarget.IsValidTarget(W.Range))
                             {
                                 W.Cast();
                             }
-                            if (EnemyTarget.IsValidTarget(400))
+                            if (_enemyTarget.IsValidTarget(400))
                             {
                                 CastItems();
                             }
-                            CastSmite(Helper.Misc.Smite, EnemyTarget);
-                            if (E.IsReady() && EnemyTarget.IsValidTarget(E.Range))
+                            CastSmite(Misc.Smite, _enemyTarget);
+                            if (E.IsReady() && _enemyTarget.IsValidTarget(E.Range))
                             {
-                                CastEPrediction(EnemyTarget);
+                                CastEPrediction(_enemyTarget);
                             }
                         }
                         if (RengarHasPassive && Ferocity == 5)
                         {
-                            if (W.IsReady() && EnemyTarget.IsValidTarget(W.Range))
+                            if (W.IsReady() && _enemyTarget.IsValidTarget(W.Range))
                             {
                                 W.Cast();
                             }
                         }
-                        if (EnemyTarget.IsValidTarget(E.Range) && E.IsReady() && MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
+                        if (_enemyTarget.IsValidTarget(E.Range) && E.IsReady() && MenuChecker.UseEoutofQRange && !RengarQ && !RengarHasPassive)
                         {
-                            CastEPrediction(EnemyTarget);
+                            CastEPrediction(_enemyTarget);
                         }
                     }
                     break;
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         internal static void Dash_OnDash(Obj_AI_Base sender, Dash.DashEventArgs e)
         {
+            try
+            {
             if (!sender.IsMe)
             {
                 return;
@@ -257,7 +265,7 @@ namespace RengarPro_Revamped.Modes
                 return;
             }
 
-            if (Ferocity == 5 && Helper.MenuChecker.ComboModeSelected == 1)
+            if (Ferocity == 5 && MenuChecker.ComboModeSelected == 1)
             {
                 if (Q.IsReady())
                 {
@@ -310,9 +318,7 @@ namespace RengarPro_Revamped.Modes
                         break;
 
                     case 1:
-                        var BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
-                        var BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
-                        if (BetaQActive && target.IsValidTarget(BetaQRange) && RengarHasUltimate)
+                        if (Misc.BetaQVariables.BetaQActive && TargetSelector.SelectedTarget.IsValidTarget(Misc.BetaQVariables.BetaQRange) && MenuChecker.ComboModeSelected == 1 && RengarHasUltimate && Q.IsReady())
                         {
                             Q.Cast();
                         }
@@ -324,10 +330,19 @@ namespace RengarPro_Revamped.Modes
                     Core.DelayAction((() => CastItems()), e.Duration - 100 - Game.Ping / 2);
                 }
             }
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public static void CastItems()
         {
+            try
+            {
             if (!(Item.CanUseItem(ItemId.Ravenous_Hydra_Melee_Only) || Item.CanUseItem(ItemId.Tiamat_Melee_Only)))
             {
                 return;
@@ -335,37 +350,66 @@ namespace RengarPro_Revamped.Modes
 
             Item.UseItem(ItemId.Ravenous_Hydra_Melee_Only);
             Item.UseItem(ItemId.Tiamat_Melee_Only);
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         public static void CastSmite(SpellSlot smiteSlotx, AIHeroClient target)
         {
-            if (Helper.MenuChecker.ComboSmiteActive && !RengarHasUltimate && Helper.Misc.Smite != SpellSlot.Unknown
-                    && Rengar.Spellbook.CanUseSpell(Helper.Misc.Smite) == SpellState.Ready && target.IsValidTarget(500))
+            try
             {
-                Rengar.Spellbook.CastSpell(smiteSlotx, target);
+                if (MenuChecker.ComboSmiteActive && !RengarHasUltimate && Misc.Smite != SpellSlot.Unknown
+                    && Rengar.Spellbook.CanUseSpell(Misc.Smite) == SpellState.Ready && target.IsValidTarget(500))
+                {
+                    Rengar.Spellbook.CastSpell(smiteSlotx, target);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
-        public static void QPriority(AIHeroClient Target)
+        public static void QPriority(AIHeroClient target)
         {
-            var QPrioActive = Menu.ComboM["qprio.active"].Cast<CheckBox>().CurrentValue;
-            if (!QPrioActive) { return; }
+            try{
+            var qPrioActive = Menu.ComboM["qprio.active"].Cast<CheckBox>().CurrentValue;
+            if (!qPrioActive) { return; }
             if (RengarQ && !RengarHasPassive && !Q.IsOnCooldown)
             {
-                if (Target.IsValidTarget(Q.Range)) { 
-                Player.IssueOrder(GameObjectOrder.AttackUnit, Target);
+                if (target.IsValidTarget(Q.Range) && !(target.IsMinion || target.IsMonster)) { 
+                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
             }
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         public static void CastEPrediction(AIHeroClient eCastTarget)
         {
-            var predictione = E.GetPrediction(eCastTarget);
-            if (predictione.HitChance >= HitChance.High && predictione.CollisionObjects.Count() == 0)
+            try
             {
-                E.Cast(eCastTarget);
+            var predictionE = E.GetPrediction(eCastTarget);
+            if (predictionE.HitChancePercent >= 88 && predictionE.CollisionObjects.Count() == 0 && !eCastTarget.IsMoving)
+            {
+                E.Cast(predictionE.CastPosition);
             }
-            else if (predictione.HitChance < HitChance.High && predictione.CollisionObjects.Count() == 0)
+            else if (predictionE.HitChancePercent >= 88 && predictionE.CollisionObjects.Count() == 0 &&
+                     eCastTarget.IsMoving)
             {
-                E.Cast(eCastTarget.ServerPosition);
+                E.Cast(predictionE.UnitPosition);
+            }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
     }

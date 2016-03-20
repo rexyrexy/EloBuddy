@@ -1,4 +1,5 @@
-﻿using EloBuddy.SDK.Menu;
+﻿using System;
+using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 
 namespace RengarPro_Revamped
@@ -8,6 +9,8 @@ namespace RengarPro_Revamped
         public static EloBuddy.SDK.Menu.Menu RengarMenu, ComboM, LaneM, JungleM, DrawM, MiscM;       
             public static void Init()
         {
+                try
+                {
             //Main Menu
             RengarMenu = MainMenu.AddMenu("RengarPro Revamped", "RengarProMenu");
             RengarMenu.AddGroupLabel("RengarPro Revamped");
@@ -17,10 +20,10 @@ namespace RengarPro_Revamped
             ComboM.AddGroupLabel("Combo Menu");
             ComboM.AddLabel("1- OneShot | 2- Snare | 3- AP Rengo");
             ComboM.Add("combo.mode", new Slider("Combo Mode", 1, 1, 3));
-            var switcher = ComboM.Add("switch", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive, (uint)'T'));
+            var switcher = ComboM.Add("switch", new KeyBind("Combo Mode Switcher", false, KeyBind.BindTypes.HoldActive,'T'));
             switcher.OnValueChange += delegate (ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args1)
             {
-                if (args1.NewValue == true)
+                if (args1.NewValue)
                 {
                     var cast = ComboM["combo.mode"].Cast<Slider>();
                     if (cast.CurrentValue == cast.MaxValue)
@@ -72,13 +75,18 @@ namespace RengarPro_Revamped
             MiscM.AddGroupLabel("Misc Menu");
             MiscM.Add("misc.autoyoumuu", new CheckBox("Auto Youmuu when Ulti"));
             /*MiscM.Add("misc.magnet", new CheckBox("Enable Magnet"));
-            MiscM.Add("magnet.range", new Slider("Magnet Range", 225, 100, 500));
-  */        MiscM.Add("misc.smite", new CheckBox("Use Smite On Combo"));
+            MiscM.Add("magnet.range", new Slider("Magnet Range", 225, 100, 500));*/
+            MiscM.Add("misc.smite", new CheckBox("Use Smite On Combo"));
             MiscM.Add("misc.autohp", new CheckBox("Auto HP Active"));
-            MiscM.Add("misc.hp.value", new Slider("Auto HP %",30,1,100));
+            MiscM.Add("misc.hp.value", new Slider("Auto HP %",30,1));
             MiscM.AddLabel("1- HeadHunter 2- NightHunter 3- SSW");
             MiscM.Add("skin.active", new CheckBox("Enable Skin Hack"));
             MiscM.Add("skin.value", new Slider("Skin Hack Value", 1, 1, 3));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
         }
     }
 }
