@@ -35,8 +35,9 @@ namespace RengarPro_Revamped
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
             Dash.OnDash += Modes.Combo.Dash_OnDash;
             Drawing.OnDraw += Drawing_OnDraw;
-
-
+            Chat.Print("RengarPro Revamped | Loaded !",Color.Blue);
+            Chat.Print("RengarPro Revamped | Coded by Rexy",Color.BlueViolet);
+            Chat.Print("RengarPro Revamped | Say Hello To New Renglet",Color.Crimson);
             }
             catch (Exception e)
             {
