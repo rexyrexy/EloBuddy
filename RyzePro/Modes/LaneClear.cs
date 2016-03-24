@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EloBuddy;
+﻿using EloBuddy;
 using EloBuddy.SDK;
 
 namespace RyzePro.Modes
@@ -7,7 +6,6 @@ namespace RyzePro.Modes
     class LaneClear
     {
         public static AIHeroClient Ryze = Starting.Ryze;
-        public static int PassiveStack = Starting.StackPassive;
         public static void Do()
         {
             if (Ryze.ManaPercent < Checker.LaneClearMana)
@@ -15,9 +13,9 @@ namespace RyzePro.Modes
                 return;
             }
 
-            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && x.IsValidTarget(Spells.W.Range));
-
-            if (Checker.LaneClearUseW && Spells.W.IsReady())
+            foreach (var minions in EntityManager.MinionsAndMonsters.GetLaneMinions(EntityManager.UnitTeam.Enemy,Player.Instance.Position,Spells.Q.Range))
+            {
+              if (Checker.LaneClearUseW && Spells.W.IsReady())
             {
                 Spells.W.Cast(minions);
             }
@@ -39,6 +37,7 @@ namespace RyzePro.Modes
             if (Checker.LaneClearUseR && Spells.R.IsReady())
             {
                 Spells.R.Cast();
+            }
             }
         }
     }

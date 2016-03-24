@@ -1,90 +1,74 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Enumerations;
 
 namespace RyzePro.Modes
 {
     class Combo
     {
-        public static AIHeroClient Ryze = Starting.Ryze;
-        public static int PassiveStack = Starting.StackPassive;
-        public static AIHeroClient Target;
+        private static Spell.SpellBase Q = Spells.Q;
+        private static Spell.SpellBase W = Spells.W;
+        private static Spell.SpellBase E = Spells.E;
+        private static Spell.SpellBase R = Spells.R;
+
+        private static bool QReady
+        {
+            get { return Q.IsReady(); }
+        }
+        private static bool WReady
+        {
+            get { return W.IsReady(); }
+        }
+        private static bool EReady
+        {
+            get { return E.IsReady(); }
+        }
+        private static bool RReady
+        {
+            get { return R.IsReady(); }
+        }
+
+        private static bool IsValid(Spell.SpellBase slot)
+        {
+            return Target.IsValidTarget(slot.Range);
+        }
+        private static AIHeroClient Target;
+
+        private static bool IsRooted(AIHeroClient target)
+        {
+             return target.HasBuff("RyzeW") || target.IsRooted;
+        }
         public static void Do()
         {
-            if (!TargetSelector.SelectedTarget.IsValidTarget(2500))
+            if (TargetSelector.SelectedTarget == null)
             {
-                Target = TargetSelector.GetTarget(2500, DamageType.Magical);
+                Target = TargetSelector.GetTarget(Spells.Q.Range + 250, DamageType.Magical);
             }
-            else if (TargetSelector.SelectedTarget.IsValidTarget(2500))
+            else if (TargetSelector.SelectedTarget != null)
             {
                 Target = TargetSelector.SelectedTarget;
             }
 
-            if (PassiveStack <= 2)
+            if (Target == null)
             {
-                if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
-                {
-                    Spells.Q.Cast(Target);
-                }
-
-                if (Checker.ComboUseE && Spells.E.IsReady() && Target.IsValidTarget(Spells.E.Range))
-                {
-                    Spells.E.Cast(Target);
-                }
-                if (Checker.ComboUseW && Spells.W.IsReady() && Target.IsValidTarget(Spells.W.Range))
-                {
-                    Spells.W.Cast(Target);
-                }
-
-                if (Checker.ComboUseR && Spells.R.IsReady() && Target.HasBuff("RyzeW") && Target.IsValidTarget(Spells.W.Range))
-                {
-                    Spells.R.Cast();
-                }
+                return;
             }
-            else if (PassiveStack == 3)
-            {
-                if (Checker.ComboUseW && Spells.W.IsReady() && Target.IsValidTarget(Spells.W.Range))
-                {
-                    Spells.W.Cast(Target);
-                }
-
-                if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
-                {
-                        Spells.Q.Cast(Target);
-                }
-
-                if (Checker.ComboUseE && Spells.E.IsReady() && Target.IsValidTarget(Spells.E.Range))
-                {
-                    Spells.E.Cast(Target);
-                }
-
-                if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
-                {
-                        Spells.Q.Cast(Target);
-                }
-
-                if (Checker.ComboUseR && Spells.R.IsReady() && Target.HasBuff("RyzeW") && Target.IsValidTarget(Spells.W.Range))
-                {
-                    Spells.R.Cast();
-                }
-            }
-            else if (PassiveStack == 4)
-            {
-                if (Checker.ComboUseW && Spells.W.IsReady() && Target.IsValidTarget(Spells.W.Range))
-                {
-                    Spells.W.Cast(Target);
-                }
-
-                if (Checker.ComboUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
-                {
-                    Spells.Q.Cast(Target);
-                }
-
-                if (Checker.ComboUseE && Spells.E.IsReady() && Target.IsValidTarget(Spells.E.Range))
-                {
-                    Spells.E.Cast(Target);
-                }
-            }
+            
+                    if (QReady && IsValid(Q) && Checker.ComboUseQ)
+                    {
+                        Q.Cast(Target);
+                    }
+                    if (RReady && IsRooted(Target) && Checker.ComboUseR)
+                    {
+                        R.Cast();
+                    }
+                    if (EReady && IsValid(E) && Checker.ComboUseE)
+                    {
+                        E.Cast(Target);
+                    }
+                    if (WReady && IsValid(W) && Checker.ComboUseW)
+                    {
+                        W.Cast(Target);
+                    }
         }
 
     }

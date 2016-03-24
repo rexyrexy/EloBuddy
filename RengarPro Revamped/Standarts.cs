@@ -43,7 +43,7 @@ namespace RengarPro_Revamped
         {
             get
             {
-                return Rengar.Buffs.Any(x => x.Name.Contains("rengarq"));
+                return Rengar.Buffs.Any(x => x.Name.ToLower().Contains("rengarq"));
             }
         }
     }

@@ -20,7 +20,7 @@ namespace RengarPro_Revamped
             {
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
                 return;
-            if (Player.Instance.Mana < 5 || (Player.Instance.Mana == 5 && !MenuChecker.LaneClearSaveStacks))
+            if (Player.Instance.Mana < 5 || ((int)Player.Instance.Mana == 5 && !MenuChecker.LaneClearSaveStacks))
             {
                 if (MenuChecker.LaneClearUseQ && Standarts.Q.IsReady())
                 {
@@ -52,12 +52,12 @@ namespace RengarPro_Revamped
             {
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
                 return;
-            if (Player.Instance.Mana < 5 || (Player.Instance.Mana == 5 && !MenuChecker.LaneClearSaveStacks))
+            if (Player.Instance.Mana < 5 || ((int)Player.Instance.Mana == 5 && !MenuChecker.LaneClearSaveStacks))
             {
                 if (MenuChecker.LaneClearUseW && Standarts.W.IsReady())
                 {
                     var minion = EntityManager.MinionsAndMonsters
-                        .GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 400, true)
+                        .GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, 400)
                         .OrderBy(x => x.Health).FirstOrDefault();
                     if (minion.IsValidTarget())
                         Standarts.W.Cast();
@@ -65,7 +65,7 @@ namespace RengarPro_Revamped
                 if (MenuChecker.LaneClearUseE && Standarts.E.IsReady())
                 {
                     var minion = EntityManager.MinionsAndMonsters
-                        .GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Standarts.E.Range, true)
+                        .GetLaneMinions(EntityManager.UnitTeam.Enemy, Player.Instance.Position, Standarts.E.Range)
                         .OrderBy(x => x.Health).FirstOrDefault();
                     if (minion.IsValidTarget())
                         Standarts.E.Cast(minion);
@@ -95,7 +95,7 @@ namespace RengarPro_Revamped
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
                 return;
 
-            if (Player.Instance.Mana < 5 || (Player.Instance.Mana == 5 && !MenuChecker.JungleClearSaveStacks))
+            if (Player.Instance.Mana < 5 || ((int)Player.Instance.Mana == 5 && !MenuChecker.JungleClearSaveStacks))
             {
                 if (MenuChecker.JungleClearUseQ && Standarts.Q.IsReady())
                 {
@@ -128,12 +128,12 @@ namespace RengarPro_Revamped
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
                 return;
 
-            if (Player.Instance.Mana < 5 || (Player.Instance.Mana == 5 && !MenuChecker.JungleClearSaveStacks))
+            if (Player.Instance.Mana < 5 || ((int)Player.Instance.Mana == 5 && !MenuChecker.JungleClearSaveStacks))
             {
                 if (MenuChecker.JungleClearUseW && Standarts.W.IsReady())
                 {
                     var minion = EntityManager.MinionsAndMonsters
-                        .GetJungleMonsters(Player.Instance.Position, 400, true)
+                        .GetJungleMonsters(Player.Instance.Position, 400)
                         .OrderBy(x => x.Health).FirstOrDefault();
                     if (minion.IsValidTarget())
                     {
@@ -143,7 +143,7 @@ namespace RengarPro_Revamped
                 if (MenuChecker.JungleClearUseE && Standarts.E.IsReady())
                 {
                     var minion = EntityManager.MinionsAndMonsters
-                        .GetJungleMonsters(Player.Instance.Position, Standarts.E.Range, true)
+                        .GetJungleMonsters(Player.Instance.Position, Standarts.E.Range)
                         .OrderBy(x => x.Health).FirstOrDefault();
                     if (minion.IsValidTarget())
                         Standarts.E.Cast(minion);

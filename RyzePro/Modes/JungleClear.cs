@@ -6,7 +6,6 @@ namespace RyzePro.Modes
     class JungleClear
     {
         public static AIHeroClient Ryze = Starting.Ryze;
-        public static int PassiveStack = Starting.StackPassive;
         public static void Do()
         {
             if (Ryze.ManaPercent < Checker.JungleClearMana)

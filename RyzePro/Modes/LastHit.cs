@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EloBuddy;
+﻿using EloBuddy;
 using EloBuddy.SDK;
 
 namespace RyzePro.Modes
@@ -7,22 +6,18 @@ namespace RyzePro.Modes
     class LastHit
     {
         public static AIHeroClient Ryze = Starting.Ryze;
-        public static int PassiveStack = Starting.StackPassive;
         public static void Do()
         {
-            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(x => !x.IsDead && Spells.Q.IsInRange(x));
-            if (minions == null)
+            foreach (var minions in EntityManager.MinionsAndMonsters.Get(EntityManager.MinionsAndMonsters.EntityType.Both,EntityManager.UnitTeam.Enemy,Player.Instance.Position,Spells.Q.Range))
             {
-                return;
-            }
-
-            if (Spells.Q.IsReady() && Checker.LastHitUseQ)
-            {
-                if (Prediction.Health.GetPrediction(minions,(int)0.25)
-                    <= Ryze.GetSpellDamage(minions, SpellSlot.Q))
+                if (Spells.Q.IsReady() && Checker.LastHitUseQ)
                 {
-                    Spells.Q.Cast(minions);
-                }
+                    if (Prediction.Health.GetPrediction(minions, (int)0.25)
+                        <= Ryze.GetSpellDamage(minions, SpellSlot.Q))
+                    {
+                        Spells.Q.Cast(minions);
+                    }
+                }   
             }
         }
     }

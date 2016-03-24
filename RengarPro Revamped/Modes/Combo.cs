@@ -15,11 +15,11 @@ namespace RengarPro_Revamped.Modes
         {
             try
             {
-            if (!TargetSelector.SelectedTarget.IsValidTarget(1750))
+            if (TargetSelector.SelectedTarget == null)
             {
                 _enemyTarget = TargetSelector.GetTarget(R.Range, DamageType.Physical);
             }
-            else if (TargetSelector.SelectedTarget.IsValidTarget(1750))
+            else if (TargetSelector.SelectedTarget != null)
             {
                 _enemyTarget = TargetSelector.SelectedTarget;
             }

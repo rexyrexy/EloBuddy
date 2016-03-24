@@ -8,20 +8,19 @@ namespace RyzePro.Modes
     class Harass
     {
         public static AIHeroClient Ryze = Starting.Ryze;
-        public static int PassiveStack = Starting.StackPassive;
         public static AIHeroClient Target;
         public static void Do()
         {
-            if (!TargetSelector.SelectedTarget.IsValidTarget(2500))
+            if (TargetSelector.SelectedTarget == null)
             {
-                Target = TargetSelector.GetTarget(2500, DamageType.Magical);
+                Target = TargetSelector.GetTarget(Spells.Q.Range, DamageType.Magical);
             }
-            else if (TargetSelector.SelectedTarget.IsValidTarget(2500))
+            else if (TargetSelector.SelectedTarget != null)
             {
                 Target = TargetSelector.SelectedTarget;
             }
 
-            if (Ryze.ManaPercent < Checker.HarassMana)
+            if (Ryze.ManaPercent < Checker.HarassMana || Target == null)
             {
                 return;
             }
@@ -29,7 +28,7 @@ namespace RyzePro.Modes
             if (Checker.HarassUseQ && Spells.Q.IsReady() && Target.IsValidTarget(Spells.Q.Range))
             {
                 var pred = Spells.Q.GetPrediction(Target);
-                if (pred.HitChance >= HitChance.High && pred.CollisionObjects.Count() == 0)
+                if (pred.HitChancePercent >= 85 && pred.CollisionObjects.Count() == 0)
                 {
                     Spells.Q.Cast(Target);
                 }
