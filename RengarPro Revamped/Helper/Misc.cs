@@ -6,15 +6,17 @@ using EloBuddy.SDK.Menu.Values;
 
 namespace RengarPro_Revamped.Helper
 {
-    class Misc
+    internal class Misc
     {
-        public static int[] BlueSmite = { 3706, 1400, 1401, 1402, 1403 };
-        public static int[] RedSmite = { 3715, 1415, 1414, 1413, 1412 };
+        public static int[] BlueSmite = {3706, 1400, 1401, 1402, 1403};
+        public static int[] RedSmite = {3715, 1415, 1414, 1413, 1412};
         public static SpellSlot Smite;
+
         public static void Init()
         {
             Game.OnTick += Game_OnTick;
         }
+
         public static void Game_OnTick(EventArgs args)
         {
             AutoHp();
@@ -24,20 +26,19 @@ namespace RengarPro_Revamped.Helper
             BetaQ();
         }
 
-        public static class BetaQVariables
-        {
-            public static bool BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
-            public static int BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
-        }
         public static void BetaQ()
         {
             try
             {
-            if (!BetaQVariables.BetaQActive) { return; }
-            if (TargetSelector.SelectedTarget.IsValidTarget(BetaQVariables.BetaQRange) && MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
-            {
-                Standarts.Q.Cast();    
-            }
+                if (!BetaQVariables.BetaQActive)
+                {
+                    return;
+                }
+                if (TargetSelector.SelectedTarget.IsValidTarget(BetaQVariables.BetaQRange) &&
+                    MenuChecker.ComboModeSelected == 1 && Standarts.RengarHasUltimate && Standarts.Q.IsReady())
+                {
+                    Standarts.Q.Cast();
+                }
             }
             catch (Exception e)
             {
@@ -76,9 +77,21 @@ namespace RengarPro_Revamped.Helper
 
                 switch (MenuChecker.SkinHackValue)
                 {
-                    case 1: { Standarts.Rengar.SetSkinId(1); break; }
-                    case 2: { Standarts.Rengar.SetSkinId(2); break; }
-                    case 3: { Standarts.Rengar.SetSkinId(3); break; }
+                    case 1:
+                    {
+                        Standarts.Rengar.SetSkinId(1);
+                        break;
+                    }
+                    case 2:
+                    {
+                        Standarts.Rengar.SetSkinId(2);
+                        break;
+                    }
+                    case 3:
+                    {
+                        Standarts.Rengar.SetSkinId(3);
+                        break;
+                    }
                 }
             }
             catch (Exception e)
@@ -119,7 +132,8 @@ namespace RengarPro_Revamped.Helper
                 {
                     return;
                 }
-                if (Standarts.Rengar.HealthPercent <= MenuChecker.AutoHpValue && Standarts.Ferocity == 5 && Standarts.W.IsReady())
+                if (Standarts.Rengar.HealthPercent <= MenuChecker.AutoHpValue && Standarts.Ferocity == 5 &&
+                    Standarts.W.IsReady())
                 {
                     Standarts.W.Cast();
                 }
@@ -128,6 +142,12 @@ namespace RengarPro_Revamped.Helper
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public static class BetaQVariables
+        {
+            public static bool BetaQActive = Menu.ComboM["betaq.active"].Cast<CheckBox>().CurrentValue;
+            public static int BetaQRange = Menu.ComboM["betaq.range"].Cast<Slider>().CurrentValue;
         }
     }
 }

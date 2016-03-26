@@ -5,9 +5,10 @@ using EloBuddy.SDK;
 
 namespace RengarPro_Revamped.Helper
 {
-    class Targetting
+    internal class Targetting
     {
         public static AIHeroClient RjumpTarget, PassiveJumpTarget;
+
         public static void Initialize()
         {
             Game.OnTick += Game_OnTick;
@@ -19,20 +20,18 @@ namespace RengarPro_Revamped.Helper
         {
             try
             {
-            if (Standarts.Rengar.IsDead)
-            {
-                return;
-            }
+                if (Standarts.Rengar.IsDead)
+                {
+                    return;
+                }
 
-            if (!sender.IsMe
-                || !Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)
-                || !args.Order.HasFlag(GameObjectOrder.AttackUnit)
-                || !Standarts.RengarHasUltimate
-                || args.Target == null || !args.Target.IsValid || !(args.Target is AIHeroClient))
-                return;
-            UltimateTargetingOnIssue(sender, args);
-
-
+                if (!sender.IsMe
+                    || !Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)
+                    || !args.Order.HasFlag(GameObjectOrder.AttackUnit)
+                    || !Standarts.RengarHasUltimate
+                    || args.Target == null || !args.Target.IsValid || !(args.Target is AIHeroClient))
+                    return;
+                UltimateTargetingOnIssue(sender, args);
             }
             catch (Exception e)
             {
@@ -44,20 +43,18 @@ namespace RengarPro_Revamped.Helper
         {
             try
             {
-            if (Standarts.Rengar.IsDead)
-            {
-                return;
-            }
+                if (Standarts.Rengar.IsDead)
+                {
+                    return;
+                }
 
-            if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-                return;
-            if (Standarts.RengarHasPassive && !Standarts.RengarHasUltimate)
-            {
-                args.Process = false;
-                BushTargeting();
-            }
-
-
+                if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                    return;
+                if (Standarts.RengarHasPassive && !Standarts.RengarHasUltimate)
+                {
+                    args.Process = false;
+                    BushTargeting();
+                }
             }
             catch (Exception e)
             {
@@ -69,24 +66,22 @@ namespace RengarPro_Revamped.Helper
         {
             try
             {
-            if (Standarts.Rengar.IsDead)
-            {
-                return;
-            }
+                if (Standarts.Rengar.IsDead)
+                {
+                    return;
+                }
 
-            if (Standarts.RengarHasUltimate)
-            {
-                RjumpTarget = GetUltimateTarget();
-            }
-            else if (Standarts.RengarHasPassive)
-            {
-                PassiveJumpTarget = GetBushTarget();
-            }
-            if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-                return;
-            UltimateTargetingOnTick();
-
-
+                if (Standarts.RengarHasUltimate)
+                {
+                    RjumpTarget = GetUltimateTarget();
+                }
+                else if (Standarts.RengarHasPassive)
+                {
+                    PassiveJumpTarget = GetBushTarget();
+                }
+                if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                    return;
+                UltimateTargetingOnTick();
             }
             catch (Exception e)
             {
@@ -98,18 +93,17 @@ namespace RengarPro_Revamped.Helper
         {
             try
             {
-            var target = args.Target as AIHeroClient;
-            var ultTarget = GetUltimateTarget();
-            if (!target.IsValid() || !ultTarget.IsValidTarget() || target.NetworkId != ultTarget.NetworkId)
-                args.Process = false;
-
-
+                var target = args.Target as AIHeroClient;
+                var ultTarget = GetUltimateTarget();
+                if (!target.IsValid() || !ultTarget.IsValidTarget() || target.NetworkId != ultTarget.NetworkId)
+                    args.Process = false;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
+
         private static void UltimateTargetingOnTick()
         {
             try
@@ -144,12 +138,15 @@ namespace RengarPro_Revamped.Helper
 
         private static AIHeroClient GetUltimateTarget()
         {
-                if (TargetSelector.SelectedTarget.IsValid())
-                {
-                    return TargetSelector.SelectedTarget;
-                }
-                var target = EntityManager.Heroes.Enemies.Where(hero => hero.IsValid()).OrderBy(hero => hero.Distance(Player.Instance)).FirstOrDefault();
-                return target != null ? target : TargetSelector.SelectedTarget;
+            if (TargetSelector.SelectedTarget.IsValid())
+            {
+                return TargetSelector.SelectedTarget;
+            }
+            var target =
+                EntityManager.Heroes.Enemies.Where(hero => hero.IsValid())
+                    .OrderBy(hero => hero.Distance(Player.Instance))
+                    .FirstOrDefault();
+            return target != null ? target : TargetSelector.SelectedTarget;
         }
 
         private static AIHeroClient GetBushTarget()
@@ -159,10 +156,11 @@ namespace RengarPro_Revamped.Helper
             {
                 return TargetSelector.SelectedTarget;
             }
-            var target = EntityManager.Heroes.Enemies.Where(hero => hero.IsValid() && Player.Instance.IsInAutoAttackRange(hero))
-                        .OrderByDescending(hero => EntityManager.Heroes.Enemies)
-                        .ThenBy(hero => hero.Health)
-                        .FirstOrDefault();
+            var target =
+                EntityManager.Heroes.Enemies.Where(hero => hero.IsValid() && Player.Instance.IsInAutoAttackRange(hero))
+                    .OrderByDescending(hero => EntityManager.Heroes.Enemies)
+                    .ThenBy(hero => hero.Health)
+                    .FirstOrDefault();
             return target;
         }
     }

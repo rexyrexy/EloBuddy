@@ -1,0 +1,18 @@
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\RengarPro Revamped.exe.config
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\RengarPro Revamped.exe
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\RengarPro Revamped.pdb
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\EloBuddy.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\mscorlib.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\SharpDX.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\SharpDX.Direct3D9.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\tr\mscorlib.resources.dll
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\normidna.nlp
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\normnfc.nlp
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\normnfd.nlp
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\normnfkc.nlp
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Debug\normnfkd.nlp
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Debug\RengarPro Revamped.csprojResolveAssemblyReference.cache
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Debug\RengarPro Revamped.exe
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Debug\RengarPro Revamped.pdb
