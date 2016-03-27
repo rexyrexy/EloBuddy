@@ -279,7 +279,7 @@ namespace LeagueSharp.Common
             /// <returns></returns>
             public bool IsInRange(Vector3 target)
             {
-                return ObjectManager.Player.ServerPosition.Distance(target, true) < RangeSqr;
+                return ObjectManager.Player.ServerPosition.LSDistance(target, true) < RangeSqr;
             }
 
             /// <summary>
@@ -345,7 +345,7 @@ namespace LeagueSharp.Common
             /// </summary>
             public void Buy()
             {
-                ObjectManager.Player.BuyItem((ItemId) Id);
+                Shop.BuyItem((ItemId) Id);
             }
         }
     }

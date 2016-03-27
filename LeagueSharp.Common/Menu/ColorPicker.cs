@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using EloBuddy;
 using LeagueSharp.Common.Properties;
 using SharpDX;
 using Color = System.Drawing.Color;

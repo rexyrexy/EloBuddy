@@ -101,7 +101,7 @@ namespace LeagueSharp.Common
             {
                 if (type.IsAssignableFrom(key))
                 {
-                    found.AddRange(gameObjects[key].Values.Where(o => o.IsValid).ToList().ConvertAll(o => (T) o));
+                    found.AddRange(gameObjects[key].Values.Where(o => o.IsValid<T>()).ToList().ConvertAll(o => (T) o));
                 }
             }
 
@@ -139,7 +139,7 @@ namespace LeagueSharp.Common
             /// <value>The allies.</value>
             public List<T> Allies
             {
-                get { return FindAll(o => o.IsValid && o.IsAlly); }
+                get { return FindAll(o => o.IsValid<T>() && o.IsAlly); }
             }
 
             /// <summary>
@@ -148,7 +148,7 @@ namespace LeagueSharp.Common
             /// <value>The enemies.</value>
             public List<T> Enemies
             {
-                get { return FindAll(o => o.IsValid && o.IsEnemy); }
+                get { return FindAll(o => o.IsValid<T>() && o.IsEnemy); }
             }
 
             /// <summary>
@@ -157,7 +157,7 @@ namespace LeagueSharp.Common
             /// <value>The neutrals.</value>
             public List<T> Neutrals
             {
-                get { return FindAll(o => o.IsValid && o.Team == GameObjectTeam.Neutral); }
+                get { return FindAll(o => o.IsValid<T>() && o.Team == GameObjectTeam.Neutral); }
             }
         }
     }

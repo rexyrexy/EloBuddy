@@ -113,7 +113,7 @@ namespace LeagueSharp.Common
         private static void Game_OnGameUpdate(EventArgs args)
         {
             if (!enabled || Player.SpellTrainingPoints < 1 || Utils.TickCount - LastLeveled < NextDelay ||
-                MenuGUI.IsShopOpen)
+                Shop.IsOpen)
             {
                 return;
             }

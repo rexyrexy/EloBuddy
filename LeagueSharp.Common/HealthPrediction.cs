@@ -50,8 +50,8 @@ namespace LeagueSharp.Common
             Obj_AI_Base.OnProcessSpellCast += ObjAiBaseOnOnProcessSpellCast;
             Game.OnUpdate += Game_OnGameUpdate;
             Spellbook.OnStopCast += SpellbookOnStopCast;
-            GameObject.OnDelete += MissileClient_OnDelete;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            MissileClient.OnDelete += MissileClient_OnDelete;
+            Obj_AI_Base.OnSpellCast += Obj_AI_Base_OnDoCast;
         }
 
         /// <summary>
@@ -105,13 +105,13 @@ namespace LeagueSharp.Common
         /// </summary>
         /// <param name="spellbook">The spellbook.</param>
         /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
+        private static void SpellbookOnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
-            if (spellbook.Owner.IsValid && args.StopAnimation)
+            if (sender.IsValid && args.StopAnimation)
             {
-                if (ActiveAttacks.ContainsKey(spellbook.Owner.NetworkId))
+                if (ActiveAttacks.ContainsKey(sender.NetworkId))
                 {
-                    ActiveAttacks.Remove(spellbook.Owner.NetworkId);
+                    ActiveAttacks.Remove(sender.NetworkId);
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace LeagueSharp.Common
                     attack.Target.IsValidTarget(float.MaxValue, false) && attack.Target.NetworkId == unit.NetworkId)
                 {
                     var landTime = attack.StartTick + attack.Delay +
-                                   1000*Math.Max(0, unit.Distance(attack.Source) - attack.Source.BoundingRadius)/
+                                   1000*Math.Max(0, unit.LSDistance(attack.Source) - attack.Source.BoundingRadius)/
                                    attack.ProjectileSpeed + delay;
 
                     if ( /*Utils.GameTimeTickCount < landTime - delay &&*/ landTime < Utils.GameTimeTickCount + time)
@@ -201,7 +201,7 @@ namespace LeagueSharp.Common
                     {
                         if (fromT >= Utils.GameTimeTickCount &&
                             (fromT + attack.Delay +
-                             Math.Max(0, unit.Distance(attack.Source) - attack.Source.BoundingRadius)/
+                             Math.Max(0, unit.LSDistance(attack.Source) - attack.Source.BoundingRadius)/
                              attack.ProjectileSpeed < toT))
                         {
                             n++;

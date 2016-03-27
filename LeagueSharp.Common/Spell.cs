@@ -627,7 +627,7 @@ namespace LeagueSharp.Common
             bool exactHitChance = false,
             int minTargets = -1)
         {
-            if (unit == null ||  MenuGUI.IsChatOpen)
+            if (unit == null || Shop.IsOpen || MenuGUI.IsChatOpen)
             {
                 return CastStates.NotCasted;
             }
@@ -647,7 +647,7 @@ namespace LeagueSharp.Common
             if (!IsSkillshot)
             {
                 //Target out of range
-                if (RangeCheckFrom.Distance(unit.ServerPosition, true) > RangeSqr)
+                if (RangeCheckFrom.LSDistance(unit.ServerPosition, true) > RangeSqr)
                 {
                     return CastStates.OutOfRange;
                 }
@@ -689,7 +689,7 @@ namespace LeagueSharp.Common
             }
 
             //Target out of range.
-            if (RangeCheckFrom.Distance(prediction.CastPosition, true) > RangeSqr)
+            if (RangeCheckFrom.LSDistance(prediction.CastPosition, true) > RangeSqr)
             {
                 return CastStates.OutOfRange;
             }
@@ -737,12 +737,12 @@ namespace LeagueSharp.Common
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool CastOnUnit(Obj_AI_Base unit, bool packetCast = false)
         {
-            if (!Slot.IsReady() || From.Distance(unit.ServerPosition, true) > RangeSqr)
+            if (!Slot.IsReady() || From.LSDistance(unit.ServerPosition, true) > RangeSqr)
             {
                 return false;
             }
 
-            if (MenuGUI.IsChatOpen)
+            if (Shop.IsOpen || MenuGUI.IsChatOpen)
             {
                 return false;
             }
@@ -797,7 +797,7 @@ namespace LeagueSharp.Common
         /// <returns><c>true</c> if the spell was sucessfully casted, <c>false</c> otherwise.</returns>
         public bool Cast(Vector3 fromPosition, Vector3 toPosition)
         {
-            if (MenuGUI.IsChatOpen)
+            if (Shop.IsOpen || MenuGUI.IsChatOpen)
             {
                 return false;
             }
@@ -812,7 +812,7 @@ namespace LeagueSharp.Common
         /// <returns><c>true</c> if the spell was casted successfully, <c>false</c> otherwise.</returns>
         public bool Cast(Vector2 position, bool packetCast = false)
         {
-            if (MenuGUI.IsChatOpen)
+            if (Shop.IsOpen || MenuGUI.IsChatOpen)
             {
                 return false;
             }
@@ -878,7 +878,7 @@ namespace LeagueSharp.Common
         private static void ShootChargedSpell(SpellSlot slot, Vector3 position, bool releaseCast = true)
         {
             position.Z = NavMesh.GetHeightForPosition(position.X, position.Y);
-            ObjectManager.Player.Spellbook.UpdateChargeableSpell(slot,position, false);
+            ObjectManager.Player.Spellbook.UpdateChargeableSpell(slot, position, releaseCast, false);
             ObjectManager.Player.Spellbook.CastSpell(slot, position, false);
         }
 
@@ -918,7 +918,7 @@ namespace LeagueSharp.Common
         /// <returns>System.Single.</returns>
         public float GetHealthPrediction(Obj_AI_Base unit)
         {
-            var time = (int) (Delay*1000 + From.Distance(unit.ServerPosition)/Speed - 100);
+            var time = (int)(Delay * 1000 + From.LSDistance(unit.ServerPosition) / Speed - 100);
             return HealthPrediction.GetHealthPrediction(unit, time);
         }
 
@@ -1053,14 +1053,14 @@ namespace LeagueSharp.Common
             switch (Type)
             {
                 case SkillshotType.SkillshotCircle:
-                    if (point.To2D().Distance(castPosition, true) < WidthSqr)
+                    if (point.To2D().LSDistance(castPosition, true) < WidthSqr)
                     {
                         return true;
                     }
                     break;
 
                 case SkillshotType.SkillshotLine:
-                    if (point.To2D().Distance(castPosition.To2D(), From.To2D(), true, true) <
+                    if (point.To2D().LSDistance(castPosition.To2D(), From.To2D(), true, true) <
                         Math.Pow(Width + extraWidth, 2))
                     {
                         return true;
@@ -1070,7 +1070,7 @@ namespace LeagueSharp.Common
                     var edge1 = (castPosition.To2D() - From.To2D()).Rotated(-Width/2);
                     var edge2 = edge1.Rotated(Width);
                     var v = point.To2D() - From.To2D();
-                    if (point.To2D().Distance(From, true) < RangeSqr && edge1.CrossProduct(v) > 0 &&
+                    if (point.To2D().LSDistance(From, true) < RangeSqr && edge1.CrossProduct(v) > 0 &&
                         v.CrossProduct(edge2) > 0)
                     {
                         return true;
@@ -1122,7 +1122,7 @@ namespace LeagueSharp.Common
         /// <returns><c>true</c> if the specified location is in range of the spell; otherwise, <c>false</c>.</returns>
         public bool IsInRange(Vector2 point, float range = -1)
         {
-            return RangeCheckFrom.To2D().Distance(point, true) < (range < 0 ? RangeSqr : range*range);
+            return RangeCheckFrom.To2D().LSDistance(point, true) < (range < 0 ? RangeSqr : range * range);
         }
 
         /// <summary>
@@ -1147,7 +1147,7 @@ namespace LeagueSharp.Common
         /// <returns>CastStates.</returns>
         public CastStates CastOnBestTarget(float extraRange = 0, bool packetCast = false, bool aoe = false)
         {
-            if (MenuGUI.IsChatOpen)
+            if (Shop.IsOpen || MenuGUI.IsChatOpen)
             {
                 return CastStates.NotCasted;
             }

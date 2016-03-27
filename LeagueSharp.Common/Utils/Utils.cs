@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using EloBuddy;
 using SharpDX;
 
 namespace LeagueSharp.Common
@@ -36,7 +37,7 @@ namespace LeagueSharp.Common
         /// </summary>
         public static int GameTimeTickCount
         {
-            get { return Game.Time*1000; }
+            get { return (int)(Game.Time*1000); }
         }
 
         /// <summary>

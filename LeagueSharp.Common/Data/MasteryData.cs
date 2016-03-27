@@ -22,10 +22,12 @@
 
 #region
 
-using System.Linq;
-using EloBuddy;
+
 
 #endregion
+
+using System.Linq;
+using EloBuddy;
 
 namespace LeagueSharp.Common.Data
 {

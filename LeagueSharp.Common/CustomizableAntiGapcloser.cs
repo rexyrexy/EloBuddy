@@ -870,7 +870,7 @@ namespace LeagueSharp.Common
                             cGapcloser =>
                                 cGapcloser.SkillType == CGapcloserTypes.Targeted ||
                                 (cGapcloser.SkillType == CGapcloserTypes.Skillshot &&
-                                 ObjectManager.Player.Distance(cGapcloser.Sender, true) < 250000) // 500 * 500
+                                 ObjectManager.Player.LSDistance(cGapcloser.Sender, true) < 250000) // 500 * 500
                                 &&
                                 CustomizableCustomizableAntiGapcloserMenu.Item("gapclose." +
                                                                                cGapcloser.Sender.ChampionName)

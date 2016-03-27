@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using EloBuddy;
+using SharpDX;
 
 namespace LeagueSharp.Common
 {
@@ -14,7 +15,7 @@ namespace LeagueSharp.Common
         /// </summary>
         static Cursor()
         {
-            Game.OnWndProc += args => OnWndProc(new WndEventComposition(args));
+            Game.OnWndProc += OnWndProc;
         }
 
         #endregion
@@ -52,9 +53,9 @@ namespace LeagueSharp.Common
         /// <param name="args">
         ///     The arguments.
         /// </param>
-        private static void OnWndProc(WndEventComposition args)
+        private static void OnWndProc(WndEventArgs args)
         {
-            if (args.Msg == WindowsMessages.WM_MOUSEMOVE)
+            if (args.Msg == (uint)(WindowsMessages.WM_MOUSEMOVE))
             {
                 unchecked
                 {

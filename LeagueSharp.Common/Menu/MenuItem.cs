@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using EloBuddy;
 using SharpDX;
 using SharpDX.Direct3D9;
 using Color = SharpDX.Color;
@@ -957,7 +958,7 @@ namespace LeagueSharp.Common
 
                     break;
                 case MenuValueType.KeyBind:
-                    if (!MenuGUI.IsChatOpen && !MenuGUI.IsShopOpen)
+                    if (!MenuGUI.IsChatOpen && !Shop.IsOpen)
                     {
                         switch (message)
                         {

@@ -1274,7 +1274,7 @@ namespace LeagueSharp.Common
                     public Struct(byte slot, int networkId = -1)
                     {
                         InventorySlot = slot;
-                        SpellSlot = (SpellSlot) (InventorySlot + (byte) this.SpellSlot.Item1);
+                        SpellSlot = (SpellSlot) (InventorySlot + (byte) SpellSlot.Item1);
                         NetworkId = networkId == -1 ? ObjectManager.Player.NetworkId : networkId;
                     }
 
@@ -1286,7 +1286,7 @@ namespace LeagueSharp.Common
                     public Struct(SpellSlot slot, int networkId = -1)
                     {
                         SpellSlot = slot;
-                        InventorySlot = (byte) ((byte) SpellSlot - (byte) this.SpellSlot.Item1);
+                        InventorySlot = (byte) ((byte) SpellSlot - (byte) SpellSlot.Item1);
                         NetworkId = networkId == -1 ? ObjectManager.Player.NetworkId : networkId;
                     }
                 }
@@ -1575,7 +1575,7 @@ namespace LeagueSharp.Common
                 public static Struct Decoded(byte[] data)
                 {
                     var result = new Struct {NetworkId = new GamePacket(data).ReadInteger(6)};
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
                     return result;
                 }
 
@@ -2262,7 +2262,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.SourceNetworkId = packet.ReadInteger(1);
-                    result.SourceUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.SourceNetworkId);
+                    result.SourceUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.SourceNetworkId);
 
 
                     result.SpellFlag = packet.ReadShort(10);
@@ -2285,7 +2285,7 @@ namespace LeagueSharp.Common
                     if (c > 0) //hopefully c is 1 always
                     {
                         result.TargetNetworkId = packet.ReadInteger();
-                        result.TargetUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.TargetNetworkId);
+                        result.TargetUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.TargetNetworkId);
                         packet.ReadByte(); // for 0
                     }
                     result.ChannelTime = packet.ReadFloat();
@@ -3484,7 +3484,7 @@ namespace LeagueSharp.Common
 
                     packet.Position = 6;
                     result.NetworkId = packet.ReadInteger();
-                    result.Player = ObjectManager.GetUnitByNetworkId<AIHeroClient>(result.NetworkId);
+                    result.Player = ObjectManager.GetUnitByNetworkId<AIHeroClient>((uint)result.NetworkId);
 
                     return result;
                 }
@@ -3629,7 +3629,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(1);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
 
                     result.BuffSlot = packet.ReadByte();
                     result.Type = (BuffType) packet.ReadByte();
@@ -3638,14 +3638,14 @@ namespace LeagueSharp.Common
                     result.BuffId = packet.ReadInteger();
 
                     result.TargetNetworkId = packet.ReadInteger();
-                    result.Target = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.TargetNetworkId);
+                    result.Target = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.TargetNetworkId);
 
                     packet.Position += 4;
 
                     result.Duration = packet.ReadFloat();
 
                     result.SourceNetworkId = packet.ReadInteger();
-                    result.Source = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.SourceNetworkId);
+                    result.Source = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.SourceNetworkId);
 
                     return result;
                 }
@@ -3742,7 +3742,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(1);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
 
                     result.BuffSlot = packet.ReadByte();
                     result.BuffId = packet.ReadInteger();
@@ -3808,7 +3808,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(1);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
                     result.Slot = (SpellSlot) packet.ReadByte();
                     packet.Position += 1;
                     result.TotalCooldown = packet.ReadFloat();
@@ -3874,7 +3874,7 @@ namespace LeagueSharp.Common
                     public Struct(int networkId, SpellSlot slot, float totalCd, float currentCd)
                     {
                         NetworkId = networkId;
-                        Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(NetworkId);
+                        Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)NetworkId);
                         Slot = slot;
                         TotalCooldown = totalCd;
                         CurrentCooldown = currentCd;
@@ -3907,7 +3907,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(1);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
                     result.InventorySlot = packet.ReadByte();
                     result.SpellSlot = (SpellSlot) (result.InventorySlot + (byte) SpellSlot.Item1);
                     return result;
@@ -4058,12 +4058,12 @@ namespace LeagueSharp.Common
                     {
                         Item = new Items.Item(id, 0);
                         InventorySlot = slot;
-                        SpellSlot = (SpellSlot) (InventorySlot + (byte) this.SpellSlot.Item1);
+                        SpellSlot = (SpellSlot) (InventorySlot + (byte) SpellSlot.Item1);
                         ReplaceItem = replace;
                         Stack = stack;
                         Charge = charge;
                         NetworkId = networkId == -1 ? ObjectManager.Player.NetworkId : networkId;
-                        Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>(NetworkId);
+                        Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>((uint)NetworkId);
                     }
                 }
             }
@@ -4231,7 +4231,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(1);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.NetworkId);
                     result.Slot = (SpellSlot) (packet.ReadByte());
                     result.UnknownByte = packet.ReadByte(); // 0, 1C, 48
                     result.UnknownByte2 = packet.ReadByte(); //usually 2
@@ -4318,9 +4318,9 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.ReceivingNetworkId = packet.ReadInteger(5);
-                    result.ReceivingUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.ReceivingNetworkId);
+                    result.ReceivingUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.ReceivingNetworkId);
                     result.SourceNetworkId = packet.ReadInteger();
-                    result.SourceUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>(result.SourceNetworkId);
+                    result.SourceUnit = ObjectManager.GetUnitByNetworkId<Obj_AI_Base>((uint)result.SourceNetworkId);
                     result.Gold = packet.ReadFloat();
                     return result;
                 }
@@ -4397,7 +4397,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(2);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>((uint)result.NetworkId);
                     result.Level = packet.ReadByte();
                     result.PointsLeft = packet.ReadByte();
 
@@ -4456,7 +4456,7 @@ namespace LeagueSharp.Common
                     var result = new Struct();
 
                     result.NetworkId = packet.ReadInteger(2);
-                    result.Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>(result.NetworkId);
+                    result.Unit = ObjectManager.GetUnitByNetworkId<AIHeroClient>((uint)result.NetworkId);
                     result.Slot = (SpellSlot) packet.ReadByte();
                     result.PointsLeft = packet.ReadByte();
                     result.Level = packet.ReadByte();

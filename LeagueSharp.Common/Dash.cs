@@ -46,7 +46,7 @@ namespace LeagueSharp.Common
         /// </summary>
         static Dash()
         {
-            Obj_AI_Base.OnNewPath += ObjAiHeroOnOnNewPath;
+            AIHeroClient.OnNewPath += ObjAiHeroOnOnNewPath;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace LeagueSharp.Common
                     DetectedDashes[sender.NetworkId].EndTick = DetectedDashes[sender.NetworkId].StartTick +
                                                                (int)
                                                                    (1000*
-                                                                    (DetectedDashes[sender.NetworkId].EndPos.Distance(
+                                                                    (DetectedDashes[sender.NetworkId].EndPos.LSDistance(
                                                                         DetectedDashes[sender.NetworkId].StartPos)/
                                                                      DetectedDashes[sender.NetworkId].Speed));
                     DetectedDashes[sender.NetworkId].Duration = DetectedDashes[sender.NetworkId].EndTick -

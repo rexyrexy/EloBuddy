@@ -373,7 +373,7 @@ namespace LeagueSharp.Common
 
             for (var i = 0; i < path.Count - 1; i++)
             {
-                var dist = path[i].Distance(path[i + 1]);
+                var dist = path[i].LSDistance(path[i + 1]);
                 if (dist > Distance)
                 {
                     result.Add(path[i] + Distance*(path[i + 1] - path[i]).Normalized());
@@ -403,7 +403,7 @@ namespace LeagueSharp.Common
                 if (path.Length > 0)
                 {
                     var first = path[0].To2D();
-                    if (first.Distance(result[0], true) > 40)
+                    if (first.LSDistance(result[0], true) > 40)
                     {
                         result.Add(first);
                     }
@@ -443,7 +443,7 @@ namespace LeagueSharp.Common
 
             foreach (var point in wp)
             {
-                time += point.Distance(lastPoint)/speed;
+                time += point.LSDistance(lastPoint) / speed;
                 result.Add(new Vector2Time(point, time));
                 lastPoint = point;
             }
@@ -630,11 +630,11 @@ namespace LeagueSharp.Common
                         .FindAll(
                             x =>
                                 x.NetworkId != originalunit.NetworkId &&
-                                point.Distance(x.ServerPosition, true) <= range*range);
+                                point.LSDistance(x.ServerPosition, true) <= range * range);
             }
             return
                 HeroManager.Allies
-                    .FindAll(x => point.Distance(x.ServerPosition, true) <= range*range);
+                    .FindAll(x => point.LSDistance(x.ServerPosition, true) <= range * range);
         }
 
         public static List<AIHeroClient> GetEnemiesInRange(this Obj_AI_Base unit, float range)
@@ -646,12 +646,12 @@ namespace LeagueSharp.Common
         {
             return
                 HeroManager.Enemies
-                    .FindAll(x => point.Distance(x.ServerPosition, true) <= range*range);
+                    .FindAll(x => point.LSDistance(x.ServerPosition, true) <= range * range);
         }
 
         public static List<T> GetObjects<T>(this Vector3 position, float range) where T : GameObject, new()
         {
-            return ObjectManager.Get<T>().Where(x => position.Distance(x.Position, true) < range*range).ToList();
+            return ObjectManager.Get<T>().Where(x => position.LSDistance(x.Position, true) < range * range).ToList();
         }
 
         public static List<T> GetObjects<T>(string objectName, float range, Vector3 rangeCheckFrom = new Vector3())
@@ -662,7 +662,7 @@ namespace LeagueSharp.Common
                 rangeCheckFrom = HeroManager.Player.ServerPosition;
             }
 
-            return ObjectManager.Get<T>().Where(x => rangeCheckFrom.Distance(x.Position, true) < range*range).ToList();
+            return ObjectManager.Get<T>().Where(x => rangeCheckFrom.LSDistance(x.Position, true) < range * range).ToList();
         }
 
         /// <summary>
@@ -717,7 +717,7 @@ namespace LeagueSharp.Common
                 fountainRange = 1000000; //1000 * 1000
             }
             var fpos = unit.Team == HeroManager.Player.Team ? MiniCache.AllyFountain : MiniCache.EnemyFountain;
-            return unit.IsVisible && unit.Distance(fpos, true) <= fountainRange;
+            return unit.IsVisible && unit.LSDistance(fpos, true) <= fountainRange;
         }
 
         /// <summary>
@@ -744,7 +744,7 @@ namespace LeagueSharp.Common
                 fpos = unit.Team == HeroManager.Player.Team ? MiniCache.EnemyFountain : MiniCache.AllyFountain;
             }
 
-            return unit.IsVisible && unit.Distance(fpos, true) <= fountainRange;
+            return unit.IsVisible && unit.LSDistance(fpos, true) <= fountainRange;
         }
 
         /// <summary>
@@ -767,7 +767,7 @@ namespace LeagueSharp.Common
                 fountainRange = 1210000; //1100 * 1100
             }
             var fpos = fountain == FountainType.OwnFountain ? MiniCache.AllyFountain : MiniCache.EnemyFountain;
-            return position.Distance(fpos, true) <= fountainRange;
+            return position.LSDistance(fpos, true) <= fountainRange;
         }
 
         public static short GetPacketId(this GamePacketEventArgs gamePacketEventArgs)

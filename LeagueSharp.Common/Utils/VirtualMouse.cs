@@ -1,4 +1,5 @@
 ﻿using System;
+using EloBuddy;
 using SharpDX;
 
 namespace LeagueSharp.Common

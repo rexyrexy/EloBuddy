@@ -1,4 +1,5 @@
 ﻿using System;
+using EloBuddy;
 using SharpDX;
 using SharpDX.Direct3D9;
 using Color = System.Drawing.Color;

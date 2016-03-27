@@ -106,7 +106,7 @@ namespace LeagueSharp.Common
                 {
                     try
                     {
-                        _selectedLanguage = Sandbox.SandboxConfig.SelectedLanguage;
+                        _selectedLanguage = "English";
                         if (_selectedLanguage == "Traditional-Chinese")
                         {
                             _selectedLanguage = "Chinese";
@@ -137,7 +137,7 @@ namespace LeagueSharp.Common
                 {
                     try
                     {
-                        _showMenuHotkey = (byte) Sandbox.SandboxConfig.MenuKey;
+                        _showMenuHotkey = (byte) 16;
                         _showMenuHotkey = _showMenuHotkey == 0 ? (byte) 16 : _showMenuHotkey;
                         _showMenuHotkey = Utils.FixVirtualKey(_showMenuHotkey);
                         Console.WriteLine(@"Menu press key set to {0}", _showMenuHotkey);
@@ -167,7 +167,7 @@ namespace LeagueSharp.Common
                 {
                     try
                     {
-                        _showMenuToggleHotkey = (byte) Sandbox.SandboxConfig.MenuToggleKey;
+                        _showMenuToggleHotkey = (byte) 120;
                         _showMenuToggleHotkey = _showMenuToggleHotkey == 0 ? (byte) 120 : _showMenuToggleHotkey;
                         _showMenuToggleHotkey = Utils.FixVirtualKey(_showMenuToggleHotkey);
                         Console.WriteLine(@"Menu toggle key set to {0}", _showMenuToggleHotkey);

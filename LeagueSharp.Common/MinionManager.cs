@@ -253,7 +253,7 @@ namespace LeagueSharp.Common
                     {
                         var circle = MEC.GetMec(subGroup);
 
-                        if (circle.Radius <= width && circle.Center.Distance(startPos, true) <= range)
+                        if (circle.Radius <= width && circle.Center.LSDistance(startPos, true) <= range)
                         {
                             minionCount = subGroup.Count;
                             return new FarmLocation(circle.Center, minionCount);
@@ -265,9 +265,9 @@ namespace LeagueSharp.Common
             {
                 foreach (var pos in minionPositions)
                 {
-                    if (pos.Distance(startPos, true) <= range)
+                    if (pos.LSDistance(startPos, true) <= range)
                     {
-                        var count = minionPositions.Count(pos2 => pos.Distance(pos2, true) <= width*width);
+                        var count = minionPositions.Count(pos2 => pos.LSDistance(pos2, true) <= width*width);
 
                         if (count >= minionCount)
                         {
@@ -311,12 +311,12 @@ namespace LeagueSharp.Common
 
             foreach (var pos in posiblePositions)
             {
-                if (pos.Distance(startPos, true) <= range*range)
+                if (pos.LSDistance(startPos, true) <= range*range)
                 {
                     var endPos = startPos + range*(pos - startPos).Normalized();
 
                     var count =
-                        minionPositions.Count(pos2 => pos2.Distance(startPos, endPos, true, true) <= width*width);
+                        minionPositions.Count(pos2 => pos2.LSDistance(startPos, endPos, true, true) <= width*width);
 
                     if (count >= minionCount)
                     {

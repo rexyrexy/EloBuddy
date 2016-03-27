@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
+using EloBuddy.SDK.Events;
 
 #endregion
 
@@ -86,14 +87,14 @@ namespace LeagueSharp.Common
                     NexusList.Add(hq);
                 }
 
-                if (LeagueSharp.Game.Mode == GameMode.Running)
+                if (EloBuddy.Game.Mode == GameMode.Running)
                 {
                     //Otherwise the .ctor didn't return yet and no callback will occur
                     Utility.DelayAction.Add(500, () => { Game_OnGameStart(new EventArgs()); });
                 }
                 else
                 {
-                    LeagueSharp.Game.OnStart += Game_OnGameStart;
+                    Loading.OnLoadingComplete += Game_OnGameStart;
                 }
             }
 
@@ -154,7 +155,7 @@ namespace LeagueSharp.Common
             /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
             private static void Game_OnGameStart(EventArgs args)
             {
-                LeagueSharp.Game.OnUpdate += Game_OnGameUpdate;
+                EloBuddy.Game.OnUpdate += Game_OnGameUpdate;
 
                 if (OnGameLoad != null)
                 {
@@ -206,7 +207,7 @@ namespace LeagueSharp.Common
             /// </summary>
             static Unit()
             {
-                LeagueSharp.Game.OnProcessPacket += PacketHandler;
+                EloBuddy.Game.OnProcessPacket += PacketHandler;
 
                 //Initializes ondash class:
                 ObjectManager.Player.IsDashing();

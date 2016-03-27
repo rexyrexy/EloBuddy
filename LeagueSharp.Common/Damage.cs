@@ -25,8 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EloBuddy;
 using LeagueSharp.Common.Data;
+using EloBuddy;
 
 #endregion
 
@@ -585,13 +585,13 @@ namespace LeagueSharp.Common
                 IsActive = (source, target) => true,
                 GetDamage =
                     (source, target) =>
-                        (float) (((72 + 3*source.Level)/100f)*source.CalcDamage(
+                        ((72 + 3*source.Level)/100f)*source.CalcDamage(
                             target,
                             DamageType.Physical,
                             source.TotalAttackDamage) - source.CalcDamage(
                                 target,
                                 DamageType.Physical,
-                                source.TotalAttackDamage))
+                                source.TotalAttackDamage)
             };
             AttackPassives.Add(p);
 
@@ -7523,7 +7523,7 @@ namespace LeagueSharp.Common
                         HeroManager.AllHeroes.Any(
                             h =>
                                 h.NetworkId != source.NetworkId && h.Team == source.Team
-                                && h.Distance(minionTarget.Position) < 1100))
+                                && h.LSDistance(minionTarget.Position) < 1100))
                     {
                         var value = 0;
 
@@ -7908,11 +7908,11 @@ namespace LeagueSharp.Common
 
                 //DAMAGE REDUCTION 2 %, increasing to 8 % when near at least one allied champion
                 //IN THIS TOGETHER 8 % of the damage that the nearest allied champion would take is dealt to you instead.This can't bring you below 15% health.
-                var BondofStones = targetHero.GetMastery(MasteryData.Resolve.BondofStones);
+                Mastery BondofStones = targetHero.GetMastery(MasteryData.Resolve.BondofStones);
                 if (BondofStones != null && BondofStones.IsActive())
                 {
                     var closebyenemies =
-                        HeroManager.Enemies.Any(x => x.NetworkId != target.NetworkId && x.Distance(target) <= 500);
+                        HeroManager.Enemies.Any(x => x.NetworkId != target.NetworkId && x.LSDistance(target) <= 500);
                         //500 is not the real value
                     if (closebyenemies)
                     {
@@ -8090,7 +8090,7 @@ namespace LeagueSharp.Common
                 } */
 
                 //Opressor: KICK 'EM WHEN THEY'RE DOWN You deal 2.5% increased damage to targets with impaired movement (slows, stuns, taunts, etc)
-                var Opressor = hero.GetMastery(MasteryData.Ferocity.Oppresor);
+                Mastery Opressor = hero.GetMastery(MasteryData.Ferocity.Oppresor);
                 if (targetHero != null && Opressor != null && Opressor.IsActive() && targetHero.IsMovementImpaired())
                 {
                     amount *= 1.025;
@@ -8099,7 +8099,7 @@ namespace LeagueSharp.Common
                 //Merciless DAMAGE AMPLIFICATION 1 / 2 / 3 / 4 / 5 % increased damage to champions below 40 % health
                 if (targetHero != null)
                 {
-                    var Merciless = hero.GetMastery(MasteryData.Cunning.Merciless);
+                    Mastery Merciless = hero.GetMastery(MasteryData.Cunning.Merciless);
                     if (Merciless != null && Merciless.IsActive() && targetHero.HealthPercent < 40)
                     {
                         amount *= 1 + Merciless.Points/100f;
@@ -8110,7 +8110,7 @@ namespace LeagueSharp.Common
                 if (false)
                     // Need a good way to check if it is 3rd attack (Use OnProcessSpell/SpellBook.OnCast if have to)
                 {
-                    var Thunder = hero.GetMastery(MasteryData.Cunning.ThunderlordsDecree);
+                    Mastery Thunder = hero.GetMastery(MasteryData.Cunning.ThunderlordsDecree);
                     if (Thunder != null && Thunder.IsActive())
                     {
                         // amount += 10 * hero.Level + (0.2 * hero.FlatPhysicalDamageMod) + (0.1 * hero.TotalMagicalDamage);
@@ -8151,7 +8151,7 @@ namespace LeagueSharp.Common
             //Fervor of Battle: STACKTIVATE Your basic attacks and spells give you stacks of Fervor for 5 seconds, stacking 10 times. Each stack of Fervor adds 1-8 bonus physical damage to your basic attacks against champions, based on your level.
             if (targetHero != null && hero != null)
             {
-                var Fervor = hero.GetMastery(MasteryData.Ferocity.FervorofBattle);
+                Mastery Fervor = hero.GetMastery(MasteryData.Ferocity.FervorofBattle);
                 if (Fervor != null && Fervor.IsActive())
                 {
                     value += (0.9 + hero.Level*0.42)*hero.GetBuffCount("MasteryOnHitDamageStacker");
@@ -8163,7 +8163,7 @@ namespace LeagueSharp.Common
             //Tough Skin DIRT OFF YOUR SHOULDERS You take 2 less damage from champion and monster basic attacks
             if (targetHero != null && (source is AIHeroClient || source is Obj_AI_Minion))
             {
-                var Toughskin = targetHero.GetMastery(MasteryData.Resolve.ToughSkin);
+                Mastery Toughskin = targetHero.GetMastery(MasteryData.Resolve.ToughSkin);
                 if (Toughskin != null && Toughskin.IsActive())
                 {
                     value -= 2;

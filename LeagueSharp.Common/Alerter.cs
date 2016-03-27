@@ -23,6 +23,7 @@
 #region
 
 using System;
+using EloBuddy;
 using SharpDX;
 
 #endregion

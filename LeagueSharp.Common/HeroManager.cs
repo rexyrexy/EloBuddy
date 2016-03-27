@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
+using EloBuddy.SDK.Events;
 
 #endregion
 
@@ -45,7 +46,7 @@ namespace LeagueSharp.Common
             {
                 Game_OnStart(new EventArgs());
             }
-            Game.OnStart += Game_OnStart;
+            Loading.OnLoadingComplete += Game_OnStart;
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using EloBuddy;
 using SharpDX;
 using SharpDX.Direct3D9;
 using Color = SharpDX.Color;

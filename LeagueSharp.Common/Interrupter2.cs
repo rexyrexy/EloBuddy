@@ -221,9 +221,9 @@ namespace LeagueSharp.Common
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void Spellbook_OnStopCast(Spellbook sender, SpellbookStopCastEventArgs args)
+        private static void Spellbook_OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
-            var target = sender.Owner as AIHeroClient;
+            var target = sender as AIHeroClient;
             if (target != null)
             {
                 // Check if the spell itself stopped casting (interrupted)

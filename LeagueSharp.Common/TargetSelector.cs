@@ -115,8 +115,8 @@ namespace LeagueSharp.Common
             }
             _selectedTargetObjAiHero =
                 HeroManager.Enemies
-                    .FindAll(hero => hero.IsValidTarget() && hero.Distance(Game.CursorPos, true) < 40000) // 200 * 200
-                    .OrderBy(h => h.Distance(Game.CursorPos, true)).FirstOrDefault();
+                    .FindAll(hero => hero.IsValidTarget() && hero.LSDistance(Game.CursorPos, true) < 40000) // 200 * 200
+                    .OrderBy(h => h.LSDistance(Game.CursorPos, true)).FirstOrDefault();
         }
 
         #endregion
@@ -408,7 +408,7 @@ namespace LeagueSharp.Common
             Vector3? rangeCheckFrom = null)
         {
             return target.IsValidTarget() &&
-                   target.Distance(rangeCheckFrom ?? ObjectManager.Player.ServerPosition, true) <
+                   target.LSDistance(rangeCheckFrom ?? ObjectManager.Player.ServerPosition, true) <
                    Math.Pow(range <= 0 ? Orbwalking.GetRealAutoAttackRange(target) : range, 2) &&
                    !IsInvulnerable(target, damageType, ignoreShieldSpells);
         }
@@ -488,11 +488,11 @@ namespace LeagueSharp.Common
                         return
                             targets.MinOrDefault(
                                 hero =>
-                                    (rangeCheckFrom.HasValue ? rangeCheckFrom.Value : champion.ServerPosition).Distance(
+                                    (rangeCheckFrom.HasValue ? rangeCheckFrom.Value : champion.ServerPosition).LSDistance(
                                         hero.ServerPosition, true));
 
                     case TargetingMode.NearMouse:
-                        return targets.MinOrDefault(hero => hero.Distance(Game.CursorPos, true));
+                        return targets.MinOrDefault(hero => hero.LSDistance(Game.CursorPos, true));
 
                     case TargetingMode.AutoPriority:
                         return

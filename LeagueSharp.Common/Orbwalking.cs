@@ -237,7 +237,7 @@ namespace LeagueSharp.Common
             Player = ObjectManager.Player;
             _championName = Player.ChampionName;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpell;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Obj_AI_Base.OnSpellCast += Obj_AI_Base_OnDoCast;
             Spellbook.OnStopCast += SpellbookOnStopCast;
         }
 
@@ -536,11 +536,11 @@ namespace LeagueSharp.Common
         {
             var playerPosition = Player.ServerPosition;
 
-            if (playerPosition.Distance(position, true) < holdAreaRadius*holdAreaRadius)
+            if (playerPosition.LSDistance(position, true) < holdAreaRadius*holdAreaRadius)
             {
                 if (Player.Path.Length > 0)
                 {
-                    Player.IssueOrder(GameObjectOrder.Stop, playerPosition);
+                    EloBuddy.Player.IssueOrder(GameObjectOrder.Stop, playerPosition);
                     LastMoveCommandPosition = playerPosition;
                     LastMoveCommandT = Utils.GameTimeTickCount - 70;
                 }
@@ -549,7 +549,7 @@ namespace LeagueSharp.Common
 
             var point = position;
 
-            if (Player.Distance(point, true) < 150*150)
+            if (Player.LSDistance(point, true) < 150 * 150)
             {
                 point = playerPosition.Extend(
                     position, randomizeMinDistance ? (_random.NextFloat(0.6f, 1) + 0.2f)*_minDistance : _minDistance);
@@ -565,7 +565,7 @@ namespace LeagueSharp.Common
                     var v1 = currentPath[1] - currentPath[0];
                     var v2 = movePath[1] - movePath[0];
                     angle = v1.AngleBetween(v2.To2D());
-                    var distance = movePath.Last().To2D().Distance(currentPath.Last(), true);
+                    var distance = movePath.Last().To2D().LSDistance(currentPath.Last(), true);
 
                     if ((angle < 10 && distance < 500*500) || distance < 50*50)
                     {
@@ -585,7 +585,7 @@ namespace LeagueSharp.Common
                 return;
             }
 
-            Player.IssueOrder(GameObjectOrder.MoveTo, point);
+            EloBuddy.Player.IssueOrder(GameObjectOrder.MoveTo, point);
             LastMoveCommandPosition = point;
             LastMoveCommandT = Utils.GameTimeTickCount;
         }
@@ -625,7 +625,7 @@ namespace LeagueSharp.Common
                             _missileLaunched = false;
                         }
 
-                        if (Player.IssueOrder(GameObjectOrder.AttackUnit, target))
+                        if (EloBuddy.Player.IssueOrder(GameObjectOrder.AttackUnit, target))
                         {
                             LastAttackCommandT = Utils.GameTimeTickCount;
                             _lastTarget = target;
@@ -665,9 +665,9 @@ namespace LeagueSharp.Common
         /// </summary>
         /// <param name="spellbook">The spellbook.</param>
         /// <param name="args">The <see cref="SpellbookStopCastEventArgs" /> instance containing the event data.</param>
-        private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
+        private static void SpellbookOnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
-            if (spellbook.Owner.IsValid && spellbook.Owner.IsMe && args.DestroyMissile && args.StopAnimation)
+            if (sender.IsValid && sender.IsMe && args.DestroyMissile && args.StopAnimation)
             {
                 ResetAutoAttackTimer();
             }
@@ -1087,13 +1087,12 @@ namespace LeagueSharp.Common
                                 InAutoAttackRange(minion) && MinionManager.IsMinion(minion, false) &&
                                 HealthPrediction.LaneClearHealthPrediction(
                                     minion,
-                                    (int)
-                                        (Player.AttackDelay*1000 +
-                                         (Player.IsMelee
-                                             ? Player.AttackCastDelay*1000
-                                             : Player.AttackCastDelay*1000 +
-                                               1000*(Player.AttackRange + 2*Player.BoundingRadius)/
-                                               Player.BasicAttack.MissileSpeed)), FarmDelay) <=
+                                    (int)(Player.AttackDelay*1000 +
+                                    (Player.IsMelee
+                                        ? Player.AttackCastDelay*1000
+                                        : Player.AttackCastDelay*1000 +
+                                          1000*(Player.AttackRange + 2*Player.BoundingRadius)/
+                                          Player.BasicAttack.MissileSpeed)), FarmDelay) <=
                                 Player.GetAutoAttackDamage(minion));
             }
 
@@ -1130,8 +1129,8 @@ namespace LeagueSharp.Common
 
                     foreach (var minion in MinionList)
                     {
-                        var t = (int) (Player.AttackCastDelay*1000) - 100 + Game.Ping/2 +
-                                1000*(int) Math.Max(0, Player.Distance(minion) - Player.BoundingRadius)/
+                        var t = Player.AttackCastDelay*1000 - 100 + Game.Ping/2 +
+                                1000 * (int)Math.Max(0, Player.LSDistance(minion) - Player.BoundingRadius) /
                                 (int) GetMyProjectileSpeed();
 
                         if (mode == OrbwalkingMode.Freeze)
@@ -1139,7 +1138,7 @@ namespace LeagueSharp.Common
                             t += 200 + Game.Ping/2;
                         }
 
-                        var predHealth = HealthPrediction.GetHealthPrediction(minion, t, FarmDelay);
+                        var predHealth = HealthPrediction.GetHealthPrediction(minion, (int)t, FarmDelay);
 
                         if (minion.Team != GameObjectTeam.Neutral && ShouldAttackMinion(minion))
                         {
@@ -1251,9 +1250,9 @@ namespace LeagueSharp.Common
                 {
                     var closestTower =
                         ObjectManager.Get<Obj_AI_Turret>()
-                            .MinOrDefault(t => t.IsAlly && !t.IsDead ? Player.Distance(t, true) : float.MaxValue);
+                            .MinOrDefault(t => t.IsAlly && !t.IsDead ? Player.LSDistance(t, true) : float.MaxValue);
 
-                    if (closestTower != null && Player.Distance(closestTower, true) < 1500*1500)
+                    if (closestTower != null && Player.LSDistance(closestTower, true) < 1500 * 1500)
                     {
                         Obj_AI_Minion farmUnderTurretMinion = null;
                         Obj_AI_Minion noneKillableMinion = null;
@@ -1262,7 +1261,7 @@ namespace LeagueSharp.Common
                             MinionManager.GetMinions(Player.Position, Player.AttackRange + 200)
                                 .Where(
                                     minion =>
-                                        InAutoAttackRange(minion) && closestTower.Distance(minion, true) < 900*900)
+                                        InAutoAttackRange(minion) && closestTower.LSDistance(minion, true) < 900 * 900)
                                 .OrderByDescending(minion => minion.CharData.BaseSkinName.Contains("Siege"))
                                 .ThenBy(minion => minion.CharData.BaseSkinName.Contains("Super"))
                                 .ThenByDescending(minion => minion.MaxHealth)
@@ -1284,14 +1283,14 @@ namespace LeagueSharp.Common
                                 var turretStarTick = HealthPrediction.TurretAggroStartTick(
                                     turretMinion as Obj_AI_Minion);
                                 // from healthprediction (don't blame me :S)
-                                var turretLandTick = turretStarTick + (int) (closestTower.AttackCastDelay*1000) +
+                                var turretLandTick = turretStarTick + closestTower.AttackCastDelay*1000 +
                                                      1000*
                                                      Math.Max(
                                                          0,
                                                          (int)
-                                                             (turretMinion.Distance(closestTower) -
+                                                             (turretMinion.LSDistance(closestTower) -
                                                               closestTower.BoundingRadius))/
-                                                     (int) (closestTower.BasicAttack.MissileSpeed + 70);
+                                                     (closestTower.BasicAttack.MissileSpeed + 70);
                                 // calculate the HP before try to balance it
                                 for (float i = turretLandTick + 50;
                                     i < turretLandTick + 10*closestTower.AttackDelay*1000 + 50;
@@ -1319,17 +1318,17 @@ namespace LeagueSharp.Common
                                     var hits = hpLeftBeforeDie/damage;
                                     var timeBeforeDie = turretLandTick +
                                                         (turretAttackCount + 1)*
-                                                        (int) (closestTower.AttackDelay*1000) -
+                                                        (closestTower.AttackDelay*1000) -
                                                         Utils.GameTimeTickCount;
-                                    var timeUntilAttackReady = LastAATick + (int) (Player.AttackDelay*1000) >
+                                    var timeUntilAttackReady = LastAATick + Player.AttackDelay*1000 >
                                                                Utils.GameTimeTickCount + Game.Ping/2 + 25
-                                        ? LastAATick + (int) (Player.AttackDelay*1000) -
+                                        ? LastAATick + Player.AttackDelay*1000 -
                                           (Utils.GameTimeTickCount + Game.Ping/2 + 25)
                                         : 0;
                                     var timeToLandAttack = Player.IsMelee
                                         ? Player.AttackCastDelay*1000
                                         : Player.AttackCastDelay*1000 +
-                                          1000*Math.Max(0, turretMinion.Distance(Player) - Player.BoundingRadius)/
+                                          1000 * Math.Max(0, turretMinion.LSDistance(Player) - Player.BoundingRadius) /
                                           Player.BasicAttack.MissileSpeed;
                                     if (hits >= 1 &&
                                         hits*Player.AttackDelay*1000 + timeUntilAttackReady + timeToLandAttack <
@@ -1380,7 +1379,7 @@ namespace LeagueSharp.Common
                                 if (lastminion != null && minions.Count() >= 2)
                                 {
                                     if (1f/Player.AttackDelay >= 1f &&
-                                        (int) (turretAttackCount*closestTower.AttackDelay/Player.AttackDelay)*
+                                        turretAttackCount*closestTower.AttackDelay/Player.AttackDelay*
                                         Player.GetAutoAttackDamage(lastminion) > lastminion.Health)
                                     {
                                         return lastminion;
