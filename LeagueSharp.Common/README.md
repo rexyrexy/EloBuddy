@@ -1,5 +1,5 @@
 License
-=================
+======================================
 Copyright 2014 - 2016 LeagueSharp
 LeagueSharp.Common is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -13,3 +13,24 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with LeagueSharp.Common. If not, see http://www.gnu.org/licenses/
+
+Usage Reference
+======================================
+    System
+    System.Core
+    System.Drawing
+    System.ServiceModel
+    System.Xml.Linq
+    System.Data.DataSetExtensions
+    Microsoft.CSharp
+    System.Data
+    System.Xml
+    WindowsBase
+    System.Web.Extensions
+    
+	EloBuddy
+	EloBuddy.SDK
+	SharpDX
+	SharpDX.Direct3D9
+======================================
+
