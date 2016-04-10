@@ -97,5 +97,4 @@ namespace RyzePro.Modes
             }        
         }
     }
-}
 
