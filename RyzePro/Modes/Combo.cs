@@ -74,7 +74,7 @@ namespace RyzePro.Modes
         }
 
 
-
+		
         public static void Do()
         {
             if (TargetSelector.SelectedTarget == null)
@@ -90,77 +90,10 @@ namespace RyzePro.Modes
             {
                 return;
             }
-
-            switch (Menu.ComboMenu["combo.mode"].Cast<Slider>().CurrentValue)
-            {
-                case 1:
-                {
                     QCast(Target);
                     RCast(Target);
                     ECast(Target);
                     WCast(Target);
-                    QCast(Target);
-                    RCast(Target);
-                    ECast(Target);
-                    WCast(Target);
-                    QCast(Target);
-                    RCast(Target);
-                    ECast(Target);
-                    WCast(Target);
-                    break;
-                }
-                case 2:
-                {
-                    if (Starting.PassiveCount == 0 || Starting.PassiveCount == 1 || Starting.PassiveCount == 2)
-                    {
-                        QCast(Target);
-                        QCast(Target);
-                        WCast(Target);
-                        ECast(Target);
-                        RCast(Target);
-                        WCast(Target);
-                        QCast(Target);
-                        ECast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        WCast(Target);
-                        ECast(Target);
-                        RCast(Target);
-                        WCast(Target);
-                        QCast(Target);
-                        ECast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        WCast(Target);
-                        ECast(Target);
-                        RCast(Target);
-                        WCast(Target);
-                        QCast(Target);
-                        ECast(Target);
-                        QCast(Target);
-                    }
-                    else if (Starting.PassiveCount == 3 || Starting.PassiveCount == 4 || Starting.PassiveCharged)
-                    {
-                        QCast(Target);
-                        ECast(Target);
-                        WCast(Target);
-                        RCast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        ECast(Target);
-                        WCast(Target);
-                        RCast(Target);
-                        QCast(Target);
-                        QCast(Target);
-                        ECast(Target);
-                        WCast(Target);
-                        RCast(Target);
-                        QCast(Target);
-                    }
-                    break;
-                }
             }        
         }
     }
