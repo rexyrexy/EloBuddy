@@ -3,6 +3,7 @@ using System.Drawing;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
+using RyzePro.Modes;
 
 namespace RyzePro
 {
@@ -77,9 +78,13 @@ namespace RyzePro
 
         private static void Orbwalker_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
-            if (Checker.WhileComboAa && Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            if (Checker.WhileComboAa && Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && (Combo.QReady || Combo.EReady || Combo.WReady))
             {
                 args.Process = false;
+            }
+            else if (Checker.WhileComboAa && Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo) && !(Combo.QReady || Combo.EReady || Combo.WReady))
+            {
+                args.Process = true;
             }
         }
 

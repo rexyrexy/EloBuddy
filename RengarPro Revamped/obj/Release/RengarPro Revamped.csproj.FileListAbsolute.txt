@@ -9,3 +9,4 @@ C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Release\Newtonsof
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Release\RengarPro Revamped.csprojResolveAssemblyReference.cache
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Release\RengarPro Revamped.exe
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\obj\Release\RengarPro Revamped.pdb
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RengarPro Revamped\bin\Release\EloBuddy.Sandbox.dll

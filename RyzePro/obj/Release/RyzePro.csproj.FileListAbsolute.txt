@@ -9,3 +9,4 @@ C:\Users\Rexy\Documents\GitHub\EloBuddy\RyzePro\bin\Release\Newtonsoft.Json.dll
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RyzePro\obj\Release\RyzePro.exe
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RyzePro\obj\Release\RyzePro.pdb
 C:\Users\Rexy\Documents\GitHub\EloBuddy\RyzePro\obj\Release\RyzePro.csprojResolveAssemblyReference.cache
+C:\Users\Rexy\Documents\GitHub\EloBuddy\RyzePro\bin\Release\EloBuddy.Sandbox.dll

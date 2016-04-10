@@ -18,6 +18,8 @@ namespace RyzePro
             ComboMenu.Add("combo.useW", new CheckBox("Use W"));
             ComboMenu.Add("combo.useE", new CheckBox("Use E"));
             ComboMenu.Add("combo.useR", new CheckBox("Use R when target rooted"));
+            ComboMenu.AddLabel("1 => Classic Combo || 2 => Logic Combo");
+            ComboMenu.Add("combo.mode", new Slider("Combo Mode ", 2, 1, 2));
             ComboMenu.Add("combo.aa", new CheckBox("Dont AA while combo"));
             ComboMenu.Add("combo.gapcloser", new CheckBox("Auto GapCloser Enemy"));
 
